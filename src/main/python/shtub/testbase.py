@@ -36,7 +36,7 @@ class IntegrationTestBase (unittest.TestCase):
         with open(output_filename, 'w') as outputfile:
             outputfile.write('----------------- ENVIRONMENT -------------------\n')
             
-            for key in self.env:
+            for key in sorted(self.env.keys()):
                 outputfile.write('%s=%s\n' % (key, self.env[key]))
                 
             outputfile.write('----------------- STDOUT -------------------\n')
