@@ -10,6 +10,7 @@ parts
 bin
 var
 sdist
+target
 develop-eggs
 .installed.cfg
 
