@@ -1,4 +1,10 @@
-before_script: "sudo apt-get install python-coverage python-django pychecker pymetrics python-setuptools python-mock && sudo easy_install http://python-builder.googlecode.com/files/python-builder-0.6.2.tar.gz"
+language: python
+python:
+  - "2.6"
+  - "2.7"
+before_script:
+  - sudo apt-get install python-coverage python-django pychecker pymetrics python-setuptools
+  - sudo easy_install http://python-builder.googlecode.com/files/python-builder-0.6.2.tar.gz
 script: "pyb"
 notifications:
   email:
