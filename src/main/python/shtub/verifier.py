@@ -5,7 +5,8 @@ from shtub.execution import Execution
 
 class Verifier (object):
     def __init__ (self, basedir):
-        self.base_dir = basedir
+        self.base_dir       = basedir
+        self.recorded_calls = []
 
     def verify (self, command, arguments, stdin):
         expectation = Execution(command, arguments, stdin)
