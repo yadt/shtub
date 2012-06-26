@@ -10,7 +10,7 @@ use_plugin('python.pydev')
 
 default_task = ['analyze', 'run_integration_tests']
 
-version = '0.1.1'
+version = '0.1.2'
 summary = 'shtub - shell command stub'
 authors = [
     Author('Michael Gruber', 'aelgru@gmail.com'),
