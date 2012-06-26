@@ -18,7 +18,7 @@ authors = [
     Author('Alexander Metzner', 'alexander.metzner@gmail.com')
 ]
 
-url = 'http://code.google.com/p/shtub'
+url = 'https://github.com/shtub/shtub'
 license = 'GNU GPL v3'
 
 @init
