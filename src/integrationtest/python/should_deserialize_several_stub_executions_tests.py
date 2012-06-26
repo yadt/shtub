@@ -2,12 +2,12 @@ import unittest
 
 from os.path import join
 
-from integrationtest_support import IntegrationTestSupport
+import integrationtest_support
 
 from shtub import deserialize_stub_executions
 
 
-class Test (IntegrationTestSupport):
+class Test (integrationtest_support.IntegrationTestSupport):
     def test (self):
         self.prepare_default_testbed(['command_stub1', 'command_stub2'])
                 

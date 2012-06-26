@@ -2,9 +2,9 @@ from mock import patch, call
 
 from shtub.fixture import Fixture
 from shtub.expectation import Expectation
-from shtub.testbase import TestCase
+import shtub.testbase
 
-class FixtureTest (TestCase):
+class FixtureTest (shtub.testbase.TestCase):
     def test_should_create_object_with_given_base_dir_and_empty_list_of_expectations (self):
         actual_fixture = Fixture('/abc/def')
         

@@ -1,9 +1,9 @@
 import os
 
-from shtub.testbase import IntegrationTestBase
+import shtub.testbase
 
 
-class IntegrationTestSupport (IntegrationTestBase):
+class IntegrationTestSupport (shtub.testbase.IntegrationTestBase):
     def create_command_wrapper (self, filename, command, arguments, stdin):
         wrapper_filename = os.path.join(self.stubs_dir, filename)
         joined_arguments = ' '.join(arguments)

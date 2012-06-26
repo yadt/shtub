@@ -8,9 +8,9 @@ from shtub import commandstub, BASEDIR, LOG_FILENAME
 from shtub.answer import Answer
 from shtub.execution import Execution
 from shtub.expectation import Expectation
-from shtub.testbase import TestCase
+import shtub.testbase
 
-class Tests (TestCase):
+class Tests (shtub.testbase.TestCase):
     @patch('shtub.commandstub.record_call')
     @patch('shtub.commandstub.send_answer')
     @patch('logging.info')

@@ -1,8 +1,8 @@
 from shtub.answer import Answer
 from shtub.expectation import Expectation
-from shtub.testbase import TestCase
+import shtub.testbase
 
-class ExpectationTests (TestCase):
+class ExpectationTests (shtub.testbase.TestCase):
     def test_should_convert_dictionary_to_object (self):
         values = {'command'        : 'any_command',
                   'arguments'      : ['any_arg1', 'any_arg2', 'any_argument3'],

@@ -6,10 +6,10 @@ import os
 from os.path import exists, join
 from StringIO import StringIO
 
-from integrationtest_support import IntegrationTestSupport
+import integrationtest_support
 
 
-class Test (IntegrationTestSupport):
+class Test (integrationtest_support.IntegrationTestSupport):
     def test (self):
         self.prepare_default_testbed(['command_stub'])
 

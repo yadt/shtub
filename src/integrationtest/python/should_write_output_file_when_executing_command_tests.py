@@ -5,10 +5,10 @@ from os.path import exists, isdir, islink, join
 from StringIO import StringIO
 
 from shtub import BASEDIR
-from integrationtest_support import IntegrationTestSupport
+import integrationtest_support
 
 
-class Test (IntegrationTestSupport):
+class Test (integrationtest_support.IntegrationTestSupport):
     def test (self):
         self.prepare_default_testbed(['command_stub'])
 
