@@ -21,14 +21,18 @@ def serialize_stub_executions (filename, executions):
     with open(filename, 'w') as json_file:
         json_file.write(json_string)
 
-def deserialize_stub_executions (filename):
+
+def load_json_file (filename):
     with open(filename, 'r') as json_file:
         file_content = json_file.read()
-        executions_as_dictionaries = json.loads(file_content)
-        return map(lambda e: Execution.from_dictionary(e), executions_as_dictionaries) 
+        data = json.loads(file_content)
+
+    return data
+
+def deserialize_stub_executions (filename):
+    executions = load_json_file(filename)
+    return map(lambda e: Execution.from_dictionary(e), executions) 
 
 def deserialize_expectations (filename):
-    with open(filename, 'r') as json_file:
-        file_content = json_file.read()
-        expectations_as_dictionaries = json.loads(file_content)
-        return map(lambda e: Expectation.from_dictionary(e), expectations_as_dictionaries) 
+    expectations = load_json_file(filename)
+    return map(lambda e: Expectation.from_dictionary(e), expectations) 
