@@ -4,11 +4,9 @@ from shtub.execution import Execution
 
 class ExecutionTests (unittest.TestCase):
     def test_should_convert_dictionary_to_object (self):
-        values = dict (
-            command= 'any_command',
-            arguments= ['any_arguments'],
-            stdin= 'any_stdin'
-        )
+        values = {'command'   : 'any_command',
+                  'arguments' : ['any_arguments'],
+                  'stdin'     : 'any_stdin'}
         
         actual_execution = Execution.from_dictionary(values)
         

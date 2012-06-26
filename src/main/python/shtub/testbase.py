@@ -19,7 +19,7 @@ class IntegrationTestBase (unittest.TestCase):
             shutil.rmtree(self.base_dir)
             
     def execute_command (self, command):
-        shell_process = subprocess.Popen([command],
+        shell_process = subprocess.Popen(args   = [command],
                                          stdout = subprocess.PIPE,
                                          stderr = subprocess.PIPE,
                                          shell  = True,
@@ -29,11 +29,10 @@ class IntegrationTestBase (unittest.TestCase):
         stdout, stderr = shell_process.communicate()
         
         normalized_command = command.replace(' ', '_')
-        output_filename = os.path.join(self.base_dir,
-                                       BASEDIR,
-                                       '%02d-command-%s' % (self.command_counter, normalized_command))
+        filename = '%02d-command-%s' % (self.command_counter, normalized_command)
+        output_path = os.path.join(self.base_dir, BASEDIR, filename)
         
-        with open(output_filename, 'w') as outputfile:
+        with open(output_path, 'w') as outputfile:
             outputfile.write('----------------- ENVIRONMENT -------------------\n')
             
             for key in sorted(self.env.keys()):
@@ -56,7 +55,7 @@ class IntegrationTestBase (unittest.TestCase):
         return Verifier(self.base_dir)
     
     def prepare_testbed (self, env, stubs):
-        self.env = env
+        self.env   = env
         self.stubs = stubs
         
         os.mkdir(os.path.join(self.base_dir, BASEDIR))

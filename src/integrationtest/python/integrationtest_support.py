@@ -39,9 +39,7 @@ echo -n %s | %s %s
         path = self.create_path()
         python_path = self.create_python_path()
         
-        env = dict(
-            PATH = path,
-            PYTHONPATH = python_path
-        )
+        env = {'PATH': path,
+               'PYTHONPATH': python_path}
         
         self.prepare_testbed(env, stubs_list)

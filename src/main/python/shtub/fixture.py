@@ -5,7 +5,7 @@ from shtub.expectation import Expectation
 
 class Fixture (object):
     def __init__ (self, basedir):
-        self.base_dir = basedir
+        self.base_dir     = basedir
         self.expectations = []
         
     def expect (self, command, arguments, stdin):

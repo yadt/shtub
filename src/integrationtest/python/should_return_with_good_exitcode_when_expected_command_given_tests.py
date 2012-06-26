@@ -8,13 +8,13 @@ from os.path import abspath, dirname, join
 
 class Test (unittest.TestCase):
     def test (self):
-        test_dir = tempfile.mkdtemp()
-        test_execution_dir = join(test_dir, 'test-execution')
+        test_dir              = tempfile.mkdtemp()
+        test_execution_dir    = join(test_dir, 'test-execution')
+        command_stub_path     = abspath(join(dirname(__file__), '..', '..', 'main', 'python', 'shtub', 'commandstub.py'))
+        expectations_filename = join(test_execution_dir, 'expectations')
+
         mkdir(test_execution_dir)
 
-        command_stub_path = abspath(join(dirname(__file__), '..', '..', 'main', 'python', 'shtub', 'commandstub.py'))
-
-        expectations_filename = join(test_execution_dir, 'expectations')
         with open(expectations_filename, 'w') as expectations_file:
             expectation_json = """[{
     "arguments": ["-arg1", "-arg2", "-arg3"],
@@ -31,7 +31,7 @@ class Test (unittest.TestCase):
 }]"""
             expectations_file.write(expectation_json)
 
-        shell_process = subprocess.Popen([command_stub_path + ' -arg1 -arg2 -arg3'],
+        shell_process = subprocess.Popen(args   = [command_stub_path + ' -arg1 -arg2 -arg3'],
                                          stdin  = subprocess.PIPE,
                                          stdout = subprocess.PIPE,
                                          stderr = subprocess.PIPE,

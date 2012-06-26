@@ -4,23 +4,17 @@ from shtub.testbase import TestCase
 
 class ExpectationTests (TestCase):
     def test_should_convert_dictionary_to_object (self):
-        values = dict(
-            command = 'any_command',
-            arguments = ['any_arg1', 'any_arg2', 'any_argument3'],
-            stdin = 'any_stdin',
-            current_answer = 0,
-            answers = [
-                dict(
-                    stdout = 'Hello world.',
-                    stderr = 'Hello error!',
-                    return_code = 18
-                ), dict(
-                    stdout = 'Spam eggs.',
-                    stderr = 'Error!',
-                    return_code = 21
-                )
-            ]
-        )
+        values = {'command'        : 'any_command',
+                  'arguments'      : ['any_arg1', 'any_arg2', 'any_argument3'],
+                  'stdin'          : 'any_stdin',
+                  'current_answer' : 0,
+                  'answers'        : [{'stdout'      : 'Hello world.',
+                                       'stderr'      : 'Hello error!',
+                                       'return_code' : 18},
+                                      {'stdout'      : 'Spam eggs.',
+                                       'stderr'      : 'Error!',
+                                       'return_code' : 21}]
+                  }
         
         actual_expectation = Expectation.from_dictionary(values)
         

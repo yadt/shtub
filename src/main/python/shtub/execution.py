@@ -1,15 +1,13 @@
 class Execution (object):
     def __init__ (self, command, arguments, stdin):
-        self.command = command
+        self.command   = command
         self.arguments = arguments or []
-        self.stdin = stdin
+        self.stdin     = stdin
     
     def as_dictionary (self):
-        return dict(
-            command = self.command,
-            arguments = self.arguments,
-            stdin = self.stdin
-        )
+        return {'command'   : self.command,
+                'arguments' : self.arguments,
+                'stdin'     : self.stdin}
     
     def fulfills (self, expectation):
         if self.command != expectation.command:
@@ -26,8 +24,8 @@ class Execution (object):
 
     def __eq__ (self, other):
         return self.command == other.command \
-            and self.stdin == other.stdin \
-            and self.arguments == other.arguments
+           and self.stdin == other.stdin \
+           and self.arguments == other.arguments
     
     def __ne__ (self, other):
         return not(self == other)

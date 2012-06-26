@@ -12,11 +12,9 @@ class AnswerTest (unittest.TestCase):
         self.assertEquals(8, actual_answer.return_code)
 
     def test_should_return_answer_from_dictionary (self):
-        answer_dictionary = dict(
-            stdout = 'Hello world.',
-            stderr = 'Hello error!',
-            return_code = 82
-        )
+        answer_dictionary = {'stdout'      : 'Hello world.',
+                             'stderr'      : 'Hello error!',
+                             'return_code' : 82}
         
         actual_answer = Answer.from_dictionary(answer_dictionary)
         

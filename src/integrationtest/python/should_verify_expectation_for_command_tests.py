@@ -19,11 +19,11 @@ class Tests (integrationtest_support.IntegrationTestSupport):
 
         self.assertEquals(0, actual_return_code1)
         self.assertEquals(0, actual_return_code2)
-        
 
         with self.verify() as verifier:
             verifier.verify('command_stub', ['-arg1', '-arg2', '-arg3'], 'stdin')
             verifier.verify('command_stub', ['-arg1', '-arg2', '-arg3'], 'stdin')
+
 
 if __name__ == '__main__':
     unittest.main()

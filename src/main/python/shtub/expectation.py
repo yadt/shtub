@@ -52,8 +52,8 @@ class Expectation (Execution):
     
     def __eq__ (self, other):
         return Execution.__eq__(self, other) \
-            and self.current_answer == other.current_answer \
-            and self.answers == other.answers
+           and self.current_answer == other.current_answer \
+           and self.answers == other.answers
 
     def __str__ (self):
         return 'Expectation %s' % (self.as_dictionary())

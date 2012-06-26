@@ -19,7 +19,7 @@ class Test (IntegrationTestSupport):
         
         self.assertTrue(exists(command_wrapper_filename))
         file_permissions = stat.S_IMODE(os.stat(command_wrapper_filename).st_mode)
-        self.assertEqual(0755, file_permissions)
+        self.assertEqual(0o755, file_permissions)
         
         actual_file_content = StringIO()
         with open(command_wrapper_filename) as cmd_wrapper_file:

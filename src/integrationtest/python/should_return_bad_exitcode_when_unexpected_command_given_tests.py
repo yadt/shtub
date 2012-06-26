@@ -11,11 +11,12 @@ from integrationtest_support import IntegrationTestSupport
 
 class Test (IntegrationTestSupport):
     def test (self):
-        test_dir = tempfile.mkdtemp()
-        test_execution_dir = join(test_dir, 'test-execution')
+        test_dir              = tempfile.mkdtemp()
+        test_execution_dir    = join(test_dir, 'test-execution')
+        expectations_filename = join(test_execution_dir, 'expectations')
+        
         mkdir(test_execution_dir)
 
-        expectations_filename = join(test_execution_dir, 'expectations')
         with open(expectations_filename, 'w') as expectations_file:
             expectation_json = """[{
     "arguments": ["-arg1", "-arg2", "-arg3"],
@@ -34,7 +35,7 @@ class Test (IntegrationTestSupport):
             
         command_stub_path = abspath(join(dirname(__file__), '..', '..', 'main', 'python', 'shtub', 'commandstub.py'))
 
-        shell_process = subprocess.Popen([command_stub_path + ' -arg1 -arg2 -arg3'],
+        shell_process = subprocess.Popen(args   = [command_stub_path + ' -arg1 -arg2 -arg3'],
                                          stdin  = subprocess.PIPE,
                                          stdout = subprocess.PIPE,
                                          stderr = subprocess.PIPE,

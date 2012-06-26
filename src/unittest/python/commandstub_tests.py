@@ -10,7 +10,7 @@ from shtub.execution import Execution
 from shtub.expectation import Expectation
 from shtub.testbase import TestCase
 
-class CommandStubTests (TestCase):
+class Tests (TestCase):
     @patch('shtub.commandstub.record_call')
     @patch('shtub.commandstub.send_answer')
     @patch('logging.info')
@@ -27,8 +27,8 @@ class CommandStubTests (TestCase):
         
         commandstub.dispatch(execution)
         
-        record_mock.assert_called_once_with(execution)
-        answer_mock.assert_called_once_with(answer)
+        self.assertEquals(call(execution), record_mock.call_args)
+        self.assertEquals(call(answer), answer_mock.call_args)
         
     @patch('sys.exit')
     @patch('logging.error')
@@ -41,7 +41,7 @@ class CommandStubTests (TestCase):
         
         commandstub.dispatch(execution)
         
-        exit_mock.assert_called_once_with(255)
+        self.assertEquals(call(255), exit_mock.call_args)
         
     @patch('sys.exit')
     @patch('logging.error')
@@ -52,7 +52,7 @@ class CommandStubTests (TestCase):
         
         commandstub.dispatch(execution)
         
-        deserialize_mock.assert_called_once_with('test-execution/expectations')
+        self.assertEquals(call('test-execution/expectations'), deserialize_mock.call_args)
         
     
     @patch('shtub.commandstub.serialize_stub_executions')
@@ -63,7 +63,7 @@ class CommandStubTests (TestCase):
         
         commandstub.record_call(execution)
         
-        serialize_mock.assert_called_once_with('test-execution/recorded-calls', ANY)
+        self.assertEquals(call('test-execution/recorded-calls', ANY), serialize_mock.call_args)
         
         actual_recorded_calls = serialize_mock.call_args[0][1]
         
@@ -77,7 +77,7 @@ class CommandStubTests (TestCase):
         
         commandstub.record_call(execution)
         
-        deserialize_mock.assert_called_once_with('test-execution/recorded-calls')
+        self.assertEquals(call('test-execution/recorded-calls'), deserialize_mock.call_args)
 
     @patch('shtub.commandstub.serialize_stub_executions')
     @patch('shtub.commandstub.deserialize_stub_executions')
@@ -100,7 +100,7 @@ class CommandStubTests (TestCase):
         
         self.assertEquals('Hello world!', stdout_mock.getvalue())
         self.assertEquals('Hello error!', stderr_mock.getvalue())
-        exit_mock.assert_called_once_with(223)
+        self.assertEquals(call(223), exit_mock.call_args)
 
     @patch('sys.stdout', new_callable=StringIO)
     @patch('sys.stderr', new_callable=StringIO)
@@ -112,7 +112,7 @@ class CommandStubTests (TestCase):
         
         self.assertEquals('', stdout_mock.getvalue())
         self.assertEquals('', stderr_mock.getvalue())
-        exit_mock.assert_called_once_with(123)
+        self.assertEquals(call(123), exit_mock.call_args)
 
 
     @patch('sys.stdin')
@@ -120,7 +120,7 @@ class CommandStubTests (TestCase):
     def test_should_use_a_one_second_timeout_when_waiting_for_stdin (self, select_mock, stdin_mock):
         commandstub.read_stdin()
         
-        select_mock.assert_called_once_with([sys.stdin], [], [], 1)
+        self.assertEquals(call([sys.stdin], [], [], 1), select_mock.call_args)
 
     @patch('sys.stdin')
     @patch('shtub.commandstub.select', return_value=([],[],[]))
@@ -150,8 +150,8 @@ class CommandStubTests (TestCase):
         
         commandstub.handle_stub_call()
         
-        exists_mock.assert_called_once_with('test-execution')
-        mkdir_mock.assert_called_once_with('test-execution')
+        self.assertEquals(call('test-execution'), exists_mock.call_args)
+        self.assertEquals(call('test-execution'), mkdir_mock.call_args)
 
     @patch.object(sys, 'argv', ['command', '-arg1', '-arg2', '-arg3'])
     @patch('shtub.commandstub.read_stdin', return_value=None)
@@ -165,7 +165,7 @@ class CommandStubTests (TestCase):
         commandstub.handle_stub_call()
         
         
-        exists_mock.assert_called_once_with('test-execution')
+        self.assertEquals(call('test-execution'), exists_mock.call_args)
         self.assertIsNone(mkdir_mock.call_args)
 
     @patch.object(sys, 'argv', ['command', '-arg1', '-arg2', '-arg3'])
@@ -179,9 +179,10 @@ class CommandStubTests (TestCase):
         
         commandstub.handle_stub_call()
         
-        logging_mock.assert_called_once_with(filename = LOG_FILENAME,
-                                             level    = logging.INFO,
-                                             format   = '%(asctime)s %(levelname)5s [%(name)s] - %(message)s')
+        self.assertEquals(call(filename = LOG_FILENAME,
+                               level    = logging.INFO,
+                               format   = '%(asctime)s %(levelname)5s [%(name)s] - %(message)s'),
+                          logging_mock.call_args)
 
     @patch.object(sys, 'argv', ['command', '-arg1', '-arg2', '-arg3'])
     @patch('shtub.commandstub.read_stdin', return_value=None)
