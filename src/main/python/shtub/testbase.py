@@ -17,7 +17,23 @@ class IntegrationTestBase (unittest.TestCase):
     def tearDown (self):
         if self.cleanup_base_dir and os.path.exists(self.base_dir):
             shutil.rmtree(self.base_dir)
+
+    def _write_output_file(self, command, stdout, stderr):
+        normalized_command = command.replace(' ', '_')
+        filename = '%02d-command-%s' % (self.command_counter, normalized_command)
+        output_path = os.path.join(self.base_dir, BASEDIR, filename)
+        
+        with open(output_path, 'w') as output_file:
+            output_file.write('----------------- ENVIRONMENT -------------------\n')
+            for key in sorted(self.env.keys()):
+                output_file.write('%s=%s\n' % (key, self.env[key]))
             
+            output_file.write('----------------- STDOUT -------------------\n')
+            output_file.write(stdout)
+            
+            output_file.write('----------------- STDERR -------------------\n')
+            output_file.write(stderr)
+
     def execute_command (self, command):
         shell_process = subprocess.Popen(args   = [command],
                                          stdout = subprocess.PIPE,
@@ -27,23 +43,7 @@ class IntegrationTestBase (unittest.TestCase):
                                          env    = self.env)
         
         stdout, stderr = shell_process.communicate()
-        
-        normalized_command = command.replace(' ', '_')
-        filename           = '%02d-command-%s' % (self.command_counter, normalized_command)
-        output_path        = os.path.join(self.base_dir, BASEDIR, filename)
-        
-        with open(output_path, 'w') as outputfile:
-            outputfile.write('----------------- ENVIRONMENT -------------------\n')
-            
-            for key in sorted(self.env.keys()):
-                outputfile.write('%s=%s\n' % (key, self.env[key]))
-                
-            outputfile.write('----------------- STDOUT -------------------\n')
-            outputfile.write(stdout)
-            
-            outputfile.write('----------------- STDERR -------------------\n')
-            outputfile.write(stderr)
-
+        self._write_output_file(command, stdout, stderr)
         self.command_counter += 1
 
         return shell_process.returncode
