@@ -5,7 +5,6 @@ from mock import Mock, patch, call, ANY
 from StringIO import StringIO
 
 from shtub import commandstub, BASEDIR, LOG_FILENAME
-
 from shtub.answer import Answer
 from shtub.execution import Execution
 from shtub.expectation import Expectation

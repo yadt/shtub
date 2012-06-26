@@ -1,10 +1,10 @@
 import unittest
 
 from os.path import exists, isdir, join, islink
-from shtub.frameworktestbase import FrameworkTestbase
+from integrationtest_support import IntegrationTestSupport
 
 
-class Test(FrameworkTestbase):
+class Test (IntegrationTestSupport):
     def test (self):
         self.prepare_testbed({'env_var': 'env_value'}, ['command_stub1', 'command_stub2'])
         

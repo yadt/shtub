@@ -1,9 +1,9 @@
 import unittest
 
-from shtub.frameworktestbase import FrameworkTestbase
+import integrationtest_support
 
 
-class Tests(FrameworkTestbase):
+class Tests (integrationtest_support.IntegrationTestSupport):
     def test (self):
         self.prepare_default_testbed(['command_stub'])
 

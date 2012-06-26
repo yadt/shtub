@@ -4,10 +4,10 @@ from os.path import join
 
 from shtub import BASEDIR, deserialize_expectations
 
-from shtub.frameworktestbase import FrameworkTestbase
+from integrationtest_support import IntegrationTestSupport
 
 
-class Test (FrameworkTestbase):
+class Test (IntegrationTestSupport):
     def test (self):
         self.prepare_default_testbed(['command_stub1', 'command_stub2'])
         

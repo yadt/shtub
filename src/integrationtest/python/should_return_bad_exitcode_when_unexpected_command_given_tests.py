@@ -6,10 +6,10 @@ from os import mkdir
 from os.path import abspath, dirname, exists, join
 
 from shtub.commandstub import handle_stub_call
-from shtub.frameworktestbase import FrameworkTestbase
+from integrationtest_support import IntegrationTestSupport
 
 
-class Test(FrameworkTestbase):
+class Test (IntegrationTestSupport):
     def test (self):
         test_dir = tempfile.mkdtemp()
         test_execution_dir = join(test_dir, 'test-execution')

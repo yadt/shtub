@@ -8,7 +8,6 @@ from select import select
 
 from shtub import RECORDED_CALLS_FILENAME, EXPECTATIONS_FILENAME, LOG_FILENAME, BASEDIR, \
             deserialize_expectations, deserialize_stub_executions, serialize_stub_executions
-
 from shtub.execution import Execution
         
 
