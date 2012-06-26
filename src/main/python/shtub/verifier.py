@@ -1,5 +1,4 @@
-from os.path import join
-from shtub import BASEDIR, deserialize_stub_executions
+from shtub import RECORDED_CALLS_FILENAME, deserialize_stub_executions
 from shtub.execution import Execution
 
 
@@ -20,8 +19,7 @@ class Verifier (object):
         self.recorded_calls = self.recorded_calls[1:]
     
     def __enter__ (self):
-        filename = join(self.base_dir, BASEDIR, 'recorded-calls')
-        self.recorded_calls = deserialize_stub_executions(filename)
+        self.recorded_calls = deserialize_stub_executions(RECORDED_CALLS_FILENAME)
         return self
     
     def __exit__(self, exception_type, exception_value, traceback):
