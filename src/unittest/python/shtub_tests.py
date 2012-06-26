@@ -42,9 +42,9 @@ class IntegrationtestsTests (unittest.TestCase):
                                    'arguments'      : ['-arg1', '-arg2', '-arg3'],
                                    'stdin'          : 'stdin',
                                    'current_answer' : 0,
-                                   'answers'        : [{'stdout': 'stdout',
-                                                        'stderr': 'stderr',
-                                                        'return_code': 15}]
+                                   'answers'        : [{'stdout'      : 'stdout',
+                                                        'stderr'      : 'stderr',
+                                                        'return_code' : 15}]
                                  }]
                 
         actual_expectations = deserialize_expectations('executions.json')
@@ -66,11 +66,11 @@ class IntegrationtestsTests (unittest.TestCase):
 
         serialize_stub_executions('executions.json', executions)
         
-        self.assertEquals(call([{'command': 'command',
-                                 'arguments': ['-arg1', '-arg2', '-arg3'],
-                                 'stdin': 'stdin'}], sort_keys=True, indent=4),
-                          json_mock.call_args)
+        expected_dictionary = {'command'   : 'command', 
+                               'arguments' : ['-arg1', '-arg2', '-arg3'], 
+                               'stdin'     : 'stdin'}
         
+        self.assertEquals(call([expected_dictionary], sort_keys=True, indent=4), json_mock.call_args)
         self.assertEquals(call('executions.json', 'w'), open_mock.call_args)
         self.assertEquals(call('[{"some": "json"}]'), fake_file.write.call_args)
 
