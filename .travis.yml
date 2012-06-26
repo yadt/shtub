@@ -8,5 +8,7 @@ before_script:
 script: "pyb"
 notifications:
   email:
-    - aelgru@gmail.com
+    - arne.hilmann@immobilienscout24.de
+    - udo.juettner@immobilienscout24.de
+    - michael.gruber@immobilienscout24.de
 
