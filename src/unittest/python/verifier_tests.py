@@ -10,6 +10,11 @@ class VerfierTest (unittest.TestCase):
         actual_verifier = Verifier('/abc/def')
         
         self.assertEquals('/abc/def', actual_verifier.base_dir)
+        
+    def test_should_initialize_recoreded_calls (self):
+        actual_verifier = Verifier('/abc/def')
+
+        self.assertEquals([], actual_verifier.recorded_calls)
     
     @patch('shtub.verifier.deserialize_stub_executions')
     def test_should_deserialize_recorded_calls_and_return_verifier_itself_when_entering_with_statement (self, deserialize_mock):
