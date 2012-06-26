@@ -2,7 +2,7 @@ import unittest
 
 from os.path import join
 
-from shtub import BASEDIR, deserialize_expectations
+from shtub import deserialize_expectations
 
 from integrationtest_support import IntegrationTestSupport
 
@@ -17,7 +17,7 @@ class Test (IntegrationTestSupport):
             fixture.expect('command_stub', ['-arg1', '-arg2', '-arg3'], 'stdin') \
                    .then_answer('Hello world.', 'Hello error!', 2)
 
-        expectations_filename = join(self.base_dir, BASEDIR, "expectations")
+        expectations_filename = join(self.base_dir, 'test-execution', 'expectations')
         actual_expectations = deserialize_expectations(expectations_filename)
         
         self.assertEquals(1, len(actual_expectations))

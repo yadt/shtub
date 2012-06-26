@@ -18,8 +18,8 @@ class Test (IntegrationTestSupport):
         for stub_name in ['command_stub1', 'command_stub2']:
             self.assertTrue(islink(join(actual_testbase.stubs_dir, stub_name)))
 
-        test_execution_filename = join(actual_testbase.base_dir, "test-execution")
-        self.assertTrue(exists(test_execution_filename), 'test-execution directory does not exist')
+        test_execution_filename = join(actual_testbase.base_dir, 'test-execution')
+        self.assertTrue(exists(test_execution_filename), 'directory test-execution does not exist')
         self.assertTrue(isdir(test_execution_filename), 'test-execution is not a directory!')
 
 

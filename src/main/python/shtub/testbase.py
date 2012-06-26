@@ -29,8 +29,8 @@ class IntegrationTestBase (unittest.TestCase):
         stdout, stderr = shell_process.communicate()
         
         normalized_command = command.replace(' ', '_')
-        filename = '%02d-command-%s' % (self.command_counter, normalized_command)
-        output_path = os.path.join(self.base_dir, BASEDIR, filename)
+        filename           = '%02d-command-%s' % (self.command_counter, normalized_command)
+        output_path        = os.path.join(self.base_dir, BASEDIR, filename)
         
         with open(output_path, 'w') as outputfile:
             outputfile.write('----------------- ENVIRONMENT -------------------\n')
@@ -74,21 +74,21 @@ class IntegrationTestBase (unittest.TestCase):
 
     def set_base_dir (self, base_dir):
         if base_dir:
-            self.base_dir = base_dir
+            self.base_dir         = base_dir
             self.cleanup_base_dir = False
         else:
-            self.base_dir = tempfile.mkdtemp(prefix='integration-test-')
+            self.base_dir         = tempfile.mkdtemp(prefix='integration-test-')
             self.cleanup_base_dir = True
 
         self.stubs_dir = os.path.join(self.base_dir, STUBS_DIR)
 
 
 class TestCase (unittest.TestCase):
-    def assertIsNone (self, given_object, msg=None):
+    def assertIsNone (self, given_object, msg = None):
         self.assertTrue(given_object is None, msg)
         
-    def assertIsNotNone (self, given_object, msg=None):
+    def assertIsNotNone (self, given_object, msg = None):
         self.assertTrue(given_object is not None, msg)
         
-    def assertIsInstance (self, given_object, class_or_type_or_tuple, msg=None):
+    def assertIsInstance (self, given_object, class_or_type_or_tuple, msg = None):
         self.assertTrue(isinstance(given_object, class_or_type_or_tuple), msg)

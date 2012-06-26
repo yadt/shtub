@@ -2,7 +2,7 @@ import unittest
 
 from os.path import join
 
-from shtub import BASEDIR, deserialize_expectations
+from shtub import deserialize_expectations
 
 from integrationtest_support import IntegrationTestSupport
 
@@ -26,7 +26,7 @@ class Test (IntegrationTestSupport):
         self.assertEquals(0, actual_return_code1)
         self.assertEquals(0, actual_return_code2)
 
-        expectations_filename = join(self.base_dir, BASEDIR, "expectations")
+        expectations_filename = join(self.base_dir, 'test-execution', 'expectations')
         actual_expectations = deserialize_expectations(expectations_filename)
         
         self.assertEquals(2, len(actual_expectations))

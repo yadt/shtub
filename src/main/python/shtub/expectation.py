@@ -6,22 +6,21 @@ class Expectation (Execution):
     def __init__ (self, command, arguments, stdin, initial_answers=[], initial_current_answer=0):
         super(Expectation, self).__init__(command, arguments, stdin)
         
-        self.answers = []
+        self.answers        = []
         self.current_answer = initial_current_answer
         
         for answer in initial_answers:
             self.answers.append(answer)
             
     def as_dictionary (self):
-        result = Execution.as_dictionary(self)
-
         answers_list = []
         
         for answer in self.answers:
             answer_dictionary = answer.as_dictionary()
             answers_list.append(answer_dictionary)
         
-        result['answers'] = answers_list
+        result = Execution.as_dictionary(self)
+        result['answers']        = answers_list
         result['current_answer'] = self.current_answer        
         return result
 

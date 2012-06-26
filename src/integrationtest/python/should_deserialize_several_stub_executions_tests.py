@@ -2,8 +2,9 @@ import unittest
 
 from os.path import join
 
-from shtub import BASEDIR, deserialize_stub_executions
 from integrationtest_support import IntegrationTestSupport
+
+from shtub import deserialize_stub_executions
 
 
 class Test (IntegrationTestSupport):
@@ -25,7 +26,7 @@ class Test (IntegrationTestSupport):
         self.assertEquals(0, actual_return_code1)
         self.assertEquals(0, actual_return_code2)
 
-        path = join(self.base_dir, BASEDIR, "recorded-calls")
+        path = join(self.base_dir, 'test-execution', 'recorded-calls')
         
         actual_calls = deserialize_stub_executions(path)
         

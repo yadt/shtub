@@ -59,13 +59,13 @@ class VerfierTest (unittest.TestCase):
 
         self.assertEquals(call('/hello/world/test-execution/recorded-calls'), deserialize_mock.call_args)
 
-
     @patch('shtub.verifier.deserialize_stub_executions')
     def test_should_verify_all_recorded_calls_when_all_recorded_calls_fit_expectation (self, deserialize_mock):
         verifier = Verifier('/hello/world')
         
         stub_execution1 = Execution('any_command1', ['1any_arg1', '1any_arg2'], 'any_stdin1')
         stub_execution2 = Execution('any_command2', ['2any_arg1', '2any_arg2'], 'any_stdin2')
+        
         deserialize_mock.return_value = [stub_execution1, stub_execution2]
         
         with verifier as veri:

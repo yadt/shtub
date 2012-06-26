@@ -5,8 +5,9 @@ import tempfile
 from os import mkdir
 from os.path import abspath, dirname, exists, join
 
-from shtub.commandstub import handle_stub_call
 from integrationtest_support import IntegrationTestSupport
+
+from shtub.commandstub import handle_stub_call
 
 
 class Test (IntegrationTestSupport):
@@ -14,11 +15,7 @@ class Test (IntegrationTestSupport):
         test_dir              = tempfile.mkdtemp()
         test_execution_dir    = join(test_dir, 'test-execution')
         expectations_filename = join(test_execution_dir, 'expectations')
-        
-        mkdir(test_execution_dir)
-
-        with open(expectations_filename, 'w') as expectations_file:
-            expectation_json = """[{
+        expectation_json      = """[{
     "arguments": ["-arg1", "-arg2", "-arg3"],
     "command": "not_commandstub.py",
     "stdin": "Hello world.",
@@ -31,6 +28,10 @@ class Test (IntegrationTestSupport):
         }
     ]
 }]"""
+        
+        mkdir(test_execution_dir)
+
+        with open(expectations_filename, 'w') as expectations_file:
             expectations_file.write(expectation_json)
             
         command_stub_path = abspath(join(dirname(__file__), '..', '..', 'main', 'python', 'shtub', 'commandstub.py'))

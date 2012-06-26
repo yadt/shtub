@@ -18,9 +18,9 @@ class IntegrationtestsTests (unittest.TestCase):
         executions = [Execution('command', ['-arg1', '-arg2', '-arg3'], 'stdin')]
         json_string = "[{'command': 'command', 'arguments': ['-arg1', '-arg2', '-arg3'], 'stdin': 'stdin'}]"
         fake_file.read.return_value = json_string
-        json_mock.return_value = [{'command': 'command',
-                                   'arguments': ['-arg1', '-arg2', '-arg3'],
-                                   'stdin': 'stdin'}]
+        json_mock.return_value = [{'command'   : 'command',
+                                   'arguments' : ['-arg1', '-arg2', '-arg3'],
+                                   'stdin'     : 'stdin'}]
                 
         actual_executions = deserialize_stub_executions('executions.json')
         
