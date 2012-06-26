@@ -7,6 +7,7 @@ use_plugin('python.integrationtest')
 use_plugin('python.distutils')
 use_plugin('python.pychecker')
 use_plugin('python.pydev')
+use_plugin('python.pylint')
 
 default_task = ['analyze', 'run_integration_tests']
 
