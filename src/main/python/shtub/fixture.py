@@ -17,7 +17,7 @@ class Fixture (object):
     def __enter__ (self):
         return self
     
-    def __exit__(self, exception_type, exception_value, traceback):
+    def __exit__ (self, exception_type, exception_value, traceback):
         __pychecker__ = 'unusednames=exception_type,exception_value,traceback'
         filename = os.path.join(self.base_dir, BASEDIR, 'expectations')
         

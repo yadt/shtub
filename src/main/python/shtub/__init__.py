@@ -11,7 +11,7 @@ BASEDIR                 = 'test-execution'
 EXPECTATIONS_FILENAME   = join(BASEDIR, 'expectations')
 RECORDED_CALLS_FILENAME = join(BASEDIR, 'recorded-calls')
 LOG_FILENAME            = join(BASEDIR, 'log')
-STUBS_DIR               = join(BASEDIR, 'stubs')
+STUBS_DIRECTORY         = join(BASEDIR, 'stubs')
 
 
 def serialize_stub_executions (filename, executions):

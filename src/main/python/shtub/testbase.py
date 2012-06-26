@@ -4,7 +4,7 @@ import shutil
 import subprocess
 import tempfile
 
-from shtub import BASEDIR, STUBS_DIR
+from shtub import BASEDIR, STUBS_DIRECTORY
 from shtub.fixture import Fixture
 from shtub.verifier import Verifier
 
@@ -18,7 +18,7 @@ class IntegrationTestBase (unittest.TestCase):
         if self.cleanup_base_dir and os.path.exists(self.base_dir):
             shutil.rmtree(self.base_dir)
 
-    def _write_output_file(self, command, stdout, stderr):
+    def _write_output_file (self, command, stdout, stderr):
         normalized_command = command.replace(' ', '_')
         filename = '%02d-command-%s' % (self.command_counter, normalized_command)
         output_path = os.path.join(self.base_dir, BASEDIR, filename)
@@ -80,7 +80,7 @@ class IntegrationTestBase (unittest.TestCase):
             self.base_dir         = tempfile.mkdtemp(prefix='integration-test-')
             self.cleanup_base_dir = True
 
-        self.stubs_dir = os.path.join(self.base_dir, STUBS_DIR)
+        self.stubs_dir = os.path.join(self.base_dir, STUBS_DIRECTORY)
 
 
 class TestCase (unittest.TestCase):
