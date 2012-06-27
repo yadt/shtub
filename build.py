@@ -11,7 +11,7 @@ use_plugin('python.pylint')
 
 default_task = ['analyze', 'run_integration_tests']
 
-version = '0.1.7'
+version = '0.1.8'
 summary = 'shtub - shell command stub'
 authors = [
     Author('Michael Gruber', 'aelgru@gmail.com'),

@@ -66,3 +66,11 @@ echo -n %s | %s %s
         
         self.assertEquals(expected_file_content, actual_file_content.getvalue())
 
+    def assert_directory_exists(self, directory_name):
+        it_exists = os.path.exists(directory_name)
+        self.assertTrue(it_exists, 'directory %s does not exist' % directory_name)
+        
+        is_a_directory = os.path.isdir(directory_name)
+        self.assertTrue(is_a_directory, '%s is not a directory!' % directory_name)
+
+
