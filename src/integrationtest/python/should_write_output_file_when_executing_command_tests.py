@@ -1,6 +1,6 @@
 import unittest
 
-from os.path import exists, isdir, islink, join
+from os.path import join
 
 from StringIO import StringIO
 
