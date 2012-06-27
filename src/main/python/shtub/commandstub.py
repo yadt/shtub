@@ -3,6 +3,7 @@
 import logging
 import os
 import sys
+import fcntl
 
 from select import select
 
@@ -18,7 +19,20 @@ from shtub import BASEDIR,                          \
 from shtub.execution import Execution
         
 
+def lock ():
+    logging.info('Locking process %s' % os.getpid())
+    file_handle = open(os.path.join(BASEDIR, 'LOCK'), 'a')
+    fcntl.flock(file_handle, fcntl.LOCK_EX)
+    logging.info('Lock acquired by process %s' % os.getpid())
+    
+    return file_handle
+
+def unlock (file_handle):
+    logging.info('Unlocking %s' % os.getpid())
+    file_handle.close()
+
 def record_call (execution):
+    file_handle = lock()
     recorded_calls = []
     
     if os.path.exists(RECORDED_CALLS_FILENAME):
@@ -29,6 +43,8 @@ def record_call (execution):
     serialize_stub_executions(RECORDED_CALLS_FILENAME, recorded_calls)
     
     logging.info('Recorded %s calls' % len(recorded_calls))
+    
+    unlock(file_handle)
  
 def send_answer (answer):
     logging.info('Sending answer: %s' % answer)
@@ -44,7 +60,7 @@ def send_answer (answer):
 def dispatch (execution):
     expectations = deserialize_expectations(EXPECTATIONS_FILENAME)
     
-    logging.info('Got execution: %s', execution)
+    logging.info('Got execution: %s in process %s' % (execution, os.getpid()))
 
     for expectation in expectations:
         if execution.fulfills(expectation):

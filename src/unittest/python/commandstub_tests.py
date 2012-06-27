@@ -54,11 +54,13 @@ class Tests (shtub.testbase.TestCase):
         
         self.assertEquals(call('test-execution/expectations'), deserialize_mock.call_args)
         
-    
+    @patch('shtub.commandstub.unlock')
+    @patch('shtub.commandstub.lock')
     @patch('shtub.commandstub.serialize_stub_executions')
     @patch('shtub.commandstub.deserialize_stub_executions', return_value=[])
     @patch('os.path.exists', return_value=True)
-    def test_should_append_execution_and_serialize (self, exists_mock, deserialize_mock, serialize_mock):
+    def test_should_append_execution_and_serialize (self, \
+            exists_mock, deserialize_mock, serialize_mock, lock_mock, unlock_mock):
         execution = Execution('command', ['-arg1', '-arg2', '-arg3'], 'stdin')
         
         commandstub.record_call(execution)
@@ -69,20 +71,26 @@ class Tests (shtub.testbase.TestCase):
         
         self.assertEquals(str(execution), str(actual_recorded_calls[0]))
 
+    @patch('shtub.commandstub.unlock')
+    @patch('shtub.commandstub.lock')
     @patch('shtub.commandstub.serialize_stub_executions')
     @patch('shtub.commandstub.deserialize_stub_executions')
     @patch('os.path.exists', return_value=True)
-    def test_should_deserialize_when_file_exists (self, exists_mock, deserialize_mock, serialize_mock):
+    def test_should_deserialize_when_file_exists (self, \
+            exists_mock, deserialize_mock, serialize_mock, lock_mock, unlock_mock):
         execution = Execution('command', ['-arg1', '-arg2', '-arg3'], 'stdin')
         
         commandstub.record_call(execution)
         
         self.assertEquals(call('test-execution/recorded-calls'), deserialize_mock.call_args)
 
+    @patch('shtub.commandstub.unlock')
+    @patch('shtub.commandstub.lock')
     @patch('shtub.commandstub.serialize_stub_executions')
     @patch('shtub.commandstub.deserialize_stub_executions')
     @patch('os.path.exists', return_value=False)
-    def test_should_not_deserialize_when_file_does_not_exist (self, exists_mock, deserialize_mock, serialize_mock):
+    def test_should_not_deserialize_when_file_does_not_exist (self, \
+                exists_mock, deserialize_mock, serialize_mock, lock_mock, unlock_mock):
         execution = Execution('command', ['-arg1', '-arg2', '-arg3'], 'stdin')
         
         commandstub.record_call(execution)
@@ -201,3 +209,24 @@ class Tests (shtub.testbase.TestCase):
         actual_execution = str(dispatch_mock.call_args[0][0])
         
         self.assertEquals(expected_execution, actual_execution)
+
+    @patch('shtub.commandstub.fcntl')
+    @patch('__builtin__.open')
+    def test_should_create_lock (self, open_mock, fcntl_mock):
+        fcntl_mock.LOCK_EX = 'LOCK_EX'
+        file_handle_mock = Mock()
+        open_mock.return_value = file_handle_mock
+        
+        actual_file_handle = commandstub.lock()
+        
+        self.assertEquals(file_handle_mock, actual_file_handle)
+        self.assertEquals(call('test-execution/LOCK', 'a'), open_mock.call_args)
+        self.assertEquals(call(file_handle_mock, fcntl_mock.LOCK_EX), fcntl_mock.flock.call_args)
+    
+    def test_should_unlock (self):
+        file_handle_mock = Mock()
+        
+        commandstub.unlock(file_handle_mock)
+        
+        self.assertEquals(call(), file_handle_mock.close.call_args)
+    
