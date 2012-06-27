@@ -46,12 +46,6 @@ Hello error.""") % (self.create_path(), self.create_python_path())
         
         self.assertEquals(expected_file_content, actual_file_content.getvalue())
 
-    def assert_stub_links_created(self, actual_testbase, stubbed_local_command_list):
-        self.assertTrue(isdir(actual_testbase.stubs_dir))
-        
-        for stub_name in stubbed_local_command_list:
-            self.assertTrue(islink(join(actual_testbase.stubs_dir, stub_name)))
-
 
 if __name__ == '__main__':
     unittest.main()
