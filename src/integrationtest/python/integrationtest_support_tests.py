@@ -9,8 +9,8 @@ from StringIO import StringIO
 import integrationtest_support
 
 
-class Test (integrationtest_support.IntegrationTestSupport):
-    def test (self):
+class IntegrationTestSupportTest (integrationtest_support.IntegrationTestSupport):
+    def test_should_create_command_wrapper (self):
         self.prepare_default_testbed(['command_stub'])
 
         self.create_command_wrapper('command_wrapper', 'command_stub', ['-arg1', '-arg2', '-arg3'], 'stdin')
