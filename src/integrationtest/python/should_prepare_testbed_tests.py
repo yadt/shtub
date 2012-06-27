@@ -1,11 +1,11 @@
 import unittest
-
-from os.path import join, islink
+import os
 
 import integrationtest_support
 
 
 class Test (integrationtest_support.IntegrationTestSupport):
+
     def test (self):
         self.prepare_testbed({'env_var': 'env_value'}, ['command_stub1', 'command_stub2'])
         
@@ -17,9 +17,10 @@ class Test (integrationtest_support.IntegrationTestSupport):
         self.assert_directory_exists(actual_testbase.stubs_dir)
         
         for stub_name in ['command_stub1', 'command_stub2']:
-            self.assertTrue(islink(join(actual_testbase.stubs_dir, stub_name)))
+            symlink_to_stub = os.path.join(actual_testbase.stubs_dir, stub_name)
+            self.assert_is_link(symlink_to_stub)
 
-        test_execution_directory = join(actual_testbase.base_dir, 'test-execution')
+        test_execution_directory = os.path.join(actual_testbase.base_dir, 'test-execution')
         self.assert_directory_exists(test_execution_directory)
 
 

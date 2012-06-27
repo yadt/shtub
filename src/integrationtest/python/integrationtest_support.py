@@ -56,7 +56,7 @@ echo -n %s | %s %s
 
     def assert_file_exists (self, filename):
         file_exists = os.path.exists(filename)
-        self.assertTrue(file_exists, 'file %s does not exist' % filename)
+        self.assertTrue(file_exists, 'file %s does not exist!' % filename)
 
     def assert_file_content (self, filename, expected_file_content):
         actual_file_content = StringIO()
@@ -68,9 +68,13 @@ echo -n %s | %s %s
 
     def assert_directory_exists(self, directory_name):
         it_exists = os.path.exists(directory_name)
-        self.assertTrue(it_exists, 'directory %s does not exist' % directory_name)
+        self.assertTrue(it_exists, 'directory %s does not exist!' % directory_name)
         
         is_a_directory = os.path.isdir(directory_name)
         self.assertTrue(is_a_directory, '%s is not a directory!' % directory_name)
+
+    def assert_is_link(self, filename):
+        file_is_a_link = os.path.islink(filename)
+        return self.assertTrue(file_is_a_link, '%s is not a link!')
 
 
