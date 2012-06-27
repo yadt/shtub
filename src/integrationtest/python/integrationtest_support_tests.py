@@ -1,6 +1,5 @@
 import unittest
 
-import stat
 import os
 
 from os.path import join
@@ -17,8 +16,7 @@ class IntegrationTestSupportTest (integrationtest_support.IntegrationTestSupport
         command_wrapper_filename = join(self.stubs_dir, 'command_wrapper')
         
         self.assert_file_exists(command_wrapper_filename)
-        file_permissions = stat.S_IMODE(os.stat(command_wrapper_filename).st_mode)
-        self.assertEqual(0o755, file_permissions)
+        self.assert_file_permissions(command_wrapper_filename, 0o755)
         
         expected_file_content = """#!/usr/bin/env bash
 

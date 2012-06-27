@@ -1,7 +1,9 @@
 import os
+import stat
+
+from StringIO import StringIO
 
 import shtub.testbase
-from StringIO import StringIO
 
 
 class IntegrationTestSupport (shtub.testbase.IntegrationTestBase):
@@ -46,7 +48,13 @@ echo -n %s | %s %s
         
         self.prepare_testbed(env, stubs_list)
 
-    def assert_file_exists(self, filename):
+    def assert_file_permissions (self, filename, expected_permissions):
+        actual_permissions = stat.S_IMODE(os.stat(filename).st_mode)
+        actual_permissions_as_oct = str(oct(actual_permissions))
+        expected_permissions_as_oct = str(oct(expected_permissions))
+        self.assertEqual(expected_permissions_as_oct, actual_permissions_as_oct)
+
+    def assert_file_exists (self, filename):
         file_exists = os.path.exists(filename)
         self.assertTrue(file_exists, 'file %s does not exist' % filename)
 
