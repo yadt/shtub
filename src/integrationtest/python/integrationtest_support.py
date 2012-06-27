@@ -46,6 +46,10 @@ echo -n %s | %s %s
         
         self.prepare_testbed(env, stubs_list)
 
+    def assert_file_exists(self, filename):
+        file_exists = os.path.exists(filename)
+        self.assertTrue(file_exists, 'file %s does not exist' % filename)
+
     def assert_file_content(self, command_wrapper_filename, expected_file_content):
         actual_file_content = StringIO()
         with open(command_wrapper_filename) as cmd_wrapper_file:
