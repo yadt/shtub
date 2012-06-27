@@ -34,9 +34,10 @@ echo -n %s | %s %s
         return path
     
     def create_python_path (self):
-        pythonpath = os.path.abspath(os.path.join(os.path.abspath(__file__), '.'))
+        current_file = os.path.abspath(__file__)
+        pythonpath = os.path.abspath(os.path.join(current_file, '.'))
         pythonpath += os.pathsep 
-        pythonpath += os.path.abspath(os.path.join(os.path.abspath(__file__), '..', '..', '..', 'main', 'python'))
+        pythonpath += os.path.abspath(os.path.join(current_file, '..', '..', '..', 'main', 'python'))
         
         return pythonpath
     
