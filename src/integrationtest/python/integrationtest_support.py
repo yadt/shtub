@@ -58,10 +58,10 @@ echo -n %s | %s %s
         file_exists = os.path.exists(filename)
         self.assertTrue(file_exists, 'file %s does not exist' % filename)
 
-    def assert_file_content(self, command_wrapper_filename, expected_file_content):
+    def assert_file_content (self, filename, expected_file_content):
         actual_file_content = StringIO()
-        with open(command_wrapper_filename) as cmd_wrapper_file:
-            for line in cmd_wrapper_file:
+        with open(filename) as actual_file:
+            for line in actual_file:
                 actual_file_content.write(line)
         
         self.assertEquals(expected_file_content, actual_file_content.getvalue())
