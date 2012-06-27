@@ -6,11 +6,14 @@ import sys
 
 from select import select
 
-from shtub import RECORDED_CALLS_FILENAME, EXPECTATIONS_FILENAME, \
-                  LOG_FILENAME, BASEDIR, READ_STDIN_TIMEOUT_IN_SECONDS, \
-                  deserialize_expectations, deserialize_stub_executions, \
+from shtub import BASEDIR,                          \
+                  EXPECTATIONS_FILENAME,            \
+                  LOG_FILENAME,                     \
+                  RECORDED_CALLS_FILENAME,          \
+                  READ_STDIN_TIMEOUT_IN_SECONDS,    \
+                  deserialize_expectations,         \
+                  deserialize_stub_executions,      \
                   serialize_stub_executions
-
 
 from shtub.execution import Execution
         
