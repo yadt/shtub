@@ -6,12 +6,14 @@ from shtub.execution import Execution
 from shtub.expectation import Expectation
 
 
-BASEDIR                 = 'test-execution'
+BASEDIR                         = 'test-execution'
 
-EXPECTATIONS_FILENAME   = join(BASEDIR, 'expectations')
-RECORDED_CALLS_FILENAME = join(BASEDIR, 'recorded-calls')
-LOG_FILENAME            = join(BASEDIR, 'log')
-STUBS_DIRECTORY         = join(BASEDIR, 'stubs')
+EXPECTATIONS_FILENAME           = join(BASEDIR, 'expectations')
+RECORDED_CALLS_FILENAME         = join(BASEDIR, 'recorded-calls')
+LOG_FILENAME                    = join(BASEDIR, 'log')
+STUBS_DIRECTORY                 = join(BASEDIR, 'stubs')
+
+READ_STDIN_TIMEOUT_IN_SECONDS   = 1
 
 
 def serialize_stub_executions (filename, executions):

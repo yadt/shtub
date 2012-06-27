@@ -40,7 +40,7 @@ echo -n %s | %s %s
     def prepare_default_testbed (self, stubs_list):
         path        = self.create_path()
         python_path = self.create_python_path()
-        env         = {'PATH': path,
-                       'PYTHONPATH': python_path}
+        env         = {'PATH'       : path,
+                       'PYTHONPATH' : python_path}
         
         self.prepare_testbed(env, stubs_list)

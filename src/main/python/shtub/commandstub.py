@@ -6,8 +6,11 @@ import sys
 
 from select import select
 
-from shtub import RECORDED_CALLS_FILENAME, EXPECTATIONS_FILENAME, LOG_FILENAME, BASEDIR, \
-            deserialize_expectations, deserialize_stub_executions, serialize_stub_executions
+from shtub import RECORDED_CALLS_FILENAME, EXPECTATIONS_FILENAME, \
+                  LOG_FILENAME, BASEDIR, READ_STDIN_TIMEOUT_IN_SECONDS, \
+                  deserialize_expectations, deserialize_stub_executions, \
+                  serialize_stub_executions
+
 from shtub.execution import Execution
         
 
@@ -52,7 +55,7 @@ def dispatch (execution):
     sys.exit(255)
  
 def read_stdin ():
-    read_list, _, _ = select([sys.stdin], [], [], 1)
+    read_list, _, _ = select([sys.stdin], [], [], READ_STDIN_TIMEOUT_IN_SECONDS)
     
     if len(read_list) > 0:
         return read_list[0].read()
