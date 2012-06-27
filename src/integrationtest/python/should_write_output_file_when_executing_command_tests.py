@@ -20,21 +20,6 @@ class Test (integrationtest_support.IntegrationTestSupport):
         self.execute_command('command_wrapper')
         self.execute_command('command_wrapper')
 
-        actual_testbase = self
-
-        self.assert_correct_output_file_content(actual_testbase, '00-command-command_wrapper')
-        self.assert_correct_output_file_content(actual_testbase, '01-command-command_wrapper')
-
-
-    def assert_correct_output_file_content(self, actual_testbase, output_filename):
-        absolute_output_filename = join(actual_testbase.base_dir, BASEDIR, output_filename)
-        self.assertTrue(exists(absolute_output_filename), 'Output file does not exist.')
-        
-        actual_file_content = StringIO()
-        with open(absolute_output_filename) as cmd_wrapper_file:
-            for line in cmd_wrapper_file:
-                actual_file_content.write(line)
-                
         expected_file_content = ("""----------------- ENVIRONMENT -------------------
 PATH=%s
 PYTHONPATH=%s
@@ -42,8 +27,12 @@ PYTHONPATH=%s
 Hello world!
 ----------------- STDERR -------------------
 Hello error.""") % (self.create_path(), self.create_python_path())
+
+        output_filename_00 = join(self.base_dir, 'test-execution', '00-command-command_wrapper')
+        self.assert_file_content(output_filename_00, expected_file_content)
         
-        self.assertEquals(expected_file_content, actual_file_content.getvalue())
+        output_filename_01 = join(self.base_dir, 'test-execution', '01-command-command_wrapper')
+        self.assert_file_content(output_filename_01, expected_file_content)
 
 
 if __name__ == '__main__':
