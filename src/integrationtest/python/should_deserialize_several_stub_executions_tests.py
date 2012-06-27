@@ -10,7 +10,6 @@ from shtub import deserialize_stub_executions
 class Test (integrationtest_support.IntegrationTestSupport):
     def test (self):
         self.prepare_default_testbed(['command_stub1', 'command_stub2'])
-                
         self.create_command_wrapper('command_wrapper1', 'command_stub1', ['-arg1', '-arg2', '-arg3'], 'stdin1')
         self.create_command_wrapper('command_wrapper2', 'command_stub2', ['-arg6', '-arg7', '-arg8'], 'stdin2')
         

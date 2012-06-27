@@ -8,7 +8,6 @@ import integrationtest_support
 class Test (integrationtest_support.IntegrationTestSupport):       
     def test (self):
         self.prepare_default_testbed(['command_stub', 'command_stub1'])
-
         self.create_command_wrapper('command_wrapper1', 'command_stub1', ['-arg1', '-arg2', '-arg3'], 'stdin1')
         
         with self.fixture() as fixture:

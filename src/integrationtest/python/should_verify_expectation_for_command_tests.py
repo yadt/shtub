@@ -6,7 +6,6 @@ import integrationtest_support
 class Tests (integrationtest_support.IntegrationTestSupport):
     def test (self):
         self.prepare_default_testbed(['command_stub'])
-
         self.create_command_wrapper('command_wrapper', 'command_stub', ['-arg1', '-arg2', '-arg3'], 'stdin' )
 
         with self.fixture() as fixture:
