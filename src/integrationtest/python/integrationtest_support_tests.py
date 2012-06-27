@@ -4,7 +4,6 @@ import stat
 import os
 
 from os.path import exists, join
-from StringIO import StringIO
 
 import integrationtest_support
 
@@ -21,12 +20,12 @@ class IntegrationTestSupportTest (integrationtest_support.IntegrationTestSupport
         file_permissions = stat.S_IMODE(os.stat(command_wrapper_filename).st_mode)
         self.assertEqual(0o755, file_permissions)
         
-        actual_file_content = StringIO()
-        with open(command_wrapper_filename) as cmd_wrapper_file:
-            for line in cmd_wrapper_file:
-                actual_file_content.write(line)
-            
-        self.assertEquals('#!/usr/bin/env bash\n\necho -n stdin | command_stub -arg1 -arg2 -arg3\n\n', actual_file_content.getvalue())
+        expected_file_content = """#!/usr/bin/env bash
+
+echo -n stdin | command_stub -arg1 -arg2 -arg3
+
+"""
+        self.assert_file_content(command_wrapper_filename, expected_file_content)
 
 
 if __name__ == '__main__':

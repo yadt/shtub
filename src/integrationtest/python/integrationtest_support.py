@@ -1,6 +1,7 @@
 import os
 
 import shtub.testbase
+from StringIO import StringIO
 
 
 class IntegrationTestSupport (shtub.testbase.IntegrationTestBase):
@@ -44,3 +45,12 @@ echo -n %s | %s %s
                        'PYTHONPATH' : python_path}
         
         self.prepare_testbed(env, stubs_list)
+
+    def assert_file_content(self, command_wrapper_filename, expected_file_content):
+        actual_file_content = StringIO()
+        with open(command_wrapper_filename) as cmd_wrapper_file:
+            for line in cmd_wrapper_file:
+                actual_file_content.write(line)
+        
+        self.assertEquals(expected_file_content, actual_file_content.getvalue())
+
