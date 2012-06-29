@@ -4,6 +4,7 @@ python:
   - "2.7"
 before_script:
   - sudo apt-get install python-coverage python-django pychecker pymetrics python-setuptools pylint
+  - sudo pip install unittest2
   - sudo easy_install http://python-builder.googlecode.com/files/python-builder-0.6.2.tar.gz
 script: "pyb"
 notifications:
