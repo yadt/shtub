@@ -82,13 +82,3 @@ class IntegrationTestBase (unittest.TestCase):
 
         self.stubs_dir = os.path.join(self.base_dir, STUBS_DIRECTORY)
 
-
-class TestCase (unittest.TestCase):
-    def assertIsNone (self, given_object, msg = None):
-        self.assertTrue(given_object is None, msg)
-        
-    def assertIsNotNone (self, given_object, msg = None):
-        self.assertTrue(given_object is not None, msg)
-        
-    def assertIsInstance (self, given_object, class_or_type_or_tuple, msg = None):
-        self.assertTrue(isinstance(given_object, class_or_type_or_tuple), msg)
