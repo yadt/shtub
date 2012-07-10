@@ -9,7 +9,7 @@ before_script:
   - sudo apt-get install python-setuptools
   - sudo apt-get install pylint
   - sudo pip install unittest2
-  - sudo easy_install http://python-builder.googlecode.com/files/python-builder-0.6.2.tar.gz
+  - sudo easy_install http://python-builder.googlecode.com/files/python-builder-0.6.3.tar.gz
 script: "pyb"
 notifications:
   email:
