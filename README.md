@@ -8,7 +8,7 @@ shell command stub
 Integration test framework which allows to *stub shell commands*: if you have to assure that the application is calling the right shell commands in the correct order.
 
  example
-
+'''python
     class StubbingSshExampleTest (shtub.testbase.IntegrationTestBase):
         def test_should_stub_ssh_then_execute_ssh_and_verify_expectation (self):
             # given
@@ -31,3 +31,4 @@ Integration test framework which allows to *stub shell commands*: if you have to
     
         if __name__ == '__main__':
             unittest.main()
+'''
