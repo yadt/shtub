@@ -14,7 +14,7 @@ class StubbingSshExampleTest (shtub.testbase.IntegrationTestBase):
     def test_should_stub_ssh_then_execute_ssh_and_verify_expectation (self):
         # given
         env = {'PATH': ..., 'PYTHONPATH': ...}
-	stubs_list = ['ssh']
+        stubs_list = ['ssh']
         self.prepare_testbed(env, stubs_list)
 
         with self.fixture() as fixture:
