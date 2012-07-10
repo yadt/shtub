@@ -11,7 +11,7 @@ use_plugin('python.pylint')
 
 default_task = ['analyze', 'run_integration_tests']
 
-version = '0.1.15'
+version = '0.1.16'
 summary = 'shtub - shell command stub'
 authors = [
     Author('Michael Gruber', 'aelgru@gmail.com'),
@@ -19,7 +19,7 @@ authors = [
     Author('Alexander Metzner', 'alexander.metzner@gmail.com')
 ]
 
-url = 'https://github.com/shtub/shtub'
+url = 'https://github.com/yadt/shtub'
 license = 'GNU GPL v3'
 
 @init
