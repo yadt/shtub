@@ -5,15 +5,17 @@ shell command stub
 
 [![Build Status](https://secure.travis-ci.org/yadt/shtub.png?branch=master)](http://travis-ci.org/yadt/shtub)
 
-Integration test framework which allows to *stub shell commands*: if you have to assure that the application is calling the right shell commands in the correct order.
+Integration test framework which allows to *stub shell commands*:
+if you have to assure that the application is calling the right shell commands in the correct order.
 
- example
+ A simple example stubbing the "ssh" command:
 ```python
 class StubbingSshExampleTest (shtub.testbase.IntegrationTestBase):
     def test_should_stub_ssh_then_execute_ssh_and_verify_expectation (self):
         # given
-        env = {'PATH'       : ..., 'PYTHONPATH' : ...}
-        self.prepare_testbed(env, ['ssh'])
+        env = {'PATH': ..., 'PYTHONPATH': ...}
+	stubs_list = ['ssh']
+        self.prepare_testbed(env, stubs_list)
 
         with self.fixture() as fixture:
             fixture.expect('ssh', ['-arg1', '-arg2', '-arg3'], None).then_return(0)
@@ -29,6 +31,7 @@ class StubbingSshExampleTest (shtub.testbase.IntegrationTestBase):
 
     # ...
 
-    if __name__ == '__main__':
-        unittest.main()
+# run the test
+if __name__ == '__main__':
+    unittest.main()
 ```
