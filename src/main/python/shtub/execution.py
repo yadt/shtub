@@ -51,4 +51,6 @@ class Execution (object):
     
     @staticmethod
     def from_dictionary (input_map):
-        return Execution(input_map['command'], input_map['arguments'], input_map['stdin'])
+        return Execution(input_map['command'],
+                         input_map['arguments'],
+                         input_map['stdin'])

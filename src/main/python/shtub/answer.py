@@ -35,4 +35,6 @@ class Answer (object):
 
     @staticmethod
     def from_dictionary (input_map):
-        return Answer(input_map['stdout'], input_map['stderr'], input_map['return_code'])
+        return Answer(input_map['stdout'],
+                      input_map['stderr'],
+                      input_map['return_code'])

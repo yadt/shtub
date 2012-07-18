@@ -87,7 +87,8 @@ def dispatch (execution):
             send_answer(answer)
             return
 
-    logging.error('Execution does not fulfill requirements by any given expectation.')
+    logging.error('Given execution does not fulfill requirements '
+                  'of any expectation.')
     sys.exit(255)
  
 def read_stdin ():
@@ -102,9 +103,10 @@ def handle_stub_call ():
     if not os.path.exists(BASEDIR):
         os.mkdir(BASEDIR)
 
+    logging_format = '%(asctime)s %(levelname)5s [%(name)s] - %(message)s'
     logging.basicConfig(filename = LOG_FILENAME,
                         level    = logging.INFO,
-                        format   = '%(asctime)s %(levelname)5s [%(name)s] - %(message)s')
+                        format   = logging_format)
 
     command   = os.path.basename(sys.argv[0])
     arguments = sys.argv[1:]

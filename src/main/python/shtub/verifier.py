@@ -28,11 +28,15 @@ class Verifier (object):
         expectation = Execution(command, arguments, stdin)
 
         if not self.recorded_calls:
-            raise AssertionError('No more recorded calls when verifying %s' % expectation)
+            raise AssertionError('No more recorded calls when verifying %s'
+                                 % expectation)
         
         if not self.recorded_calls[0].fulfills(expectation):
-            raise AssertionError('Recorded call (execution) does not fulfill expectation:\n'
-                               + 'Expected %s\nActual   %s\n' % (expectation, self.recorded_calls[0]))
+            raise AssertionError('Recorded call (execution) '
+                                 'does not fulfill expectation:\n'
+                                 'Expected %s\n'
+                                 'Actual   %s\n'
+                                 % (expectation, self.recorded_calls[0]))
         
         self.recorded_calls = self.recorded_calls[1:]
     

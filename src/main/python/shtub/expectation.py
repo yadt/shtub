@@ -19,13 +19,14 @@ from shtub.execution import Execution
 
 
 class Expectation (Execution):
-    def __init__ (self, command, arguments, stdin, initial_answers=[], initial_current_answer=0):
+    def __init__ (self, command, arguments, stdin,
+                  answers=[], initial_answer=0):
         super(Expectation, self).__init__(command, arguments, stdin)
         
         self.answers        = []
-        self.current_answer = initial_current_answer
+        self.current_answer = initial_answer
         
-        for answer in initial_answers:
+        for answer in answers:
             self.answers.append(answer)
             
     def as_dictionary (self):

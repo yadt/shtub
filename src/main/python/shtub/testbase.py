@@ -36,11 +36,11 @@ class IntegrationTestBase (unittest.TestCase):
 
     def _write_output_file (self, command, stdout, stderr):
         normalized_command = command.replace(' ', '_')
-        filename = '%02d-command-%s' % (self.command_counter, normalized_command)
+        filename = '%02d-%s' % (self.command_counter, normalized_command)
         output_path = os.path.join(self.base_dir, BASEDIR, filename)
         
         with open(output_path, 'w') as output_file:
-            output_file.write('----------------- ENVIRONMENT -------------------\n')
+            output_file.write('--------------- ENVIRONMENT ----------------\n')
             for key in sorted(self.env.keys()):
                 output_file.write('%s=%s\n' % (key, self.env[key]))
             
@@ -79,7 +79,8 @@ class IntegrationTestBase (unittest.TestCase):
         self.stub_commands(self.stubs)
     
     def stub_commands (self, command_list):
-        command_stub_path = os.path.join(os.path.dirname(__file__), 'commandstub.py')
+        current_path = os.path.dirname(__file__)
+        command_stub_path = os.path.join(current_path, 'commandstub.py')
         
         for command in command_list:
             os.symlink(command_stub_path, os.path.join(self.stubs_dir, command))
