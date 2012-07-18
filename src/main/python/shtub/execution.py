@@ -39,8 +39,8 @@ class Execution (object):
         return True
 
     def __eq__ (self, other):
-        return self.command == other.command \
-           and self.stdin == other.stdin \
+        return   self.command == other.command \
+           and     self.stdin == other.stdin \
            and self.arguments == other.arguments
     
     def __ne__ (self, other):

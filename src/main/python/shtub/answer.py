@@ -29,8 +29,8 @@ class Answer (object):
         return 'Answer %s' % (self.as_dictionary())
     
     def __eq__ (self, other):
-        return self.stdout == other.stdout \
-           and self.stderr == other.stderr \
+        return      self.stdout == other.stdout \
+           and      self.stderr == other.stderr \
            and self.return_code == other.return_code
 
     @staticmethod
