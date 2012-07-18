@@ -28,19 +28,19 @@ class Test (unittest.TestCase):
         test_execution_dir    = join(test_dir, 'test-execution')
         expectations_filename = join(test_execution_dir, 'expectations')
         command_stub_path     = abspath(join(dirname(__file__), '..', '..', 'main', 'python', 'shtub', 'commandstub.py'))
-        expectation_json      = """[{
-    "arguments": ["-arg1", "-arg2", "-arg3"],
-    "command": "commandstub.py",
-    "stdin": "Hello world.",
-    "current_answer": 0,
-    "answers": [
-        {
-            "stdout": "Hello world!",
-            "stderr": "Hello error!",
-            "return_code": 0
-        }
-    ]
-}]"""
+        expectation_json      = ('[{\n'
+                                 '    "arguments": ["-arg1", "-arg2", "-arg3"],\n'
+                                 '    "command": "commandstub.py",\n'
+                                 '    "stdin": "Hello world.",\n'
+                                 '    "current_answer": 0,\n'
+                                 '    "answers": [\n'
+                                 '        {\n'
+                                 '            "stdout": "Hello world!",\n'
+                                 '            "stderr": "Hello error!",\n'
+                                 '            "return_code": 0\n'
+                                 '        }\n'
+                                 '    ]\n'
+                                 '}]')
 
         mkdir(test_execution_dir)
 

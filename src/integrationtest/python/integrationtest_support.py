@@ -26,11 +26,11 @@ class IntegrationTestSupport (shtub.testbase.IntegrationTestBase):
     def create_command_wrapper (self, filename, command, arguments, stdin):
         wrapper_filename = os.path.join(self.stubs_dir, filename)
         joined_arguments = ' '.join(arguments)
-        wrapper_content = """#!/usr/bin/env bash
-
-echo -n %s | %s %s
-
-""" % (stdin, command, joined_arguments)
+        wrapper_content = ('#!/usr/bin/env bash\n'
+                           '\n'
+                           'echo -n %s | %s %s\n'
+                           '\n'
+                           ) % (stdin, command, joined_arguments)
         
         with open(wrapper_filename, 'w') as wrapper_file:
             wrapper_file.write(wrapper_content)
