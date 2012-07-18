@@ -1,3 +1,19 @@
+#   shtub - shell command stub
+#   Copyright (C) 2012 Immobilien Scout GmbH
+#
+#   This program is free software: you can redistribute it and/or modify
+#   it under the terms of the GNU General Public License as published by
+#   the Free Software Foundation, either version 3 of the License, or
+#   (at your option) any later version.
+#
+#   This program is distributed in the hope that it will be useful,
+#   but WITHOUT ANY WARRANTY; without even the implied warranty of
+#   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#   GNU General Public License for more details.
+#
+#   You should have received a copy of the GNU General Public License
+#   along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 from pythonbuilder.core import use_plugin, init, Author
 
 use_plugin('python.core')
@@ -11,7 +27,7 @@ use_plugin('python.pylint')
 
 default_task = ['analyze', 'run_integration_tests']
 
-version = '0.1.16'
+version = '0.1.17'
 summary = 'shtub - shell command stub'
 authors = [
     Author('Michael Gruber', 'aelgru@gmail.com'),

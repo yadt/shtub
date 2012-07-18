@@ -35,3 +35,9 @@ class StubbingSshExampleTest (shtub.testbase.IntegrationTestBase):
 if __name__ == '__main__':
     unittest.main()
 ```
+
+License
+=======
+
+shtub is licensed under GNU GPL v3
+http://www.gnu.org/copyleft/gpl.html
