@@ -25,18 +25,16 @@ use_plugin('python.pychecker')
 use_plugin('python.pydev')
 use_plugin('python.pylint')
 
-default_task = ['analyze', 'run_integration_tests']
 
-version = '0.1.17'
-summary = 'shtub - shell command stub'
-authors = [
-    Author('Michael Gruber', 'aelgru@gmail.com'),
-    Author('Udo Juettner', 'udo.juettner@gmail.com'),
-    Author('Alexander Metzner', 'alexander.metzner@gmail.com')
-]
-
-url = 'https://github.com/yadt/shtub'
+authors = [Author('Michael Gruber', 'aelgru@gmail.com'),
+           Author('Udo Juettner', 'udo.juettner@gmail.com'),
+           Author('Alexander Metzner', 'alexander.metzner@gmail.com')]
 license = 'GNU GPL v3'
+summary = 'shtub - shell command stub'
+url     = 'https://github.com/yadt/shtub'
+version = '0.1.17'
+
+default_task = ['analyze', 'run_integration_tests']
 
 @init
 def set_properties (project):
