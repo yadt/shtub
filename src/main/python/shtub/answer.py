@@ -14,27 +14,57 @@
 #   You should have received a copy of the GNU General Public License
 #   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+"""
+    This module provides a class called Answer, which represents the answer
+    the command stub will send when a expectation is fulfilled.
+"""
+
+__author__ = 'Michael Gruber'
+
 class Answer (object):
     def __init__(self, stdout, stderr, return_code):
+        """
+            will initialize a new Answer with the given properties.
+        """
+        
         self.stdout      = stdout
         self.stderr      = stderr
         self.return_code = return_code
         
     def as_dictionary (self):
+        """
+            returns the answer as a dictionary with the keys "stdout",
+            "stderr", and "return_code".
+        """
+        
         return {'stdout'      : self.stdout,
                 'stderr'      : self.stderr,
                 'return_code' : self.return_code}
 
     def __str__ (self):
+        """
+            returns a string representation of this string using the method
+            as_dictionary.
+        """
+        
         return 'Answer %s' % (self.as_dictionary())
     
     def __eq__ (self, other):
+        """
+            returns True when the given answer object has exactly the same
+            properties.
+        """
+        
         return      self.stdout == other.stdout \
            and      self.stderr == other.stderr \
            and self.return_code == other.return_code
 
     @staticmethod
-    def from_dictionary (input_map):
-        return Answer(input_map['stdout'],
-                      input_map['stderr'],
-                      input_map['return_code'])
+    def from_dictionary (dictionary):
+        """
+            returns a new Answer object with the properties from the dictionary.
+        """
+        
+        return Answer(dictionary['stdout'],
+                      dictionary['stderr'],
+                      dictionary['return_code'])
