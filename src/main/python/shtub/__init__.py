@@ -15,8 +15,10 @@
 #   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 """
-    shtub - shell command stub
+    shtub - shell command stub.
 """
+
+__author__ = 'Alexander Metzner, Michael Gruber, Udo Juettner'
 
 import json
 
@@ -24,7 +26,6 @@ from os.path import join
 
 from shtub.execution import Execution
 from shtub.expectation import Expectation
-
 
 BASEDIR                         = 'test-execution'
 
@@ -37,6 +38,11 @@ READ_STDIN_TIMEOUT_IN_SECONDS   = 1
 
 
 def serialize_stub_executions (filename, executions):
+    """
+        writes the given execution objects into a json file with the given
+        filename.
+    """
+    
     dictionaries = map(lambda e: e.as_dictionary(), executions)
     json_string  = json.dumps(dictionaries, sort_keys=True, indent=4)
 
@@ -45,16 +51,30 @@ def serialize_stub_executions (filename, executions):
 
 
 def load_json_file (filename):
+    """
+        loads the given json file and returns the json content as dictionary.
+    """
+    
     with open(filename, 'r') as json_file:
         file_content = json_file.read()
         data = json.loads(file_content)
 
     return data
 
+
 def deserialize_stub_executions (filename):
+    """
+        loads the given json file and returns a list of executions.
+    """
+    
     executions = load_json_file(filename)
     return map(lambda e: Execution.from_dictionary(e), executions) 
 
+
 def deserialize_expectations (filename):
+    """
+        loads the given json file and returns a list of expectations.
+    """
+    
     expectations = load_json_file(filename)
     return map(lambda e: Expectation.from_dictionary(e), expectations) 
