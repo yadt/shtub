@@ -19,6 +19,8 @@
     e.g. it offers methods to create expectations for the command stub. 
 """
 
+__author__ = 'Alexander Metzner, Michael Gruber, Udo Juettner'
+
 import os
 
 from shtub import EXPECTATIONS_FILENAME, serialize_stub_executions
