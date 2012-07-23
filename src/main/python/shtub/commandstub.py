@@ -15,7 +15,13 @@
 #
 #   You should have received a copy of the GNU General Public License
 #   along with this program.  If not, see <http://www.gnu.org/licenses/>.
-    
+
+"""
+    the command stub.
+"""
+
+__author__ = 'Alexander Metzner, Michael Gruber, Udo Juettner'
+
 import logging
 import os
 import sys
@@ -36,6 +42,10 @@ from shtub.execution import Execution
         
 
 def lock ():
+    """
+        creates a file lock and blocks if the file lock is already locked.
+    """
+    
     logging.info('Locking process %s' % os.getpid())
     file_handle = open(os.path.join(BASEDIR, 'LOCK'), 'a')
     fcntl.flock(file_handle, fcntl.LOCK_EX)
@@ -44,10 +54,21 @@ def lock ():
     return file_handle
 
 def unlock (file_handle):
+    """
+        releases the given file lock by closing it.
+    """
+    
     logging.info('Unlocking %s' % os.getpid())
     file_handle.close()
 
 def record_call (execution):
+    """
+        loads the list of recent executions from the recorded-calls file,
+        appends the given execution to the list, then writes the list back to
+        the file again. To assure only one process is reading and writing the
+        file a file lock is used.
+    """
+    
     file_handle = lock()
     recorded_calls = []
     
@@ -63,6 +84,11 @@ def record_call (execution):
     unlock(file_handle)
  
 def send_answer (answer):
+    """
+        writes the stdout and stderr as given in the answer and performs a
+        sys.exit with the given return_code.
+    """
+    
     logging.info('Sending answer: %s' % answer)
     
     if answer.stdout is not None:
@@ -74,6 +100,12 @@ def send_answer (answer):
     sys.exit(answer.return_code)
     
 def dispatch (execution):
+    """
+        currently this will handle the given execution by testing if it fulfills
+        a expectation. If so it will record the call (execution) and send
+        the next answer as defined in the expectation object.
+    """
+    
     expectations = deserialize_expectations(EXPECTATIONS_FILENAME)
     
     logging.info('Got execution: %s in process %s' % (execution, os.getpid()))
@@ -92,6 +124,12 @@ def dispatch (execution):
     sys.exit(255)
  
 def read_stdin ():
+    """
+        waites READ_STDIN_TIMEOUT_IN_SECONDS seconds for input on stdin and
+        is going to return the complete input if there is any. If there is no
+        input it is going to return None.
+    """
+    
     read_list, _, _ = select([sys.stdin], [], [], READ_STDIN_TIMEOUT_IN_SECONDS)
     
     if len(read_list) > 0:
@@ -100,6 +138,11 @@ def read_stdin ():
     return None
     
 def handle_stub_call ():
+    """
+        creates the base directory, initializes the logging and will read in
+        the arguments and input from stdin to create a new execution object.
+    """
+    
     if not os.path.exists(BASEDIR):
         os.mkdir(BASEDIR)
 
