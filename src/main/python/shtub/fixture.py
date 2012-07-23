@@ -14,27 +14,55 @@
 #   You should have received a copy of the GNU General Public License
 #   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+"""
+    this module provides the class Fixture, which represents the test fixture,
+    e.g. it offers methods to create expectations for the command stub. 
+"""
+
 import os
 
-from shtub import BASEDIR, serialize_stub_executions
+from shtub import EXPECTATIONS_FILENAME, serialize_stub_executions
 from shtub.expectation import Expectation
 
 class Fixture (object):
     def __init__ (self, basedir):
+        """
+            initializes a new fixture with the given base directory.
+        """
+        
         self.base_dir     = basedir
         self.expectations = []
-        
+    
+    
     def expect (self, command, arguments, stdin):
+        """
+            creates a new expectation with the given properties and appends it
+            to the expectations, then returns the expectation for invocation
+            chaining.
+        """
+        
         expectation = Expectation(command, arguments, stdin)
         self.expectations.append(expectation)
         
         return expectation
     
+    
     def __enter__ (self):
+        """
+            since this class is designed to be used using the "with" statement
+            this returns the fixture itself.
+        """
+        
         return self
     
+    
     def __exit__ (self, exception_type, exception_value, traceback):
+        """
+            since this class is designed to be used using the "with" statement
+            this will save the list of expectations in the base directory.
+        """
+        
         __pychecker__ = 'unusednames=exception_type,exception_value,traceback'
-        filename = os.path.join(self.base_dir, BASEDIR, 'expectations')
+        filename = os.path.join(self.base_dir, EXPECTATIONS_FILENAME)
         
         serialize_stub_executions(filename, self.expectations)
