@@ -14,6 +14,13 @@
 #   You should have received a copy of the GNU General Public License
 #   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+"""
+    this module provides the class Expectation which extends Execution with
+    a list of answers and the index of the current answer.
+"""
+
+__author__ = 'Alexander Metzner, Michael Gruber, Udo Juettner'
+
 from shtub.answer import Answer
 from shtub.execution import Execution
 
@@ -21,6 +28,11 @@ from shtub.execution import Execution
 class Expectation (Execution):
     def __init__ (self, command, arguments, stdin,
                   answers=[], initial_answer=0):
+        """
+            will initialize a new object with the given properties.
+            answers and initial_answer are not mandatory.
+        """
+        
         super(Expectation, self).__init__(command, arguments, stdin)
         
         self.answers        = []
@@ -28,8 +40,13 @@ class Expectation (Execution):
         
         for answer in answers:
             self.answers.append(answer)
-            
+    
+    
     def as_dictionary (self):
+        """
+            returns a dictionary representation of this expectation.
+        """
+        
         answers_list = []
         
         for answer in self.answers:
@@ -41,7 +58,13 @@ class Expectation (Execution):
         result['current_answer'] = self.current_answer        
         return result
 
+
     def next_answer (self):
+        """
+            returns the next answer in the list of answers or if the end of the
+            list is reached it will repeatedly return the last answer of the
+            list.
+        """
         if len(self.answers) == 0:
             raise Exception('No answer given!')
         
@@ -52,40 +75,80 @@ class Expectation (Execution):
         
         return result
         
+        
     def then (self, answer):
+        """
+            will append the given answer to the list of answers and return
+            the object itself for invocation chaining.
+        """
+        
         self.answers.append(answer)
         
         return self
     
+    
     def then_answer (self, stdout=None, stderr=None, return_code=0):
+        """
+            a convinience method to "then" which will create a new answer
+            object with the given properties. 
+        """
+        
         return self.then(Answer(stdout, stderr, return_code))
         
+        
     def then_return (self, return_code):
+        """
+            a convinience method to "then" which will create a new answer
+            object with the given return_code. 
+        """
+        
         return self.then_answer(return_code=return_code)
 
+
     def then_write (self, stdout=None, stderr=None):
+        """
+            a convinience method to "then" which will create a new answer
+            object with the given stdout and stderr output. 
+        """
+        
         return self.then_answer(stdout=stdout, stderr=stderr)
     
+    
     def __eq__ (self, other):
+        """
+            returns True if all properties are equal
+        """
+        
         return Execution.__eq__(self, other) \
            and self.current_answer == other.current_answer \
            and self.answers == other.answers
 
+
     def __str__ (self):
+        """
+            returns a string representation of this expectation using
+            as_dictionary
+        """
+        
         return 'Expectation %s' % (self.as_dictionary())
     
+    
     @staticmethod
-    def from_dictionary (input_map):
+    def from_dictionary (dictionary):
+        """
+            returns a dictionary representation of this expectation.
+        """
+        
         answers = []
         
-        for answer_dictionary in input_map['answers']:
+        for answer_dictionary in dictionary['answers']:
             answer = Answer.from_dictionary(answer_dictionary)
             answers.append(answer)
         
-        expectation = Expectation(input_map['command'],
-                                  input_map['arguments'],
-                                  input_map['stdin'],
+        expectation = Expectation(dictionary['command'],
+                                  dictionary['arguments'],
+                                  dictionary['stdin'],
                                   answers,
-                                  input_map['current_answer'])
+                                  dictionary['current_answer'])
         
         return expectation
