@@ -14,18 +14,43 @@
 #   You should have received a copy of the GNU General Public License
 #   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+"""
+    this module provides the class Execution, which represents a call to the
+    command stub.
+"""
+
+__author__ = 'Alexander Metzner, Michael Gruber, Udo Juettner'
+
+
 class Execution (object):
     def __init__ (self, command, arguments, stdin):
+        """
+            initializes a new execution with the given properties.
+            If arguments is not given it will be initialized as empty list.
+        """
+        
         self.command   = command
         self.arguments = arguments or []
         self.stdin     = stdin
     
+    
     def as_dictionary (self):
+        """
+            returns a dictionary representation of the execution.
+        """
+        
         return {'command'   : self.command,
                 'arguments' : self.arguments,
                 'stdin'     : self.stdin}
     
+    
     def fulfills (self, expectation):
+        """
+            tests if the execution fulfills the given expectation by comparing
+            the command, the input from stdin and if at least the arguments
+            of the expectation are given.
+        """
+        
         if self.command != expectation.command:
             return False
         
@@ -38,19 +63,41 @@ class Execution (object):
         
         return True
 
+
     def __eq__ (self, other):
+        """
+            returns True if the given execution has exactly the same properties.
+        """
+        
         return   self.command == other.command \
            and     self.stdin == other.stdin \
            and self.arguments == other.arguments
+
     
     def __ne__ (self, other):
+        """
+            returns True when __eq__ returns False or False when __eq__ returns
+            True. 
+        """
+        
         return not(self == other)
+
     
     def __str__ (self):
+        """
+            returns a string representation using as_dictionary.
+        """
+        
         return 'Execution %s' % (self.as_dictionary())
+
     
     @staticmethod
-    def from_dictionary (input_map):
-        return Execution(input_map['command'],
-                         input_map['arguments'],
-                         input_map['stdin'])
+    def from_dictionary (dictionary):
+        """
+            returns a new execution object with the properties from the given
+            dictionary.
+        """
+        
+        return Execution(dictionary['command'],
+                         dictionary['arguments'],
+                         dictionary['stdin'])
