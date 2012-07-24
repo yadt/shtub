@@ -27,6 +27,12 @@ from shtub import EXPECTATIONS_FILENAME, serialize_stub_executions
 from shtub.expectation import Expectation
 
 class Fixture (object):
+    """
+        Represents the testing context which can be configured by defining
+        expectations and corresponding answers. Please use instances of this
+        class in a "with" statement.
+    """
+    
     def __init__ (self, basedir):
         """
             initializes a new fixture with the given base directory.

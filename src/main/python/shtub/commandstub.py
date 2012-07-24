@@ -32,6 +32,7 @@ from select import select
 from shtub import (BASEDIR,
                    EXPECTATIONS_FILENAME,
                    LOG_FILENAME,
+                   LOCK_FILENAME,
                    RECORDED_CALLS_FILENAME,
                    READ_STDIN_TIMEOUT_IN_SECONDS,
                    deserialize_expectations,
@@ -46,10 +47,10 @@ def lock ():
         creates a file lock and blocks if the file lock is already locked.
     """
     
-    logging.info('Locking process %s' % os.getpid())
-    file_handle = open(os.path.join(BASEDIR, 'LOCK'), 'a')
+    logging.info('Locking process %s', os.getpid())
+    file_handle = open(LOCK_FILENAME, 'a')
     fcntl.flock(file_handle, fcntl.LOCK_EX)
-    logging.info('Lock acquired by process %s' % os.getpid())
+    logging.info('Lock acquired by process %s', os.getpid())
     
     return file_handle
 
@@ -58,7 +59,7 @@ def unlock (file_handle):
         releases the given file lock by closing it.
     """
     
-    logging.info('Unlocking %s' % os.getpid())
+    logging.info('Unlocking %s', os.getpid())
     file_handle.close()
 
 def record_call (execution):
@@ -69,7 +70,7 @@ def record_call (execution):
         file a file lock is used.
     """
     
-    file_handle = lock()
+    lock_file_handle = lock()
     recorded_calls = []
     
     if os.path.exists(RECORDED_CALLS_FILENAME):
@@ -79,9 +80,9 @@ def record_call (execution):
     
     serialize_stub_executions(RECORDED_CALLS_FILENAME, recorded_calls)
     
-    logging.info('Recorded %s calls' % len(recorded_calls))
+    logging.info('Recorded %s calls', len(recorded_calls))
     
-    unlock(file_handle)
+    unlock(lock_file_handle)
  
 def send_answer (answer):
     """
@@ -89,7 +90,7 @@ def send_answer (answer):
         sys.exit with the given return_code.
     """
     
-    logging.info('Sending answer: %s' % answer)
+    logging.info('Sending %s', answer)
     
     if answer.stdout is not None:
         sys.stdout.write(answer.stdout)
@@ -108,7 +109,7 @@ def dispatch (execution):
     
     expectations = deserialize_expectations(EXPECTATIONS_FILENAME)
     
-    logging.info('Got execution: %s in process %s' % (execution, os.getpid()))
+    logging.info('Got %s in process %s', execution, os.getpid())
 
     for expectation in expectations:
         if execution.fulfills(expectation):

@@ -22,9 +22,14 @@
 __author__ = 'Michael Gruber'
 
 class Answer (object):
+    """
+        represents a answer the command stub is sending back when a expectation
+        is fulfilled.
+    """
+    
     def __init__(self, stdout, stderr, return_code):
         """
-            will initialize a new Answer with the given properties.
+            initializes with the given properties.
         """
         
         self.stdout      = stdout
@@ -33,8 +38,7 @@ class Answer (object):
         
     def as_dictionary (self):
         """
-            returns the answer as a dictionary with the keys "stdout",
-            "stderr", and "return_code".
+            returns a dictionary representation of this object.
         """
         
         return {'stdout'      : self.stdout,

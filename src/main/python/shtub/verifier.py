@@ -16,7 +16,7 @@
 
 """
     this module provides the class Verifier which offers methods to verify if
-    the command stub has been called in the expected way.
+    the command stub has been called in the expected way. 
 """
 
 __author__ = 'Alexander Metzner, Michael Gruber, Udo Juettner'
@@ -27,6 +27,11 @@ from shtub.execution import Execution
 
 
 class Verifier (object):
+    """
+        Verifies command stub expectations. Please use instances of this class
+        in "with" statements.
+    """
+    
     def __init__ (self, basedir):
         """
             initializes a new verifier using the given base directory.

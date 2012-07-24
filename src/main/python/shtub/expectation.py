@@ -26,6 +26,11 @@ from shtub.execution import Execution
 
 
 class Expectation (Execution):
+    """
+        Represents the parameters of a expected command stub execution and
+        contains corresponding answers.
+    """
+    
     def __init__ (self, command, arguments, stdin,
                   answers=[], initial_answer=0):
         """
@@ -65,6 +70,7 @@ class Expectation (Execution):
             list is reached it will repeatedly return the last answer of the
             list.
         """
+        
         if len(self.answers) == 0:
             raise Exception('No answer given!')
         
@@ -121,7 +127,7 @@ class Expectation (Execution):
         
         return Execution.__eq__(self, other) \
            and self.current_answer == other.current_answer \
-           and self.answers == other.answers
+           and        self.answers == other.answers
 
 
     def __str__ (self):

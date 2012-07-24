@@ -27,14 +27,15 @@ from os.path import join
 from shtub.execution import Execution
 from shtub.expectation import Expectation
 
-BASEDIR                         = 'test-execution'
+BASEDIR                       = 'test-execution'
 
-EXPECTATIONS_FILENAME           = join(BASEDIR, 'expectations')
-RECORDED_CALLS_FILENAME         = join(BASEDIR, 'recorded-calls')
-LOG_FILENAME                    = join(BASEDIR, 'log')
-STUBS_DIRECTORY                 = join(BASEDIR, 'stubs')
+EXPECTATIONS_FILENAME         = join(BASEDIR, 'expectations')
+RECORDED_CALLS_FILENAME       = join(BASEDIR, 'recorded-calls')
+LOG_FILENAME                  = join(BASEDIR, 'log')
+LOCK_FILENAME                 = join(BASEDIR, 'lock')
+STUBS_DIRECTORY               = join(BASEDIR, 'stubs')
 
-READ_STDIN_TIMEOUT_IN_SECONDS   = 1
+READ_STDIN_TIMEOUT_IN_SECONDS = 1
 
 
 def serialize_stub_executions (filename, executions):
@@ -57,9 +58,9 @@ def load_json_file (filename):
     
     with open(filename, 'r') as json_file:
         file_content = json_file.read()
-        data = json.loads(file_content)
+        dictionary = json.loads(file_content)
 
-    return data
+    return dictionary
 
 
 def deserialize_stub_executions (filename):
