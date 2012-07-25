@@ -142,7 +142,8 @@ class Expectation (Execution):
     @staticmethod
     def from_dictionary (dictionary):
         """
-            returns a dictionary representation of this expectation.
+            returns a new expectation object with the properties from the given
+            dictionary.
         """
         
         answers = []

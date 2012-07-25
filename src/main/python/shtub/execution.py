@@ -24,7 +24,7 @@ __author__ = 'Alexander Metzner, Michael Gruber, Udo Juettner'
 
 class Execution (object):
     """
-        Represents the parameteres of a call to the command stub.
+        Represents the parameters of a call to the command stub.
     """
     
     def __init__ (self, command, arguments, stdin):

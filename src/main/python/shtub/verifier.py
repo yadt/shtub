@@ -44,7 +44,7 @@ class Verifier (object):
     def verify (self, command, arguments, stdin):
         """
             raises an exception when no more recorded calls are available or
-            when the current recorded call does not fulfill then given
+            when the current recorded call does not fulfill the given
             exception, otherwise it will pass and remove the current recorded
             call from the list of recorded calls.
         """
@@ -68,7 +68,7 @@ class Verifier (object):
     
     def __enter__ (self):
         """
-            Since this class is designed to be integrated in a "with" block it
+            since this class is designed to be integrated in a "with" block it
             will load the actual recorded calls and return itself.
         """
     
@@ -79,7 +79,7 @@ class Verifier (object):
 
     def __exit__(self, exception_type, exception_value, traceback):
         """
-            Since this class is designed to be integrated in a "with" block it
+            since this class is designed to be integrated in a "with" block it
             is implemented, but has no effect.
         """
         

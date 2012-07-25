@@ -106,9 +106,9 @@ def send_answer (answer):
 
 def dispatch (execution):
     """
-        currently this will handle the given execution by testing if it fulfills
-        a expectation. If so it will record the call (execution) and send
-        the next answer as defined in the expectation object.
+        currently this will handle the given execution by testing whether it
+        fulfills an expectation. If so it will record the call (execution) and
+        send the next answer as defined in the expectation object.
     """
     
     expectations = deserialize_expectations(EXPECTATIONS_FILENAME)
@@ -131,7 +131,7 @@ def dispatch (execution):
 
 def read_stdin ():
     """
-        waites READ_STDIN_TIMEOUT_IN_SECONDS seconds for input on stdin and
+        waits READ_STDIN_TIMEOUT_IN_SECONDS seconds for input on stdin and
         is going to return the complete input if there is any. If there is no
         input it is going to return None.
     """

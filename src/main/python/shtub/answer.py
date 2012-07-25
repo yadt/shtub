@@ -16,14 +16,14 @@
 
 """
     This module provides a class called Answer, which represents the answer
-    the command stub will send when a expectation is fulfilled.
+    the command stub will send when an expectation is fulfilled.
 """
 
 __author__ = 'Michael Gruber'
 
 class Answer (object):
     """
-        represents a answer the command stub is sending back when a expectation
+        represents a answer the command stub is sending back when an expectation
         is fulfilled.
     """
     
@@ -49,7 +49,7 @@ class Answer (object):
 
     def __str__ (self):
         """
-            returns a string representation of this string using the method
+            returns a string representation of this object using the method
             as_dictionary.
         """
         
