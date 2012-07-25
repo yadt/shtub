@@ -75,7 +75,8 @@ class Verifier (object):
         filename = os.path.join(self.base_dir, RECORDED_CALLS_FILENAME)
         self.recorded_calls = deserialize_stub_executions(filename)
         return self
-    
+
+
     def __exit__(self, exception_type, exception_value, traceback):
         """
             Since this class is designed to be integrated in a "with" block it

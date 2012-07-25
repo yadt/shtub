@@ -54,6 +54,7 @@ def lock ():
     
     return file_handle
 
+
 def unlock (file_handle):
     """
         releases the given file lock by closing it.
@@ -61,6 +62,7 @@ def unlock (file_handle):
     
     logging.info('Unlocking %s', os.getpid())
     file_handle.close()
+
 
 def record_call (execution):
     """
@@ -84,6 +86,7 @@ def record_call (execution):
     
     unlock(lock_file_handle)
  
+ 
 def send_answer (answer):
     """
         writes the stdout and stderr as given in the answer and performs a
@@ -99,7 +102,8 @@ def send_answer (answer):
         sys.stderr.write(answer.stderr)
     
     sys.exit(answer.return_code)
-    
+
+
 def dispatch (execution):
     """
         currently this will handle the given execution by testing if it fulfills
@@ -123,7 +127,8 @@ def dispatch (execution):
     logging.error('Given execution does not fulfill requirements '
                   'of any expectation.')
     sys.exit(255)
- 
+
+
 def read_stdin ():
     """
         waites READ_STDIN_TIMEOUT_IN_SECONDS seconds for input on stdin and
@@ -137,7 +142,8 @@ def read_stdin ():
         return read_list[0].read()
     
     return None
-    
+
+
 def handle_stub_call ():
     """
         creates the base directory, initializes the logging and will read in
@@ -158,6 +164,7 @@ def handle_stub_call ():
     execution = Execution(command, arguments, stdin)
     
     dispatch(execution)
-    
+
+
 if __name__ == '__main__':
     handle_stub_call()

@@ -30,9 +30,9 @@ from shtub.expectation import Expectation
 BASEDIR                       = 'test-execution'
 
 EXPECTATIONS_FILENAME         = join(BASEDIR, 'expectations')
-RECORDED_CALLS_FILENAME       = join(BASEDIR, 'recorded-calls')
 LOG_FILENAME                  = join(BASEDIR, 'log')
 LOCK_FILENAME                 = join(BASEDIR, 'lock')
+RECORDED_CALLS_FILENAME       = join(BASEDIR, 'recorded-calls')
 STUBS_DIRECTORY               = join(BASEDIR, 'stubs')
 
 READ_STDIN_TIMEOUT_IN_SECONDS = 1
