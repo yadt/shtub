@@ -73,8 +73,8 @@ class Tests (unittest2.TestCase):
         
     @patch('shtub.commandstub.unlock')
     @patch('shtub.commandstub.lock')
-    @patch('shtub.commandstub.serialize_stub_executions')
-    @patch('shtub.commandstub.deserialize_stub_executions', return_value=[])
+    @patch('shtub.commandstub.serialize_executions')
+    @patch('shtub.commandstub.deserialize_executions', return_value=[])
     @patch('os.path.exists', return_value=True)
     def test_should_append_execution_and_serialize (self, \
                         mock_exists, mock_deserialize, mock_serialize, mock_lock, mock_unlock):
@@ -90,8 +90,8 @@ class Tests (unittest2.TestCase):
 
     @patch('shtub.commandstub.unlock')
     @patch('shtub.commandstub.lock')
-    @patch('shtub.commandstub.serialize_stub_executions')
-    @patch('shtub.commandstub.deserialize_stub_executions')
+    @patch('shtub.commandstub.serialize_executions')
+    @patch('shtub.commandstub.deserialize_executions')
     @patch('os.path.exists', return_value=True)
     def test_should_deserialize_when_file_exists (self, \
                         mock_exists, mock_deserialize, mock_serialize, mock_lock, mock_unlock):
@@ -103,8 +103,8 @@ class Tests (unittest2.TestCase):
 
     @patch('shtub.commandstub.unlock')
     @patch('shtub.commandstub.lock')
-    @patch('shtub.commandstub.serialize_stub_executions')
-    @patch('shtub.commandstub.deserialize_stub_executions')
+    @patch('shtub.commandstub.serialize_executions')
+    @patch('shtub.commandstub.deserialize_executions')
     @patch('os.path.exists', return_value=False)
     def test_should_not_deserialize_when_file_does_not_exist (self, \
                         mock_exists, mock_deserialize, mock_serialize, mock_lock, mock_unlock):

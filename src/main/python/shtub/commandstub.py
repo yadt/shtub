@@ -36,8 +36,8 @@ from shtub import (BASEDIR,
                    RECORDED_CALLS_FILENAME,
                    READ_STDIN_TIMEOUT_IN_SECONDS,
                    deserialize_expectations,
-                   deserialize_stub_executions,
-                   serialize_stub_executions)
+                   deserialize_executions,
+                   serialize_executions)
 
 from shtub.execution import Execution
         
@@ -76,11 +76,11 @@ def record_call (execution):
     recorded_calls = []
     
     if os.path.exists(RECORDED_CALLS_FILENAME):
-        recorded_calls = deserialize_stub_executions(RECORDED_CALLS_FILENAME)
+        recorded_calls = deserialize_executions(RECORDED_CALLS_FILENAME)
     
     recorded_calls.append(execution)
     
-    serialize_stub_executions(RECORDED_CALLS_FILENAME, recorded_calls)
+    serialize_executions(RECORDED_CALLS_FILENAME, recorded_calls)
     
     logging.info('Recorded %s calls.', len(recorded_calls))
     

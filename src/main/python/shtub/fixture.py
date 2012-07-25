@@ -23,7 +23,7 @@ __author__ = 'Alexander Metzner, Michael Gruber, Udo Juettner'
 
 import os
 
-from shtub import EXPECTATIONS_FILENAME, serialize_stub_executions
+from shtub import EXPECTATIONS_FILENAME, serialize_executions
 from shtub.expectation import Expectation
 
 class Fixture (object):
@@ -73,4 +73,4 @@ class Fixture (object):
         __pychecker__ = 'unusednames=exception_type,exception_value,traceback'
         filename = os.path.join(self.base_dir, EXPECTATIONS_FILENAME)
         
-        serialize_stub_executions(filename, self.expectations)
+        serialize_executions(filename, self.expectations)
