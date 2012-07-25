@@ -22,7 +22,7 @@
 __author__ = 'Alexander Metzner, Michael Gruber, Udo Juettner'
 
 import os.path
-from shtub import RECORDED_CALLS_FILENAME, deserialize_stub_executions
+from shtub import RECORDED_CALLS_FILENAME, deserialize_executions
 from shtub.execution import Execution
 
 
@@ -73,7 +73,7 @@ class Verifier (object):
         """
     
         filename = os.path.join(self.base_dir, RECORDED_CALLS_FILENAME)
-        self.recorded_calls = deserialize_stub_executions(filename)
+        self.recorded_calls = deserialize_executions(filename)
         return self
 
 

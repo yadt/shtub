@@ -20,7 +20,7 @@ from mock import Mock, call, patch
 
 from StringIO import StringIO
 
-from shtub import serialize_stub_executions, deserialize_stub_executions, deserialize_expectations
+from shtub import serialize_executions, deserialize_executions, deserialize_expectations
 from shtub.answer import Answer
 from shtub.execution import Execution
 from shtub.expectation import Expectation
@@ -29,7 +29,7 @@ from shtub.expectation import Expectation
 class ShtubTests (unittest.TestCase):
     @patch('json.loads')
     @patch('__builtin__.open')
-    def test_should_deserialize_stub_executions (self, mock_open, mock_json):
+    def test_should_deserialize_executions (self, mock_open, mock_json):
         fake_file = self.return_file_when_calling(mock_open)
         executions = [Execution('command', ['-arg1', '-arg2', '-arg3'], 'stdin')]
         json_string = "[{'command': 'command', 'arguments': ['-arg1', '-arg2', '-arg3'], 'stdin': 'stdin'}]"
@@ -38,7 +38,7 @@ class ShtubTests (unittest.TestCase):
                                    'arguments' : ['-arg1', '-arg2', '-arg3'],
                                    'stdin'     : 'stdin'}]
                 
-        actual_executions = deserialize_stub_executions('executions.json')
+        actual_executions = deserialize_executions('executions.json')
         
         self.assertEquals(call('executions.json', 'r'), mock_open.call_args)
         self.assertEquals(call(), fake_file.read.call_args)
@@ -75,12 +75,12 @@ class ShtubTests (unittest.TestCase):
 
     @patch('json.dumps')
     @patch('__builtin__.open')
-    def test_should_serialize_stub_executions (self, mock_open, mock_json):
+    def test_should_serialize_executions (self, mock_open, mock_json):
         fake_file = self.return_file_when_calling(mock_open)
         mock_json.return_value = '[{"some": "json"}]'
         executions = [Execution('command', ['-arg1', '-arg2', '-arg3'], 'stdin')]
 
-        serialize_stub_executions('executions.json', executions)
+        serialize_executions('executions.json', executions)
         
         expected_dictionary = {'command'   : 'command', 
                                'arguments' : ['-arg1', '-arg2', '-arg3'], 

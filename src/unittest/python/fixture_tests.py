@@ -78,7 +78,7 @@ class FixtureTest (unittest2.TestCase):
         self.assertEquals(['2any_arg0', '2any_arg1', '2any_arg2'], actual_second_expectation.arguments)
         self.assertEquals('any_stdin2', actual_second_expectation.stdin)
     
-    @patch('shtub.fixture.serialize_stub_executions')
+    @patch('shtub.fixture.serialize_executions')
     def test_should_return_fixture_itself_when_entering_with_statement_and_serialize_expectations_when_exiting (self, serialize_mock):
         fixture = Fixture('/hello/world')
         

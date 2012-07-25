@@ -32,7 +32,7 @@ authors = [Author('Michael Gruber', 'aelgru@gmail.com'),
 license = 'GNU GPL v3'
 summary = 'shtub - shell command stub'
 url     = 'https://github.com/yadt/shtub'
-version = '0.1.18'
+version = '0.1.19'
 
 default_task = ['analyze', 'run_integration_tests']
 

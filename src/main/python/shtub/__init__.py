@@ -47,7 +47,7 @@ def deserialize_expectations (filename):
     return map(lambda e: Expectation.from_dictionary(e), expectations) 
 
 
-def deserialize_stub_executions (filename):
+def deserialize_executions (filename):
     """
         loads the given json file and returns a list of executions.
     """
@@ -56,7 +56,7 @@ def deserialize_stub_executions (filename):
     return map(lambda e: Execution.from_dictionary(e), executions) 
 
 
-def serialize_stub_executions (filename, executions):
+def serialize_executions (filename, executions):
     """
         writes the given execution objects into a json file with the given
         filename.

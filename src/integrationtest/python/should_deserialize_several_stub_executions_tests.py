@@ -20,7 +20,7 @@ from os.path import join
 
 import integrationtest_support
 
-from shtub import deserialize_stub_executions
+from shtub import deserialize_executions
 
 
 class Test (integrationtest_support.IntegrationTestSupport):
@@ -43,7 +43,7 @@ class Test (integrationtest_support.IntegrationTestSupport):
 
         path = join(self.base_dir, 'test-execution', 'recorded-calls')
         
-        actual_calls = deserialize_stub_executions(path)
+        actual_calls = deserialize_executions(path)
         
         self.assertEquals(2, len(actual_calls))
         

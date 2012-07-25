@@ -32,7 +32,7 @@ class VerfierTest (unittest.TestCase):
 
         self.assertEquals([], actual_verifier.recorded_calls)
     
-    @patch('shtub.verifier.deserialize_stub_executions')
+    @patch('shtub.verifier.deserialize_executions')
     def test_should_deserialize_recorded_calls_and_return_verifier_itself_when_entering_with_statement (self, mock_deserialize):
         verifier = Verifier('/hello/world')
                 
@@ -41,7 +41,7 @@ class VerfierTest (unittest.TestCase):
             
         self.assertEquals(call('/hello/world/test-execution/recorded-calls'), mock_deserialize.call_args)
     
-    @patch('shtub.verifier.deserialize_stub_executions')
+    @patch('shtub.verifier.deserialize_executions')
     def test_should_raise_exception_when_no_executed_calls_recorded (self, mock_deserialize):
         verifier = Verifier('/hello/world')
         
@@ -52,7 +52,7 @@ class VerfierTest (unittest.TestCase):
 
         self.assertEquals(call('/hello/world/test-execution/recorded-calls'), mock_deserialize.call_args)
 
-    @patch('shtub.verifier.deserialize_stub_executions')
+    @patch('shtub.verifier.deserialize_executions')
     def test_should_raise_exception_when_recorded_call_does_not_fit_expectation (self, mock_deserialize):
         verifier = Verifier('/hello/world')
         
@@ -65,7 +65,7 @@ class VerfierTest (unittest.TestCase):
 
         self.assertEquals(call('/hello/world/test-execution/recorded-calls'), mock_deserialize.call_args)
 
-    @patch('shtub.verifier.deserialize_stub_executions')
+    @patch('shtub.verifier.deserialize_executions')
     def test_should_raise_exception_when_second_recorded_call_does_not_fit_expectation (self, mock_deserialize):
         verifier = Verifier('/hello/world')
         
@@ -80,7 +80,7 @@ class VerfierTest (unittest.TestCase):
 
         self.assertEquals(call('/hello/world/test-execution/recorded-calls'), mock_deserialize.call_args)
 
-    @patch('shtub.verifier.deserialize_stub_executions')
+    @patch('shtub.verifier.deserialize_executions')
     def test_should_verify_all_recorded_calls_when_all_recorded_calls_fit_expectation (self, mock_deserialize):
         verifier = Verifier('/hello/world')
         
