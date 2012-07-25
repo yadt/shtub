@@ -30,12 +30,30 @@ from shtub.expectation import Expectation
 BASEDIR                       = 'test-execution'
 
 EXPECTATIONS_FILENAME         = join(BASEDIR, 'expectations')
-LOG_FILENAME                  = join(BASEDIR, 'log')
 LOCK_FILENAME                 = join(BASEDIR, 'lock')
+LOG_FILENAME                  = join(BASEDIR, 'log')
 RECORDED_CALLS_FILENAME       = join(BASEDIR, 'recorded-calls')
 STUBS_DIRECTORY               = join(BASEDIR, 'stubs')
 
 READ_STDIN_TIMEOUT_IN_SECONDS = 1
+
+
+def deserialize_expectations (filename):
+    """
+        loads the given json file and returns a list of expectations.
+    """
+    
+    expectations = _load_json_file(filename)
+    return map(lambda e: Expectation.from_dictionary(e), expectations) 
+
+
+def deserialize_stub_executions (filename):
+    """
+        loads the given json file and returns a list of executions.
+    """
+    
+    executions = _load_json_file(filename)
+    return map(lambda e: Execution.from_dictionary(e), executions) 
 
 
 def serialize_stub_executions (filename, executions):
@@ -51,7 +69,7 @@ def serialize_stub_executions (filename, executions):
         json_file.write(json_string)
 
 
-def load_json_file (filename):
+def _load_json_file (filename):
     """
         loads the given json file and returns the json content as dictionary.
     """
@@ -61,21 +79,3 @@ def load_json_file (filename):
         dictionary = json.loads(file_content)
 
     return dictionary
-
-
-def deserialize_stub_executions (filename):
-    """
-        loads the given json file and returns a list of executions.
-    """
-    
-    executions = load_json_file(filename)
-    return map(lambda e: Execution.from_dictionary(e), executions) 
-
-
-def deserialize_expectations (filename):
-    """
-        loads the given json file and returns a list of expectations.
-    """
-    
-    expectations = load_json_file(filename)
-    return map(lambda e: Expectation.from_dictionary(e), expectations) 

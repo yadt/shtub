@@ -26,7 +26,7 @@ from shtub.execution import Execution
 from shtub.expectation import Expectation
 
 
-class IntegrationtestsTests (unittest.TestCase):
+class ShtubTests (unittest.TestCase):
     @patch('json.loads')
     @patch('__builtin__.open')
     def test_should_deserialize_stub_executions (self, mock_open, mock_json):
