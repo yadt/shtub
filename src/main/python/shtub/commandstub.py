@@ -47,10 +47,10 @@ def lock ():
         creates a file lock and blocks if the file lock is already locked.
     """
     
-    logging.info('Locking process %s', os.getpid())
+    logging.info('Acquiring lock.')
     file_handle = open(LOCK_FILENAME, 'a')
     fcntl.flock(file_handle, fcntl.LOCK_EX)
-    logging.info('Lock acquired by process %s', os.getpid())
+    logging.info('Lock acquired.')
     
     return file_handle
 
@@ -60,7 +60,7 @@ def unlock (file_handle):
         releases the given file lock by closing it.
     """
     
-    logging.info('Unlocking %s', os.getpid())
+    logging.info('Released lock.')
     file_handle.close()
 
 
@@ -82,7 +82,7 @@ def record_call (execution):
     
     serialize_stub_executions(RECORDED_CALLS_FILENAME, recorded_calls)
     
-    logging.info('Recorded %s calls', len(recorded_calls))
+    logging.info('Recorded %s calls.', len(recorded_calls))
     
     unlock(lock_file_handle)
  
@@ -113,7 +113,7 @@ def dispatch (execution):
     
     expectations = deserialize_expectations(EXPECTATIONS_FILENAME)
     
-    logging.info('Got %s in process %s', execution, os.getpid())
+    logging.info('Got %s', execution)
 
     for expectation in expectations:
         if execution.fulfills(expectation):
@@ -153,7 +153,9 @@ def handle_stub_call ():
     if not os.path.exists(BASEDIR):
         os.mkdir(BASEDIR)
 
-    logging_format = '%(asctime)s %(levelname)5s [%(name)s] - %(message)s'
+    logging_format = '%(asctime)s %(levelname)5s [%(name)s] ' \
+                   + 'process[%(process)d] thread[%(thread)d] ' \
+                   + '- %(message)s'
     logging.basicConfig(filename = LOG_FILENAME,
                         level    = logging.INFO,
                         format   = logging_format)

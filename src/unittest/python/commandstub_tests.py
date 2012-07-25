@@ -208,7 +208,9 @@ class Tests (unittest2.TestCase):
         
         self.assertEquals(call(filename = LOG_FILENAME,
                                level    = logging.INFO,
-                               format   = '%(asctime)s %(levelname)5s [%(name)s] - %(message)s'),
+                               format   = '%(asctime)s %(levelname)5s [%(name)s] ' \
+                                        + 'process[%(process)d] thread[%(thread)d] ' \
+                                        + '- %(message)s'),
                           mock_logging.call_args)
 
     @patch.object(sys, 'argv', ['command', '-arg1', '-arg2', '-arg3'])
