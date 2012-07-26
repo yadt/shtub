@@ -31,12 +31,12 @@ from select import select
 
 from shtub import (BASEDIR,
                    EXPECTATIONS_FILENAME,
-                   LOG_FILENAME,
                    LOCK_FILENAME,
-                   RECORDED_CALLS_FILENAME,
+                   LOG_FILENAME,
                    READ_STDIN_TIMEOUT_IN_SECONDS,
-                   deserialize_expectations,
+                   RECORDED_CALLS_FILENAME,
                    deserialize_executions,
+                   deserialize_expectations,
                    serialize_executions)
 
 from shtub.execution import Execution
@@ -47,11 +47,11 @@ def lock ():
         creates a file lock and blocks if the file lock is already locked.
     """
     
-    logging.info('Acquiring lock.')
+    logging.info('Acquire lock.')
     file_handle = open(LOCK_FILENAME, 'a')
     fcntl.flock(file_handle, fcntl.LOCK_EX)
-    logging.info('Lock acquired.')
     
+    logging.info('Lock acquired.')
     return file_handle
 
 
@@ -60,7 +60,7 @@ def unlock (file_handle):
         releases the given file lock by closing it.
     """
     
-    logging.info('Released lock.')
+    logging.info('Release lock.')
     file_handle.close()
 
 
@@ -79,9 +79,7 @@ def record_call (execution):
         recorded_calls = deserialize_executions(RECORDED_CALLS_FILENAME)
     
     recorded_calls.append(execution)
-    
     serialize_executions(RECORDED_CALLS_FILENAME, recorded_calls)
-    
     logging.info('Recorded %s calls.', len(recorded_calls))
     
     unlock(lock_file_handle)
@@ -118,7 +116,6 @@ def dispatch (execution):
     for expectation in expectations:
         if execution.fulfills(expectation):
             logging.info('Execution fulfills %s', expectation)
-            
             record_call(execution)
             answer = expectation.next_answer()
             send_answer(answer)

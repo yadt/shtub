@@ -26,15 +26,15 @@ use_plugin('python.pydev')
 use_plugin('python.pylint')
 
 
-authors = [Author('Michael Gruber', 'aelgru@gmail.com'),
-           Author('Udo Juettner', 'udo.juettner@gmail.com'),
-           Author('Alexander Metzner', 'alexander.metzner@gmail.com')]
+authors = [Author('Alexander Metzner', 'alexander.metzner@gmail.com'),
+           Author('Michael Gruber', 'aelgru@gmail.com'),
+           Author('Udo Juettner', 'udo.juettner@gmail.com')]
 license = 'GNU GPL v3'
 summary = 'shtub - shell command stub'
 url     = 'https://github.com/yadt/shtub'
-version = '0.1.19'
+version = '0.2.0'
 
-default_task = ['analyze', 'run_integration_tests']
+default_task = ['analyze', 'publish']
 
 @init
 def set_properties (project):

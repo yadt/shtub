@@ -3,8 +3,11 @@ shtub [![Build Status](https://secure.travis-ci.org/yadt/shtub.png?branch=master
 
 shell command stub
 
-Integration test framework which allows to *stub shell commands*:
-if you have to assure that the application is calling the right shell commands in the correct order.
+Integration test framework which *stubs shell commands*.
+The stubs can be configured with *expectations* and send back corresponding
+*answers* if expectations are fulfilled. The expectations can be *verified*
+(correct arguments and order).
+
 
  A simple example stubbing the "ssh" command:
 ```python

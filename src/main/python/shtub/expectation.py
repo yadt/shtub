@@ -72,7 +72,7 @@ class Expectation (Execution):
         """
         
         if len(self.answers) == 0:
-            raise Exception('No answer given!')
+            raise Exception('List of answers is empty!')
         
         result = self.answers[self.current_answer]
         

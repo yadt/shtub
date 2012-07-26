@@ -37,8 +37,8 @@ class IntegrationTestBase (unittest.TestCase):
 
 
     def _write_output_file (self, command, stdout, stderr):
-        normalized_command = command.replace(' ', '_')
-        filename = '%02d-%s' % (self.command_counter, normalized_command)
+        normalized  = command.replace(' ', '_')
+        filename    = '%02d-%s' % (self.command_counter, normalized)
         output_path = os.path.join(self.base_dir, BASEDIR, filename)
         
         with open(output_path, 'w') as output_file:
@@ -86,7 +86,7 @@ class IntegrationTestBase (unittest.TestCase):
 
 
     def stub_commands (self, command_list):
-        current_path = os.path.dirname(__file__)
+        current_path      = os.path.dirname(__file__)
         command_stub_path = os.path.join(current_path, 'commandstub.py')
         
         for command in command_list:
