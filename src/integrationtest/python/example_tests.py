@@ -26,7 +26,7 @@ class StubbingSshExampleTest (shtub.testbase.IntegrationTestBase):
         self.prepare_testbed(env, ['ssh'])
 
         with self.fixture() as fixture:
-            fixture.expect('ssh', ['-arg1', '-arg2', '-arg3'], None) \
+            fixture.expect('ssh', ['-arg1', '-arg2', '-arg3']) \
                    .then_return(0)
 
         actual_return_code = self.execute_command('ssh -arg1 -arg2 -arg3')
@@ -34,7 +34,7 @@ class StubbingSshExampleTest (shtub.testbase.IntegrationTestBase):
         self.assertEquals(0, actual_return_code)
 
         with self.verify() as verifier:
-            verifier.verify('ssh', ['-arg1', '-arg2', '-arg3'], None)
+            verifier.verify('ssh', ['-arg1', '-arg2', '-arg3'])
 
     def _path (self):
         path = self.stubs_dir

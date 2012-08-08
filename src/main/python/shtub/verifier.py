@@ -41,7 +41,7 @@ class Verifier (object):
         self.recorded_calls = []
 
 
-    def verify (self, command, arguments, stdin):
+    def verify (self, command, arguments, stdin=None):
         """
             raises an exception when no more recorded calls are available or
             when the current recorded call does not fulfill the given

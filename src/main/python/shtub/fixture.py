@@ -42,7 +42,7 @@ class Fixture (object):
         self.expectations = []
     
     
-    def expect (self, command, arguments, stdin):
+    def expect (self, command, arguments, stdin=None):
         """
             creates a new expectation with the given properties and appends it
             to the expectations, then returns the expectation for invocation
