@@ -14,6 +14,8 @@
 #   You should have received a copy of the GNU General Public License
 #   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+__author = 'Alexander Metzner, Michael Gruber, Udo Juettner'
+
 import unittest
 import os
 import shutil
@@ -36,8 +38,14 @@ class IntegrationTestBase (unittest.TestCase):
             shutil.rmtree(self.base_dir)
 
 
+    def _normalize_command_line(self, command):
+        normalized = command.replace(' ', '_')
+        normalized = normalized.replace('*', '_asterisk_')
+        return normalized
+
+
     def _write_output_file (self, command, stdout, stderr):
-        normalized  = command.replace(' ', '_')
+        normalized  = self._normalize_command_line(command)
         filename    = '%02d-%s' % (self.command_counter, normalized)
         output_path = os.path.join(self.base_dir, BASEDIR, filename)
         
