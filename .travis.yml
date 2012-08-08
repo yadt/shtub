@@ -13,6 +13,5 @@ before_script:
 script: "pyb"
 notifications:
   email:
-    - udo.juettner@immobilienscout24.de
     - michael.gruber@immobilienscout24.de
 
