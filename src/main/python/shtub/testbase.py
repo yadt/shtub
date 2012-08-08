@@ -39,8 +39,11 @@ class IntegrationTestBase (unittest.TestCase):
 
 
     def _normalize_command_line(self, command):
-        normalized = command.replace(' ', '_')
-        normalized = normalized.replace('*', '_asterisk_')
+        normalized = command.replace(' ', '_') \
+                            .replace('*', '_') \
+                            .replace('?', '_') \
+                            .replace(':', '_') \
+                            .replace('/', '_')
         return normalized
 
 
