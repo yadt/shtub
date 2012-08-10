@@ -25,9 +25,9 @@ class StubbingSshExampleTest (shtub.testbase.IntegrationTestBase):
         
         self.prepare_testbed(env, ['ssh'])
 
-        with self.fixture() as fixture:
-            fixture.expect('ssh', ['-arg1', '-arg2', '-arg3']) \
-                   .then_return(0)
+        with self.fixture() as when:
+            when.calling('ssh').with_arguments('-arg1', '-arg2', '-arg3') \
+                .then_return(0)
 
         actual_return_code = self.execute_command('ssh -arg1 -arg2 -arg3')
 

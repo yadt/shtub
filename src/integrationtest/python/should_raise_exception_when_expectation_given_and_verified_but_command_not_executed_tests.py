@@ -26,11 +26,11 @@ class Test (integrationtest_support.IntegrationTestSupport):
         self.prepare_default_testbed(['command_stub', 'command_stub1'])
         self.create_command_wrapper('command_wrapper1', 'command_stub1', ['-arg1', '-arg2', '-arg3'], 'stdin1')
         
-        with self.fixture() as fixture:
-            fixture.expect('command_stub', ['-arg0', '-arg2', '-arg3'], 'stdin') \
-                   .then_answer('Hello world 1', 'Hello error 1', 0)
-            fixture.expect('command_stub1', ['-arg1', '-arg2', '-arg3'], 'stdin1') \
-                   .then_answer('Hello world 2', 'Hello error 2', 0)
+        with self.fixture() as when:
+            when.calling('command_stub').with_arguments('-arg0', '-arg2', '-arg3').and_input('stdin') \
+                .then_answer('Hello world 1', 'Hello error 1', 0)
+            when.calling('command_stub1').with_arguments('-arg1', '-arg2', '-arg3').and_input('stdin1') \
+                .then_answer('Hello world 2', 'Hello error 2', 0)
             
         actual_return_code = self.execute_command('command_wrapper1')
         

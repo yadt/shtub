@@ -31,7 +31,7 @@ class Expectation (Execution):
         contains corresponding answers.
     """
     
-    def __init__ (self, command, arguments, stdin,
+    def __init__ (self, command, arguments=None, stdin=None,
                   answers=[], initial_answer=0):
         """
             will initialize a new object with the given properties.
@@ -45,6 +45,8 @@ class Expectation (Execution):
         
         for answer in answers:
             self.answers.append(answer)
+            
+        self.and_input = self.with_input
     
     
     def as_dictionary (self):
@@ -120,6 +122,28 @@ class Expectation (Execution):
         return self.then_answer(stdout=stdout, stderr=stderr)
     
     
+    def with_arguments (self, *arguments):
+        """
+            sets the given arguments and returns the expectation itself for
+            invocation chaining
+        """
+        
+        self.arguments = list(arguments)
+        
+        return self
+
+    
+    def with_input (self, stdin):
+        """
+            sets the given arguments and returns the expectation itself for
+            invocation chaining
+        """
+        
+        self.stdin = stdin
+        
+        return self
+
+
     def __eq__ (self, other):
         """
             returns True if all properties are equal

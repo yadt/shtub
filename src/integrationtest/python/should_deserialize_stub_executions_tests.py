@@ -28,9 +28,9 @@ class Test (integrationtest_support.IntegrationTestSupport):
         self.prepare_default_testbed(['command_stub'])
         self.create_command_wrapper('command_wrapper', 'command_stub', ['-arg1', '-arg2', '-arg3'], 'stdin')
         
-        with self.fixture() as fixture:
-            fixture.expect('command_stub', ['-arg1', '-arg2', '-arg3'], 'stdin') \
-                   .then_answer('Hello world.', 'Hello error!', 0)
+        with self.fixture() as when:
+            when.calling('command_stub').with_arguments('-arg1', '-arg2', '-arg3').and_input('stdin') \
+                .then_answer('Hello world.', 'Hello error!', 0)
         
         actual_return_code = self.execute_command('command_wrapper')
         

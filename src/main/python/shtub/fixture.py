@@ -55,6 +55,19 @@ class Fixture (object):
         return expectation
     
     
+    def calling (self, command):
+        """
+            creates a new expecation with the given command and appends it to
+            the expectations, then returns the expecation for invocation
+            chaining.
+        """
+    
+        expectation = Expectation(command)
+        self.expectations.append(expectation)
+        
+        return expectation
+
+    
     def __enter__ (self):
         """
             since this class is designed to be used using the "with" statement

@@ -28,6 +28,7 @@ class FixtureTest (unittest2.TestCase):
         
         self.assertEquals('/abc/def', actual_fixture.base_dir)
         self.assertEquals([], actual_fixture.expectations)
+
         
     def test_should_append_a_new_expectation (self):
         fixture = Fixture('/test123')
@@ -43,6 +44,23 @@ class FixtureTest (unittest2.TestCase):
         self.assertEquals(['any_arg0', 'any_arg1', 'any_arg2'], actual_expectation.arguments)
         self.assertEquals('any_stdin', actual_expectation.stdin)
 
+
+    def test_should_append_a_new_expectation (self):
+        when = Fixture('/test123')
+
+        actual_return_value = when.calling('any_command')
+
+        actual_expectations = when.expectations
+        self.assertEquals(1, len(actual_expectations))
+        
+        actual_expectation = actual_expectations[0]
+        
+        self.assertEquals(actual_return_value, actual_expectation)
+        self.assertEquals('any_command', actual_expectation.command)
+        self.assertEquals([], actual_expectation.arguments)
+        self.assertEquals(None, actual_expectation.stdin)
+
+
     def test_should_append_a_new_expectation_with_default_properties (self):
         fixture = Fixture('/test123')
         
@@ -56,6 +74,7 @@ class FixtureTest (unittest2.TestCase):
         self.assertEquals('any_command', actual_expectation.command)
         self.assertEquals(['any_arg0'], actual_expectation.arguments)
         self.assertEquals('any_stdin', actual_expectation.stdin)
+
 
     def test_should_append_two_new_expectations_in_correct_order (self):
         fixture = Fixture('/test123')
@@ -77,6 +96,7 @@ class FixtureTest (unittest2.TestCase):
         self.assertEquals('any_command2', actual_second_expectation.command)
         self.assertEquals(['2any_arg0', '2any_arg1', '2any_arg2'], actual_second_expectation.arguments)
         self.assertEquals('any_stdin2', actual_second_expectation.stdin)
+
     
     @patch('shtub.fixture.serialize_executions')
     def test_should_return_fixture_itself_when_entering_with_statement_and_serialize_expectations_when_exiting (self, serialize_mock):
@@ -86,6 +106,7 @@ class FixtureTest (unittest2.TestCase):
             self.assertEquals(fix, fixture)
         
         self.assertEquals(call('/hello/world/test-execution/expectations', []), serialize_mock.call_args)
+
             
     def test_should_return_expectation_object (self):
         fixture = Fixture('/test123')
