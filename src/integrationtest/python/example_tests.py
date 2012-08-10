@@ -33,8 +33,8 @@ class StubbingSshExampleTest (shtub.testbase.IntegrationTestBase):
 
         self.assertEquals(0, actual_return_code)
 
-        with self.verify() as verifier:
-            verifier.verify('ssh', ['-arg1', '-arg2', '-arg3'])
+        with self.verify() as verify:
+            verify.called('ssh').with_arguments('-arg1', '-arg2', '-arg3')
 
     def _path (self):
         path = self.stubs_dir

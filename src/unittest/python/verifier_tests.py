@@ -18,20 +18,23 @@ import unittest
 
 from mock import patch, call
 
-from shtub.verifier import Verifier
+from shtub.verifier import Verifier, VerfiableExecutionWrapper
 from shtub.execution import Execution
+
 
 class VerfierTest (unittest.TestCase):
     def test_should_create_object_with_given_base_dir (self):
         actual_verifier = Verifier('/abc/def')
         
         self.assertEquals('/abc/def', actual_verifier.base_dir)
-        
+
+
     def test_should_initialize_recoreded_calls (self):
         actual_verifier = Verifier('/abc/def')
 
         self.assertEquals([], actual_verifier.recorded_calls)
-    
+
+
     @patch('shtub.verifier.deserialize_executions')
     def test_should_deserialize_recorded_calls_and_return_verifier_itself_when_entering_with_statement (self, mock_deserialize):
         verifier = Verifier('/hello/world')
@@ -40,7 +43,8 @@ class VerfierTest (unittest.TestCase):
             self.assertEquals(veri, verifier)
             
         self.assertEquals(call('/hello/world/test-execution/recorded-calls'), mock_deserialize.call_args)
-    
+
+
     @patch('shtub.verifier.deserialize_executions')
     def test_should_raise_exception_when_no_executed_calls_recorded (self, mock_deserialize):
         verifier = Verifier('/hello/world')
@@ -51,6 +55,7 @@ class VerfierTest (unittest.TestCase):
             self.assertRaises(AssertionError, veri.verify, 'any_stub', ['any_arguments'], 'any_stdin')
 
         self.assertEquals(call('/hello/world/test-execution/recorded-calls'), mock_deserialize.call_args)
+
 
     @patch('shtub.verifier.deserialize_executions')
     def test_should_raise_exception_when_recorded_call_does_not_fit_expectation (self, mock_deserialize):
@@ -64,6 +69,7 @@ class VerfierTest (unittest.TestCase):
             self.assertRaises(AssertionError, veri.verify, 'other_command', ['any_arg1', 'any_arg2'], 'any_stdin')
 
         self.assertEquals(call('/hello/world/test-execution/recorded-calls'), mock_deserialize.call_args)
+
 
     @patch('shtub.verifier.deserialize_executions')
     def test_should_raise_exception_when_second_recorded_call_does_not_fit_expectation (self, mock_deserialize):
@@ -80,6 +86,7 @@ class VerfierTest (unittest.TestCase):
 
         self.assertEquals(call('/hello/world/test-execution/recorded-calls'), mock_deserialize.call_args)
 
+
     @patch('shtub.verifier.deserialize_executions')
     def test_should_verify_all_recorded_calls_when_all_recorded_calls_fit_expectation (self, mock_deserialize):
         verifier = Verifier('/hello/world')
@@ -95,3 +102,82 @@ class VerfierTest (unittest.TestCase):
             self.assertEqual(0, len(veri.recorded_calls))
 
         self.assertEquals(call('/hello/world/test-execution/recorded-calls'), mock_deserialize.call_args)
+
+
+    @patch('shtub.verifier.deserialize_executions')
+    def test_should_verify_command_has_been_called (self, mock_deserialize):
+        verifier = Verifier('/hello/world')
+        
+        stub_execution = Execution('command', ['-arg1', '-arg2'], 'stdin')
+        
+        mock_deserialize.return_value = [stub_execution]
+        
+        with verifier as verify:
+            called_command = verify.called('command')
+            self.assertEquals(called_command.execution, stub_execution)
+            self.assertEqual(0, len(verify.recorded_calls))
+
+        self.assertEquals(call('/hello/world/test-execution/recorded-calls'), mock_deserialize.call_args)
+
+
+    @patch('shtub.verifier.deserialize_executions')
+    def test_should_raise_exception_when_expected_command_has_not_been_executed (self, mock_deserialize):
+        verifier = Verifier('/hello/world')
+        
+        stub_execution = Execution('command', ['-arg1', '-arg2'], 'stdin')
+        
+        mock_deserialize.return_value = [stub_execution]
+
+        with verifier as verify:
+            self.assertRaises(AssertionError, verifier.called, 'other_command')
+
+
+    @patch('shtub.verifier.deserialize_executions')
+    def test_should_raise_exception_when_recorded_calls_available (self, mock_deserialize):
+        verifier = Verifier('/hello/world')
+        
+        mock_deserialize.return_value = []
+
+        with verifier as verify:
+            self.assertRaises(AssertionError, verifier.called, 'other_command')
+
+
+class VerfiableExecutionWrapperTests (unittest.TestCase):
+    def test_should_verify_given_arguments (self):
+        execution = Execution('command', ['-arg1', '-arg2', '-arg3'], 'stdin')
+        wrapper = VerfiableExecutionWrapper(execution)
+        
+        actual_value = wrapper.with_arguments('-arg1', '-arg2', '-arg3')
+        
+        self.assertEquals(wrapper, actual_value)
+
+
+    def test_should_raise_exception_when_given_arguments_are_different (self):
+        execution = Execution('command', ['-arg1', '-arg2', '-arg3'], 'stdin')
+        wrapper = VerfiableExecutionWrapper(execution)
+        
+        self.assertRaises(AssertionError, wrapper.with_arguments, '-arg1', '-arg2', 'arg3')
+
+
+    def test_should_verify_given_input (self):
+        execution = Execution('command', ['-arg1', '-arg2', '-arg3'], 'stdin')
+        wrapper = VerfiableExecutionWrapper(execution)
+        
+        actual_value = wrapper.with_input('stdin')
+        
+        self.assertEquals(wrapper, actual_value)
+
+
+    def test_should_raise_exception_when_given_input_is_different (self):
+        execution = Execution('command', ['-arg1', '-arg2', '-arg3'], 'stdin')
+        wrapper = VerfiableExecutionWrapper(execution)
+        
+        self.assertRaises(AssertionError, wrapper.with_input, 'hello world')
+
+
+    def test_should_verify_input_using_with_or_and (self):
+        execution = Execution('command', ['-arg1', '-arg2', '-arg3'], 'stdin')
+        wrapper = VerfiableExecutionWrapper(execution)
+        
+        self.assertEquals(wrapper.and_input, wrapper.with_input)
+
