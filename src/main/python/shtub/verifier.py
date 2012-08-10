@@ -125,9 +125,28 @@ class VerfiableExecutionWrapper (object):
         self.and_input = self.with_input
 
 
+    def at_least_with_arguments (self, *expected_arguments):
+        """
+            raises a exception if the expeceted arguments are not in the
+            arguments of the wrapped execution. Returns the wrapper itself
+            to make invocation chaining possible.
+        """
+        
+        arguments = list(expected_arguments)
+        
+        for argument in arguments:
+            if argument not in self.execution.arguments:
+                raise AssertionError(
+                    'Stub "%s" has not been executed with at least '
+                    'expected arguments %s, but with %s.'
+                    % (self.execution.command, arguments, self.execution.arguments))
+        
+        return self
+
+
     def with_arguments (self, *expected_arguments):
         """
-            raises a exception if the arguments in the wrapped execution are
+            raises a exception if the arguments of the wrapped execution are
             different than the expected arguments. Returns the wrapper itself
             to make invocation chaining possible.
         """

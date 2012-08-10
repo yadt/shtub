@@ -143,6 +143,31 @@ class VerfierTest (unittest.TestCase):
 
 
 class VerfiableExecutionWrapperTests (unittest.TestCase):
+    def test_should_verify_at_least_given_argument (self):
+        execution = Execution('command', ['-arg1', '-arg2', '-arg3'], 'stdin')
+        wrapper = VerfiableExecutionWrapper(execution)
+        
+        actual_value = wrapper.at_least_with_arguments('-arg1')
+        
+        self.assertEquals(wrapper, actual_value)
+
+
+    def test_should_verify_at_least_given_arguments (self):
+        execution = Execution('command', ['-arg1', '-arg2', '-arg3'], 'stdin')
+        wrapper = VerfiableExecutionWrapper(execution)
+        
+        actual_value = wrapper.at_least_with_arguments('-arg1', '-arg2')
+        
+        self.assertEquals(wrapper, actual_value)
+
+
+    def test_should_raise_exception_when_given_argument_is_not_execution (self):
+        execution = Execution('command', ['-arg1', '-arg2', '-arg3'], 'stdin')
+        wrapper = VerfiableExecutionWrapper(execution)
+        
+        self.assertRaises(AssertionError, wrapper.at_least_with_arguments, '-arg0')
+
+
     def test_should_verify_given_arguments (self):
         execution = Execution('command', ['-arg1', '-arg2', '-arg3'], 'stdin')
         wrapper = VerfiableExecutionWrapper(execution)
