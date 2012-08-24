@@ -37,6 +37,9 @@ if __name__ == '__main__':
     unittest.main()
 ```
 
+If you are using *shtub* within a continuous integration system like buildbot,
+make sure you are starting the process in a terminal (for buildbot: usePTY=True).  
+
 License
 =======
 
