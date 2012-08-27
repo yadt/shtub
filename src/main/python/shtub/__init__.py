@@ -27,13 +27,13 @@ from os.path import join
 from shtub.execution import Execution
 from shtub.expectation import Expectation
 
-BASEDIR                       = 'test-execution'
+BASEDIR = 'test-execution'
 
-EXPECTATIONS_FILENAME         = join(BASEDIR, 'expectations')
-LOCK_FILENAME                 = join(BASEDIR, 'lock')
-LOG_FILENAME                  = join(BASEDIR, 'log')
-RECORDED_CALLS_FILENAME       = join(BASEDIR, 'recorded-calls')
-STUBS_DIRECTORY               = join(BASEDIR, 'stubs')
+EXPECTATIONS_FILENAME = join(BASEDIR, 'expectations')
+LOCK_FILENAME = join(BASEDIR, 'lock')
+LOG_FILENAME = join(BASEDIR, 'log')
+RECORDED_CALLS_FILENAME = join(BASEDIR, 'recorded-calls')
+STUBS_DIRECTORY = join(BASEDIR, 'stubs')
 
 READ_STDIN_TIMEOUT_IN_SECONDS = 1
 
@@ -42,18 +42,18 @@ def deserialize_expectations (filename):
     """
         loads the given json file and returns a list of expectations.
     """
-    
+
     expectations = _load_json_file(filename)
-    return map(lambda e: Expectation.from_dictionary(e), expectations) 
+    return map(lambda e: Expectation.from_dictionary(e), expectations)
 
 
 def deserialize_executions (filename):
     """
         loads the given json file and returns a list of executions.
     """
-    
+
     executions = _load_json_file(filename)
-    return map(lambda e: Execution.from_dictionary(e), executions) 
+    return map(lambda e: Execution.from_dictionary(e), executions)
 
 
 def serialize_executions (filename, executions):
@@ -61,11 +61,11 @@ def serialize_executions (filename, executions):
         writes the given execution objects into a json file with the given
         filename.
     """
-    
-    dictionaries = map(lambda e: e.as_dictionary(), executions)
-    json_string  = json.dumps(dictionaries, sort_keys=True, indent=4)
 
-    with open(filename, 'w') as json_file:
+    dictionaries = map(lambda e: e.as_dictionary(), executions)
+    json_string = json.dumps(dictionaries, sort_keys=True, indent=4)
+
+    with open(filename, mode='w') as json_file:
         json_file.write(json_string)
 
 
@@ -73,8 +73,8 @@ def _load_json_file (filename):
     """
         loads the given json file and returns the json content as dictionary.
     """
-    
-    with open(filename, 'r') as json_file:
+
+    with open(filename, mode='r') as json_file:
         file_content = json_file.read()
         dictionary = json.loads(file_content)
 

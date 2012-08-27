@@ -250,7 +250,7 @@ class Tests (unittest.TestCase):
         actual_file_handle = commandstub.lock()
 
         self.assertEquals(file_handle_mock, actual_file_handle)
-        self.assertEquals(call('test-execution/lock', 'a'), mock_open.call_args)
+        self.assertEquals(call('test-execution/lock', mode='a'), mock_open.call_args)
         self.assertEquals(call(file_handle_mock, mock_fcntl.LOCK_EX), mock_fcntl.flock.call_args)
 
     def test_should_unlock (self):

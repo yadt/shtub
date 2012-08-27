@@ -45,7 +45,7 @@ class ShtubTests (unittest.TestCase):
 
         actual_executions = deserialize_executions('executions.json')
 
-        self.assertEquals(call('executions.json', 'r'), mock_open.call_args)
+        self.assertEquals(call('executions.json', mode='r'), mock_open.call_args)
         self.assertEquals(call(), fake_file.read.call_args)
         self.assertEquals(call(json_string), mock_json.call_args)
 
@@ -70,7 +70,7 @@ class ShtubTests (unittest.TestCase):
 
         actual_expectations = deserialize_expectations('executions.json')
 
-        self.assertEquals(call('executions.json', 'r'), mock_open.call_args)
+        self.assertEquals(call('executions.json', mode='r'), mock_open.call_args)
         self.assertEquals(call(), fake_file.read.call_args)
         self.assertEquals(call(json_string), mock_json.call_args)
 
@@ -92,7 +92,7 @@ class ShtubTests (unittest.TestCase):
                                'stdin'     : 'stdin'}
 
         self.assertEquals(call([expected_dictionary], sort_keys=True, indent=4), mock_json.call_args)
-        self.assertEquals(call('executions.json', 'w'), mock_open.call_args)
+        self.assertEquals(call('executions.json', mode='w'), mock_open.call_args)
         self.assertEquals(call('[{"some": "json"}]'), fake_file.write.call_args)
 
     def return_file_when_calling (self, mock_open, content=None):
