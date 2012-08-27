@@ -59,7 +59,7 @@ class Test (IntegrationTestSupport):
                                          shell=True,
                                          cwd=test_dir)
 
-        stdout, stderr = shell_process.communicate(str('Hello world.'))
+        stdout, stderr = shell_process.communicate(bytes('Hello world.'))
 
         self.assertEqual(255, shell_process.returncode)
 
