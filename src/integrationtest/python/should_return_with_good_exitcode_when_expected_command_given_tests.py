@@ -56,7 +56,6 @@ class Test (unittest.TestCase):
 
         stdout, stderr = shell_process.communicate('Hello world.')
 
-        print stdout, stderr
         self.assertEqual(0, shell_process.returncode)
 
 
