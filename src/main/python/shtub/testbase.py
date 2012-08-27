@@ -53,15 +53,15 @@ class IntegrationTestBase (unittest.TestCase):
         output_path = os.path.join(self.base_dir, BASEDIR, filename)
 
         with open(output_path, 'wb') as output_file:
-            output_file.write('--------------- ENVIRONMENT ----------------\n')
+            output_file.write(bytes('--------------- ENVIRONMENT ----------------\n'))
             for key in sorted(self.env.keys()):
-                output_file.write('%s=%s\n' % (key, self.env[key]))
+                output_file.write(bytes('%s=%s\n' % (key, self.env[key])))
 
-            output_file.write('----------------- STDOUT -------------------\n')
-            output_file.write(stdout)
+            output_file.write(bytes('----------------- STDOUT -------------------\n'))
+            output_file.write(bytes(stdout))
 
-            output_file.write('----------------- STDERR -------------------\n')
-            output_file.write(stderr)
+            output_file.write(bytes('----------------- STDERR -------------------\n'))
+            output_file.write(bytes(stderr))
 
 
     def execute_command (self, command):
