@@ -44,7 +44,7 @@ def deserialize_expectations (filename):
     """
 
     expectations = _load_json_file(filename)
-    return map(lambda e: Expectation.from_dictionary(e), expectations)
+    return list(map(lambda e: Expectation.from_dictionary(e), expectations))
 
 
 def deserialize_executions (filename):
@@ -53,7 +53,7 @@ def deserialize_executions (filename):
     """
 
     executions = _load_json_file(filename)
-    return map(lambda e: Execution.from_dictionary(e), executions)
+    return list(map(lambda e: Execution.from_dictionary(e), executions))
 
 
 def serialize_executions (filename, executions):
@@ -62,7 +62,7 @@ def serialize_executions (filename, executions):
         filename.
     """
 
-    dictionaries = map(lambda e: e.as_dictionary(), executions)
+    dictionaries = list(map(lambda e: e.as_dictionary(), executions))
     json_string = json.dumps(dictionaries, sort_keys=True, indent=4)
 
     with open(filename, mode='w') as json_file:
