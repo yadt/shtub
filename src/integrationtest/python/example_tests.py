@@ -22,7 +22,7 @@ class StubbingSshExampleTest (shtub.testbase.IntegrationTestBase):
     def test_should_stub_ssh_then_execute_ssh_and_verify_expectation (self):
         env = {'PATH'       : self._path(),
                'PYTHONPATH' : self._python_path()}
-        
+
         self.prepare_testbed(env, ['ssh'])
 
         with self.fixture() as when:
@@ -38,24 +38,24 @@ class StubbingSshExampleTest (shtub.testbase.IntegrationTestBase):
 
     def _path (self):
         path = self.stubs_dir
-        
-        if os.environ.has_key('PATH'):
+
+        if 'PATH' in os.environ:
             path += os.pathsep + os.environ['PATH']
         else:
             path += os.pathsep + '/bin'
             path += os.pathsep + '/usr/bin'
             path += os.pathsep + '/usr/local/bin'
-        
+
         return path
-    
+
     def _python_path (self):
         current_file = os.path.abspath(__file__)
         pythonpath = os.path.abspath(os.path.join(current_file, '.'))
-        pythonpath += os.pathsep 
+        pythonpath += os.pathsep
         pythonpath += os.path.abspath(os.path.join(current_file, '..', '..', '..', 'main', 'python'))
-        
+
         return pythonpath
-    
+
 
 if __name__ == '__main__':
     unittest.main()

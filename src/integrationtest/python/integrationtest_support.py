@@ -45,7 +45,7 @@ class IntegrationTestSupport (shtub.testbase.IntegrationTestBase):
     def create_path (self):
         path = self.stubs_dir
 
-        if os.environ.has_key('PATH'):
+        if 'PATH' in os.environ:
             path += os.pathsep + os.environ['PATH']
         else:
             path += os.pathsep + '/bin'
