@@ -27,7 +27,7 @@ class ExecutionTests (unittest.TestCase):
         actual_execution = Execution.from_dictionary(values)
 
         self.assertEquals('any_command', actual_execution.command)
-        self.assertEquals(['any_argduments'], actual_execution.arguments)
+        self.assertEquals(['any_arguments'], actual_execution.arguments)
         self.assertEquals('any_stdin', actual_execution.stdin)
 
     def test_should_create_object_with_given_properties (self):

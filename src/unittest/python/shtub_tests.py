@@ -22,8 +22,10 @@ from mock import Mock, call, patch
 major, minor, micro, releaselevel, serial = sys.version_info
 if major == 3:
     from io import StringIO
+    builtin_string = 'builtins'
 else:
     from StringIO import StringIO
+    builtin_string = '__builtin__'
 
 from shtub import serialize_executions, deserialize_executions, deserialize_expectations
 from shtub.answer import Answer
@@ -33,7 +35,7 @@ from shtub.expectation import Expectation
 
 class ShtubTests (unittest.TestCase):
     @patch('json.loads')
-    @patch('__builtin__.open')
+    @patch(builtin_string + '.open')
     def test_should_deserialize_executions (self, mock_open, mock_json):
         fake_file = self.return_file_when_calling(mock_open)
         executions = [Execution('command', ['-arg1', '-arg2', '-arg3'], 'stdin')]
@@ -53,7 +55,7 @@ class ShtubTests (unittest.TestCase):
         self.assertEquals(expected_executions, actual_executions)
 
     @patch('json.loads')
-    @patch('__builtin__.open')
+    @patch(builtin_string + '.open')
     def test_should_deserialize_expectations (self, mock_open, mock_json):
         fake_file = self.return_file_when_calling(mock_open)
         executions = [Expectation('command', ['-arg1', '-arg2', '-arg3'], 'stdin')]
@@ -79,7 +81,7 @@ class ShtubTests (unittest.TestCase):
         self.assertEquals(expected_expectations, actual_expectations)
 
     @patch('json.dumps')
-    @patch('__builtin__.open')
+    @patch(builtin_string + '.open')
     def test_should_serialize_executions (self, mock_open, mock_json):
         fake_file = self.return_file_when_calling(mock_open)
         mock_json.return_value = '[{"some": "json"}]'

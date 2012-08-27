@@ -25,8 +25,11 @@ else:
 
 if major == 3:
     from io import StringIO
+    builtin_string = 'builtins'
 else:
     from StringIO import StringIO
+    builtin_string = '__builtin__'
+
 
 from mock import ANY, Mock, call, patch
 
@@ -241,7 +244,7 @@ class Tests (unittest.TestCase):
         self.assertEquals(expected_execution, actual_execution)
 
     @patch('shtub.commandstub.fcntl')
-    @patch('__builtin__.open')
+    @patch(builtin_string + '.open')
     def test_should_create_lock (self, mock_open, mock_fcntl):
         mock_fcntl.LOCK_EX = 'LOCK_EX'
         file_handle_mock = Mock()
