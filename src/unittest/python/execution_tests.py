@@ -26,32 +26,32 @@ class ExecutionTests (unittest.TestCase):
 
         actual_execution = Execution.from_dictionary(values)
 
-        self.assertEquals('any_command', actual_execution.command)
-        self.assertEquals(['any_arguments'], actual_execution.arguments)
-        self.assertEquals('any_stdin', actual_execution.stdin)
+        self.assertEqual('any_command', actual_execution.command)
+        self.assertEqual(['any_arguments'], actual_execution.arguments)
+        self.assertEqual('any_stdin', actual_execution.stdin)
 
     def test_should_create_object_with_given_properties (self):
         actual_execution = Execution('any_command', ['any_arg1', 'any_arg2'], 'any_stdin')
 
-        self.assertEquals('any_command', actual_execution.command)
-        self.assertEquals(['any_arg1', 'any_arg2'], actual_execution.arguments)
-        self.assertEquals('any_stdin', actual_execution.stdin)
+        self.assertEqual('any_command', actual_execution.command)
+        self.assertEqual(['any_arg1', 'any_arg2'], actual_execution.arguments)
+        self.assertEqual('any_stdin', actual_execution.stdin)
 
     def test_should_create_object_with_given_properties_but_empty_arguments (self):
         actual_execution = Execution('any_command', [], 'any_stdin')
 
-        self.assertEquals('any_command', actual_execution.command)
-        self.assertEquals([], actual_execution.arguments)
-        self.assertEquals('any_stdin', actual_execution.stdin)
+        self.assertEqual('any_command', actual_execution.command)
+        self.assertEqual([], actual_execution.arguments)
+        self.assertEqual('any_stdin', actual_execution.stdin)
 
     def test_should_convert_object_to_dictionary (self):
         execution = Execution('any_command', ['any_arg1', 'any_arg2'], 'any_stdin')
 
         actual_dictionary = execution.as_dictionary()
 
-        self.assertEquals('any_command', actual_dictionary['command'])
-        self.assertEquals(['any_arg1', 'any_arg2'], actual_dictionary['arguments'])
-        self.assertEquals('any_stdin', actual_dictionary['stdin'])
+        self.assertEqual('any_command', actual_dictionary['command'])
+        self.assertEqual(['any_arg1', 'any_arg2'], actual_dictionary['arguments'])
+        self.assertEqual('any_stdin', actual_dictionary['stdin'])
 
     def test_should_return_false_when_objects_command_is_not_equal (self):
         execution1 = Execution('any_command', ['any_arg1', 'any_arg2'], 'any_stdin')
@@ -92,7 +92,7 @@ class ExecutionTests (unittest.TestCase):
     def test_should_return_string_with_all_properties (self):
         execution = Execution('any_command', ['any_arg1', 'any_arg2'], 'any_stdin')
 
-        self.assertEquals("Execution {'stdin': 'any_stdin', 'command': 'any_command', 'arguments': ['any_arg1', 'any_arg2']}", str(execution))
+        self.assertEqual("Execution {'stdin': 'any_stdin', 'command': 'any_command', 'arguments': ['any_arg1', 'any_arg2']}", str(execution))
 
     def test_should_return_false_if_other_has_different_arguments (self):
         execution = Execution('any_command', ['any_arg1', 'any_arg2'], 'any_stdin')

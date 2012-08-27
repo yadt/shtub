@@ -21,19 +21,19 @@ from os.path import join
 import integrationtest_support
 
 
-class Test (integrationtest_support.IntegrationTestSupport):       
+class Test (integrationtest_support.IntegrationTestSupport):
     def test (self):
         self.prepare_default_testbed(['command_stub'])
         self.create_command_wrapper('command_wrapper', 'command_stub', ['-arg1', '-arg2', '-arg3'], 'stdin')
-        
+
         with self.fixture() as when:
             when.calling('command_stub').with_arguments('-arg1', '-arg2', '-arg3').and_input('stdin') \
                 .then_answer('Hello world', 'Hello error', 0)
-            
+
         actual_return_code = self.execute_command('command_wrapper')
-        
-        self.assertEquals(0, actual_return_code)
-        
+
+        self.assertEqual(0, actual_return_code)
+
         with self.verify() as verify:
             called_command = verify.called('command_stub')
             self.assertRaises(AssertionError, called_command.with_arguments, '-arg0', '-arg1', '-arg2')

@@ -26,13 +26,13 @@ class VerfierTest (unittest.TestCase):
     def test_should_create_object_with_given_base_dir (self):
         actual_verifier = Verifier('/abc/def')
         
-        self.assertEquals('/abc/def', actual_verifier.base_dir)
+        self.assertEqual('/abc/def', actual_verifier.base_dir)
 
 
     def test_should_initialize_recoreded_calls (self):
         actual_verifier = Verifier('/abc/def')
 
-        self.assertEquals([], actual_verifier.recorded_calls)
+        self.assertEqual([], actual_verifier.recorded_calls)
 
 
     @patch('shtub.verifier.deserialize_executions')
@@ -40,9 +40,9 @@ class VerfierTest (unittest.TestCase):
         verifier = Verifier('/hello/world')
                 
         with verifier as veri:
-            self.assertEquals(veri, verifier)
+            self.assertEqual(veri, verifier)
             
-        self.assertEquals(call('/hello/world/test-execution/recorded-calls'), mock_deserialize.call_args)
+        self.assertEqual(call('/hello/world/test-execution/recorded-calls'), mock_deserialize.call_args)
 
 
     @patch('shtub.verifier.deserialize_executions')
@@ -54,7 +54,7 @@ class VerfierTest (unittest.TestCase):
         with verifier as veri:
             self.assertRaises(AssertionError, veri.verify, 'any_stub', ['any_arguments'], 'any_stdin')
 
-        self.assertEquals(call('/hello/world/test-execution/recorded-calls'), mock_deserialize.call_args)
+        self.assertEqual(call('/hello/world/test-execution/recorded-calls'), mock_deserialize.call_args)
 
 
     @patch('shtub.verifier.deserialize_executions')
@@ -68,7 +68,7 @@ class VerfierTest (unittest.TestCase):
         with verifier as veri:
             self.assertRaises(AssertionError, veri.verify, 'other_command', ['any_arg1', 'any_arg2'], 'any_stdin')
 
-        self.assertEquals(call('/hello/world/test-execution/recorded-calls'), mock_deserialize.call_args)
+        self.assertEqual(call('/hello/world/test-execution/recorded-calls'), mock_deserialize.call_args)
 
 
     @patch('shtub.verifier.deserialize_executions')
@@ -84,7 +84,7 @@ class VerfierTest (unittest.TestCase):
             veri.verify('any_command1', ['1any_arg1', '1any_arg2'], 'any_stdin')
             self.assertRaises(AssertionError, veri.verify, 'other_command', ['2any_arg1', '2any_arg2'], 'any_stdin2')
 
-        self.assertEquals(call('/hello/world/test-execution/recorded-calls'), mock_deserialize.call_args)
+        self.assertEqual(call('/hello/world/test-execution/recorded-calls'), mock_deserialize.call_args)
 
 
     @patch('shtub.verifier.deserialize_executions')
@@ -101,7 +101,7 @@ class VerfierTest (unittest.TestCase):
             veri.verify('any_command2', ['2any_arg1', '2any_arg2'], 'any_stdin2')
             self.assertEqual(0, len(veri.recorded_calls))
 
-        self.assertEquals(call('/hello/world/test-execution/recorded-calls'), mock_deserialize.call_args)
+        self.assertEqual(call('/hello/world/test-execution/recorded-calls'), mock_deserialize.call_args)
 
 
     @patch('shtub.verifier.deserialize_executions')
@@ -114,10 +114,10 @@ class VerfierTest (unittest.TestCase):
         
         with verifier as verify:
             called_command = verify.called('command')
-            self.assertEquals(called_command.execution, stub_execution)
+            self.assertEqual(called_command.execution, stub_execution)
             self.assertEqual(0, len(verify.recorded_calls))
 
-        self.assertEquals(call('/hello/world/test-execution/recorded-calls'), mock_deserialize.call_args)
+        self.assertEqual(call('/hello/world/test-execution/recorded-calls'), mock_deserialize.call_args)
 
 
     @patch('shtub.verifier.deserialize_executions')
@@ -149,7 +149,7 @@ class VerfiableExecutionWrapperTests (unittest.TestCase):
         
         actual_value = wrapper.at_least_with_arguments('-arg1')
         
-        self.assertEquals(wrapper, actual_value)
+        self.assertEqual(wrapper, actual_value)
 
 
     def test_should_verify_at_least_given_arguments (self):
@@ -158,7 +158,7 @@ class VerfiableExecutionWrapperTests (unittest.TestCase):
         
         actual_value = wrapper.at_least_with_arguments('-arg1', '-arg2')
         
-        self.assertEquals(wrapper, actual_value)
+        self.assertEqual(wrapper, actual_value)
 
 
     def test_should_raise_exception_when_given_argument_is_not_execution (self):
@@ -174,7 +174,7 @@ class VerfiableExecutionWrapperTests (unittest.TestCase):
         
         actual_value = wrapper.with_arguments('-arg1', '-arg2', '-arg3')
         
-        self.assertEquals(wrapper, actual_value)
+        self.assertEqual(wrapper, actual_value)
 
 
     def test_should_raise_exception_when_given_arguments_are_different (self):
@@ -190,7 +190,7 @@ class VerfiableExecutionWrapperTests (unittest.TestCase):
         
         actual_value = wrapper.with_input('stdin')
         
-        self.assertEquals(wrapper, actual_value)
+        self.assertEqual(wrapper, actual_value)
 
 
     def test_should_raise_exception_when_given_input_is_different (self):
@@ -204,5 +204,5 @@ class VerfiableExecutionWrapperTests (unittest.TestCase):
         execution = Execution('command', ['-arg1', '-arg2', '-arg3'], 'stdin')
         wrapper = VerfiableExecutionWrapper(execution)
         
-        self.assertEquals(wrapper.and_input, wrapper.with_input)
+        self.assertEqual(wrapper.and_input, wrapper.with_input)
 

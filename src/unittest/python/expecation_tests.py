@@ -42,36 +42,36 @@ class ExpectationTests (unittest.TestCase):
 
         actual_expectation = Expectation.from_dictionary(values)
 
-        self.assertEquals('any_command', actual_expectation.command)
-        self.assertEquals(['any_arg1', 'any_arg2', 'any_argument3'], actual_expectation.arguments)
-        self.assertEquals('any_stdin', actual_expectation.stdin)
-        self.assertEquals(0, actual_expectation.current_answer)
+        self.assertEqual('any_command', actual_expectation.command)
+        self.assertEqual(['any_arg1', 'any_arg2', 'any_argument3'], actual_expectation.arguments)
+        self.assertEqual('any_stdin', actual_expectation.stdin)
+        self.assertEqual(0, actual_expectation.current_answer)
 
         actual_count_of_answers = len(actual_expectation.answers)
 
-        self.assertEquals(2, actual_count_of_answers)
+        self.assertEqual(2, actual_count_of_answers)
 
         actual_first_answer = actual_expectation.next_answer()
 
-        self.assertEquals('Hello world.', actual_first_answer.stdout)
-        self.assertEquals('Hello error!', actual_first_answer.stderr)
-        self.assertEquals(18, actual_first_answer.return_code)
+        self.assertEqual('Hello world.', actual_first_answer.stdout)
+        self.assertEqual('Hello error!', actual_first_answer.stderr)
+        self.assertEqual(18, actual_first_answer.return_code)
 
         actual_second_answer = actual_expectation.next_answer()
 
-        self.assertEquals('Spam eggs.', actual_second_answer.stdout)
-        self.assertEquals('Error!', actual_second_answer.stderr)
-        self.assertEquals(21, actual_second_answer.return_code)
+        self.assertEqual('Spam eggs.', actual_second_answer.stdout)
+        self.assertEqual('Error!', actual_second_answer.stderr)
+        self.assertEqual(21, actual_second_answer.return_code)
 
 
     def test_should_create_new_object_with_given_properties (self):
         expectation = Expectation('any_command', ['any_arg1', 'any_arg2'], 'any_stdin')
 
-        self.assertEquals('any_command', expectation.command)
-        self.assertEquals(['any_arg1', 'any_arg2'], expectation.arguments)
-        self.assertEquals('any_stdin', expectation.stdin)
-        self.assertEquals([], expectation.answers)
-        self.assertEquals(0, expectation.current_answer)
+        self.assertEqual('any_command', expectation.command)
+        self.assertEqual(['any_arg1', 'any_arg2'], expectation.arguments)
+        self.assertEqual('any_stdin', expectation.stdin)
+        self.assertEqual([], expectation.answers)
+        self.assertEqual(0, expectation.current_answer)
 
 
     def test_should_create_new_object_with_given_properties_and_answers (self):
@@ -82,11 +82,11 @@ class ExpectationTests (unittest.TestCase):
 
         expectation = Expectation('any_command', ['any_arg1', 'any_arg2'], 'any_stdin', answers, 2)
 
-        self.assertEquals('any_command', expectation.command)
-        self.assertEquals(['any_arg1', 'any_arg2'], expectation.arguments)
-        self.assertEquals('any_stdin', expectation.stdin)
-        self.assertEquals([answer1, answer2, answer3], expectation.answers)
-        self.assertEquals(2, expectation.current_answer)
+        self.assertEqual('any_command', expectation.command)
+        self.assertEqual(['any_arg1', 'any_arg2'], expectation.arguments)
+        self.assertEqual('any_stdin', expectation.stdin)
+        self.assertEqual([answer1, answer2, answer3], expectation.answers)
+        self.assertEqual(2, expectation.current_answer)
 
 
     def test_should_return_object_as_dictionary (self):
@@ -95,15 +95,15 @@ class ExpectationTests (unittest.TestCase):
 
         actual_dictionary = expectation.as_dictionary()
 
-        self.assertEquals('any_command', actual_dictionary['command'])
-        self.assertEquals(['any_arg1', 'any_arg2'], actual_dictionary['arguments'])
-        self.assertEquals('any_stdin', actual_dictionary['stdin'])
-        self.assertEquals(0, actual_dictionary['current_answer'])
+        self.assertEqual('any_command', actual_dictionary['command'])
+        self.assertEqual(['any_arg1', 'any_arg2'], actual_dictionary['arguments'])
+        self.assertEqual('any_stdin', actual_dictionary['stdin'])
+        self.assertEqual(0, actual_dictionary['current_answer'])
         actual_answer_dictionary = actual_dictionary['answers'][0]
 
-        self.assertEquals('Hello world.', actual_answer_dictionary['stdout'])
-        self.assertEquals('Hello error!', actual_answer_dictionary['stderr'])
-        self.assertEquals(19, actual_answer_dictionary['return_code'])
+        self.assertEqual('Hello world.', actual_answer_dictionary['stdout'])
+        self.assertEqual('Hello error!', actual_answer_dictionary['stderr'])
+        self.assertEqual(19, actual_answer_dictionary['return_code'])
 
 
     def test_should_set_return_code_when_answering (self):
@@ -112,9 +112,9 @@ class ExpectationTests (unittest.TestCase):
 
         actual_answer = expectation.next_answer()
 
-        self.assertEquals(None, actual_answer.stdout)
-        self.assertEquals(None, actual_answer.stderr)
-        self.assertEquals(7, actual_answer.return_code)
+        self.assertEqual(None, actual_answer.stdout)
+        self.assertEqual(None, actual_answer.stderr)
+        self.assertEqual(7, actual_answer.return_code)
 
 
     def test_should_set_stdout_when_answering (self):
@@ -123,9 +123,9 @@ class ExpectationTests (unittest.TestCase):
 
         actual_answer = expectation.next_answer()
 
-        self.assertEquals('Hello world!', actual_answer.stdout)
-        self.assertEquals(None, actual_answer.stderr)
-        self.assertEquals(0, actual_answer.return_code)
+        self.assertEqual('Hello world!', actual_answer.stdout)
+        self.assertEqual(None, actual_answer.stderr)
+        self.assertEqual(0, actual_answer.return_code)
 
 
     def test_should_set_stderr_when_answering (self):
@@ -134,9 +134,9 @@ class ExpectationTests (unittest.TestCase):
 
         actual_answer = expectation.next_answer()
 
-        self.assertEquals(None, actual_answer.stdout)
-        self.assertEquals('Hello error!', actual_answer.stderr)
-        self.assertEquals(0, actual_answer.return_code)
+        self.assertEqual(None, actual_answer.stdout)
+        self.assertEqual('Hello error!', actual_answer.stderr)
+        self.assertEqual(0, actual_answer.return_code)
 
 
     def test_should_set_stdout_and_stderr_with_chaining_when_answering (self):
@@ -145,9 +145,9 @@ class ExpectationTests (unittest.TestCase):
 
         actual_answer = expectation.next_answer()
 
-        self.assertEquals('Hello world!', actual_answer.stdout)
-        self.assertEquals('Hello error!', actual_answer.stderr)
-        self.assertEquals(0, actual_answer.return_code)
+        self.assertEqual('Hello world!', actual_answer.stdout)
+        self.assertEqual('Hello error!', actual_answer.stderr)
+        self.assertEqual(0, actual_answer.return_code)
 
 
     def test_should_set_return_code_and_stderr_and_stdout (self):
@@ -156,15 +156,15 @@ class ExpectationTests (unittest.TestCase):
 
         actual_answer = expectation.next_answer()
 
-        self.assertEquals('Hello world!', actual_answer.stdout)
-        self.assertEquals('Hello error!', actual_answer.stderr)
-        self.assertEquals(15, actual_answer.return_code)
+        self.assertEqual('Hello world!', actual_answer.stdout)
+        self.assertEqual('Hello error!', actual_answer.stderr)
+        self.assertEqual(15, actual_answer.return_code)
 
 
     def test_should_have_property_answers_with_empty_list (self):
         expectation = Expectation('any_command', ['any_arg1', 'any_arg2'], 'any_stdin')
 
-        self.assertEquals([], expectation.answers)
+        self.assertEqual([], expectation.answers)
 
 
     def test_should_raise_exception_when_asking_for_next_answer_when_no_answer_is_given (self):
@@ -178,8 +178,8 @@ class ExpectationTests (unittest.TestCase):
 
         actual_return_value = expectation.with_arguments('-arg1', '-arg2', '-arg3')
 
-        self.assertEquals(expectation, actual_return_value)
-        self.assertEquals(['-arg1', '-arg2', '-arg3'], expectation.arguments)
+        self.assertEqual(expectation, actual_return_value)
+        self.assertEqual(['-arg1', '-arg2', '-arg3'], expectation.arguments)
 
 
     def test_should_set_stdin (self):
@@ -187,14 +187,14 @@ class ExpectationTests (unittest.TestCase):
 
         actual_return_value = expectation.with_input('stdin')
 
-        self.assertEquals(expectation, actual_return_value)
-        self.assertEquals('stdin', expectation.stdin)
+        self.assertEqual(expectation, actual_return_value)
+        self.assertEqual('stdin', expectation.stdin)
 
 
     def test_should_allow_with_or_and_input (self):
         expectation = Expectation('any_command')
 
-        self.assertEquals(expectation.with_input, expectation.and_input)
+        self.assertEqual(expectation.with_input, expectation.and_input)
 
 
     def test_should_append_second_answer (self):
@@ -204,7 +204,7 @@ class ExpectationTests (unittest.TestCase):
 
         actual_count_of_answers = len(expectation.answers)
 
-        self.assertEquals(2, actual_count_of_answers)
+        self.assertEqual(2, actual_count_of_answers)
 
 
     def test_should_send_two_different_answers_when_asking_for_next_answer_twice (self):
@@ -214,15 +214,15 @@ class ExpectationTests (unittest.TestCase):
 
         actual_first_answer = expectation.next_answer()
 
-        self.assertEquals('Hello world!', actual_first_answer.stdout)
-        self.assertEquals('Hello error!', actual_first_answer.stderr)
-        self.assertEquals(0, actual_first_answer.return_code)
+        self.assertEqual('Hello world!', actual_first_answer.stdout)
+        self.assertEqual('Hello error!', actual_first_answer.stderr)
+        self.assertEqual(0, actual_first_answer.return_code)
 
         actual_second_answer = expectation.next_answer()
 
-        self.assertEquals('Foo bar!', actual_second_answer.stdout)
-        self.assertEquals('Foo error!', actual_second_answer.stderr)
-        self.assertEquals(1, actual_second_answer.return_code)
+        self.assertEqual('Foo bar!', actual_second_answer.stdout)
+        self.assertEqual('Foo error!', actual_second_answer.stderr)
+        self.assertEqual(1, actual_second_answer.return_code)
 
 
     def test_should_repeat_last_answer_when_asking_for_more_answers_than_given (self):
@@ -232,21 +232,21 @@ class ExpectationTests (unittest.TestCase):
 
         actual_first_answer = expectation.next_answer()
 
-        self.assertEquals('Hello world!', actual_first_answer.stdout)
-        self.assertEquals('Hello error!', actual_first_answer.stderr)
-        self.assertEquals(0, actual_first_answer.return_code)
+        self.assertEqual('Hello world!', actual_first_answer.stdout)
+        self.assertEqual('Hello error!', actual_first_answer.stderr)
+        self.assertEqual(0, actual_first_answer.return_code)
 
         actual_second_answer = expectation.next_answer()
 
-        self.assertEquals('Foo bar!', actual_second_answer.stdout)
-        self.assertEquals('Foo error!', actual_second_answer.stderr)
-        self.assertEquals(1, actual_second_answer.return_code)
+        self.assertEqual('Foo bar!', actual_second_answer.stdout)
+        self.assertEqual('Foo error!', actual_second_answer.stderr)
+        self.assertEqual(1, actual_second_answer.return_code)
 
         actual_third_answer = expectation.next_answer()
 
-        self.assertEquals('Foo bar!', actual_third_answer.stdout)
-        self.assertEquals('Foo error!', actual_third_answer.stderr)
-        self.assertEquals(1, actual_third_answer.return_code)
+        self.assertEqual('Foo bar!', actual_third_answer.stdout)
+        self.assertEqual('Foo error!', actual_third_answer.stderr)
+        self.assertEqual(1, actual_third_answer.return_code)
 
 
     def test_should_send_answers_in_given_order_when_asking_for_next_answer (self):
@@ -257,21 +257,21 @@ class ExpectationTests (unittest.TestCase):
 
         actual_first_answer = expectation.next_answer()
 
-        self.assertEquals('Hello world!', actual_first_answer.stdout)
-        self.assertEquals('Hello error!', actual_first_answer.stderr)
-        self.assertEquals(0, actual_first_answer.return_code)
+        self.assertEqual('Hello world!', actual_first_answer.stdout)
+        self.assertEqual('Hello error!', actual_first_answer.stderr)
+        self.assertEqual(0, actual_first_answer.return_code)
 
         actual_second_answer = expectation.next_answer()
 
-        self.assertEquals('Foo bar!', actual_second_answer.stdout)
-        self.assertEquals('Foo error!', actual_second_answer.stderr)
-        self.assertEquals(1, actual_second_answer.return_code)
+        self.assertEqual('Foo bar!', actual_second_answer.stdout)
+        self.assertEqual('Foo error!', actual_second_answer.stderr)
+        self.assertEqual(1, actual_second_answer.return_code)
 
         actual_third_answer = expectation.next_answer()
 
-        self.assertEquals('Spam eggs!', actual_third_answer.stdout)
-        self.assertEquals('Spam error!', actual_third_answer.stderr)
-        self.assertEquals(2, actual_third_answer.return_code)
+        self.assertEqual('Spam eggs!', actual_third_answer.stdout)
+        self.assertEqual('Spam error!', actual_third_answer.stderr)
+        self.assertEqual(2, actual_third_answer.return_code)
 
 
     def test_should_append_answer_when_using_method_then (self):
@@ -281,13 +281,13 @@ class ExpectationTests (unittest.TestCase):
 
         actual_count_of_answers = len(expectation.answers)
 
-        self.assertEquals(1, actual_count_of_answers)
+        self.assertEqual(1, actual_count_of_answers)
 
         actual_answer = expectation.next_answer()
 
-        self.assertEquals('Hello world!', actual_answer.stdout)
-        self.assertEquals('Hello error', actual_answer.stderr)
-        self.assertEquals(99, actual_answer.return_code)
+        self.assertEqual('Hello world!', actual_answer.stdout)
+        self.assertEqual('Hello error', actual_answer.stderr)
+        self.assertEqual(99, actual_answer.return_code)
 
 
     def test_should_return_self_when_using_method_then (self):
@@ -296,7 +296,7 @@ class ExpectationTests (unittest.TestCase):
 
         actual_result = expectation.then(answer)
         self.assertIsNotNone(actual_result, 'Not returning anything!')
-        self.assertEquals(expectation, actual_result)
+        self.assertEqual(expectation, actual_result)
 
 
     def test_should_return_self_when_using_method_then_answer (self):
@@ -305,7 +305,7 @@ class ExpectationTests (unittest.TestCase):
         actual_result = expectation.then_answer('Hello world!', 'Hello error', 99)
 
         self.assertIsNotNone(actual_result, 'Not returning anything!')
-        self.assertEquals(expectation, actual_result)
+        self.assertEqual(expectation, actual_result)
 
 
     def test_should_return_self_when_using_method_then_return (self):
@@ -314,7 +314,7 @@ class ExpectationTests (unittest.TestCase):
         actual_result = expectation.then_return(100)
 
         self.assertIsNotNone(actual_result, 'Not returning anything!')
-        self.assertEquals(expectation, actual_result)
+        self.assertEqual(expectation, actual_result)
 
     def test_should_return_self_when_using_method_then_write (self):
         expectation = Expectation('any_command', ['any_arg1', 'any_arg2'], 'any_stdin')
@@ -322,7 +322,7 @@ class ExpectationTests (unittest.TestCase):
         actual_result = expectation.then_write('Hello world.')
 
         self.assertIsNotNone(actual_result, 'Not returning anything!')
-        self.assertEquals(expectation, actual_result)
+        self.assertEqual(expectation, actual_result)
 
 
     def test_should_return_false_when_comparing_and_current_answer_is_different (self):

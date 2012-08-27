@@ -86,7 +86,7 @@ class IntegrationTestSupport (shtub.testbase.IntegrationTestBase):
             for line in actual_file:
                 actual_file_content.write(line)
 
-        self.assertEquals(expected_file_content, actual_file_content.getvalue())
+        self.assertEqual(expected_file_content, actual_file_content.getvalue())
 
     def assert_directory_exists(self, directory_name):
         it_exists = os.path.exists(directory_name)

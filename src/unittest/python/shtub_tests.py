@@ -47,12 +47,12 @@ class ShtubTests (unittest.TestCase):
 
         actual_executions = deserialize_executions('executions.json')
 
-        self.assertEquals(call('executions.json', mode='r'), mock_open.call_args)
-        self.assertEquals(call(), fake_file.read.call_args)
-        self.assertEquals(call(json_string), mock_json.call_args)
+        self.assertEqual(call('executions.json', mode='r'), mock_open.call_args)
+        self.assertEqual(call(), fake_file.read.call_args)
+        self.assertEqual(call(json_string), mock_json.call_args)
 
         expected_executions = [Execution('command', ['-arg1', '-arg2', '-arg3'], 'stdin')]
-        self.assertEquals(expected_executions, actual_executions)
+        self.assertEqual(expected_executions, actual_executions)
 
     @patch('json.loads')
     @patch(builtin_string + '.open')
@@ -72,13 +72,13 @@ class ShtubTests (unittest.TestCase):
 
         actual_expectations = deserialize_expectations('executions.json')
 
-        self.assertEquals(call('executions.json', mode='r'), mock_open.call_args)
-        self.assertEquals(call(), fake_file.read.call_args)
-        self.assertEquals(call(json_string), mock_json.call_args)
+        self.assertEqual(call('executions.json', mode='r'), mock_open.call_args)
+        self.assertEqual(call(), fake_file.read.call_args)
+        self.assertEqual(call(json_string), mock_json.call_args)
 
         expected_expectations = [Expectation('command', ['-arg1', '-arg2', '-arg3'], 'stdin', [Answer('stdout', 'stderr', 15)], 0)]
 
-        self.assertEquals(expected_expectations, actual_expectations)
+        self.assertEqual(expected_expectations, actual_expectations)
 
     @patch('json.dumps')
     @patch(builtin_string + '.open')
@@ -93,9 +93,9 @@ class ShtubTests (unittest.TestCase):
                                'arguments' : ['-arg1', '-arg2', '-arg3'],
                                'stdin'     : 'stdin'}
 
-        self.assertEquals(call([expected_dictionary], sort_keys=True, indent=4), mock_json.call_args)
-        self.assertEquals(call('executions.json', mode='w'), mock_open.call_args)
-        self.assertEquals(call('[{"some": "json"}]'), fake_file.write.call_args)
+        self.assertEqual(call([expected_dictionary], sort_keys=True, indent=4), mock_json.call_args)
+        self.assertEqual(call('executions.json', mode='w'), mock_open.call_args)
+        self.assertEqual(call('[{"some": "json"}]'), fake_file.write.call_args)
 
     def return_file_when_calling (self, mock_open, content=None):
         file_handle = Mock()

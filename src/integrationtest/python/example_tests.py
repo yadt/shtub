@@ -31,7 +31,7 @@ class StubbingSshExampleTest (shtub.testbase.IntegrationTestBase):
 
         actual_return_code = self.execute_command('ssh -arg1 -arg2 -arg3')
 
-        self.assertEquals(0, actual_return_code)
+        self.assertEqual(0, actual_return_code)
 
         with self.verify() as verify:
             verify.called('ssh').with_arguments('-arg1', '-arg2', '-arg3')

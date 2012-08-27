@@ -22,7 +22,7 @@ import integrationtest_support
 class Tests (integrationtest_support.IntegrationTestSupport):
     def test (self):
         self.prepare_default_testbed(['command_stub'])
-        self.create_command_wrapper('command_wrapper', 'command_stub', ['-arg1', '-arg2', '-arg3'], 'stdin' )
+        self.create_command_wrapper('command_wrapper', 'command_stub', ['-arg1', '-arg2', '-arg3'], 'stdin')
 
         with self.fixture() as when:
             when.calling('command_stub').with_arguments('-arg1', '-arg2', '-arg3').and_input('stdin') \
@@ -32,8 +32,8 @@ class Tests (integrationtest_support.IntegrationTestSupport):
         actual_return_code1 = self.execute_command('command_wrapper')
         actual_return_code2 = self.execute_command('command_wrapper')
 
-        self.assertEquals(0, actual_return_code1)
-        self.assertEquals(0, actual_return_code2)
+        self.assertEqual(0, actual_return_code1)
+        self.assertEqual(0, actual_return_code2)
 
         with self.verify() as verify:
             verify.called('command_stub').with_arguments('-arg1', '-arg2', '-arg3').and_input('stdin')

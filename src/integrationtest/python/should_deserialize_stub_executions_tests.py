@@ -27,26 +27,26 @@ class Test (integrationtest_support.IntegrationTestSupport):
     def test (self):
         self.prepare_default_testbed(['command_stub'])
         self.create_command_wrapper('command_wrapper', 'command_stub', ['-arg1', '-arg2', '-arg3'], 'stdin')
-        
+
         with self.fixture() as when:
             when.calling('command_stub').with_arguments('-arg1', '-arg2', '-arg3').and_input('stdin') \
                 .then_answer('Hello world.', 'Hello error!', 0)
-        
+
         actual_return_code = self.execute_command('command_wrapper')
-        
-        self.assertEquals(0, actual_return_code)
-        
+
+        self.assertEqual(0, actual_return_code)
+
         path = join(self.base_dir, 'test-execution', 'recorded-calls')
-        
+
         actual_calls = deserialize_executions(path)
-        
-        self.assertEquals(1, len(actual_calls))
-        
+
+        self.assertEqual(1, len(actual_calls))
+
         actual_call = actual_calls[0]
-        
-        self.assertEquals('command_stub', actual_call.command)
-        self.assertEquals(['-arg1', '-arg2', '-arg3'], actual_call.arguments)
-        self.assertEquals('stdin', actual_call.stdin)
+
+        self.assertEqual('command_stub', actual_call.command)
+        self.assertEqual(['-arg1', '-arg2', '-arg3'], actual_call.arguments)
+        self.assertEqual('stdin', actual_call.stdin)
 
 
 if __name__ == '__main__':
