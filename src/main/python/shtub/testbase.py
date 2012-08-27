@@ -48,30 +48,30 @@ class IntegrationTestBase (unittest.TestCase):
 
 
     def _write_output_file (self, command, stdout, stderr):
-        normalized  = self._normalize_command_line(command)
-        filename    = '%02d-%s' % (self.command_counter, normalized)
+        normalized = self._normalize_command_line(command)
+        filename = '%02d-%s' % (self.command_counter, normalized)
         output_path = os.path.join(self.base_dir, BASEDIR, filename)
-        
-        with open(output_path, 'w') as output_file:
+
+        with open(output_path, 'wb') as output_file:
             output_file.write('--------------- ENVIRONMENT ----------------\n')
             for key in sorted(self.env.keys()):
                 output_file.write('%s=%s\n' % (key, self.env[key]))
-            
+
             output_file.write('----------------- STDOUT -------------------\n')
             output_file.write(stdout)
-            
+
             output_file.write('----------------- STDERR -------------------\n')
             output_file.write(stderr)
 
 
     def execute_command (self, command):
-        shell_process = subprocess.Popen(args   = [command],
-                                         stdout = subprocess.PIPE,
-                                         stderr = subprocess.PIPE,
-                                         shell  = True,
-                                         cwd    = self.base_dir,
-                                         env    = self.env)
-        
+        shell_process = subprocess.Popen(args=[command],
+                                         stdout=subprocess.PIPE,
+                                         stderr=subprocess.PIPE,
+                                         shell=True,
+                                         cwd=self.base_dir,
+                                         env=self.env)
+
         stdout, stderr = shell_process.communicate()
         self._write_output_file(command, stdout, stderr)
         self.command_counter += 1
@@ -88,18 +88,18 @@ class IntegrationTestBase (unittest.TestCase):
 
 
     def prepare_testbed (self, env, stubs):
-        self.env   = env
+        self.env = env
         self.stubs = stubs
-        
+
         os.mkdir(os.path.join(self.base_dir, BASEDIR))
         os.mkdir(self.stubs_dir)
         self.stub_commands(self.stubs)
 
 
     def stub_commands (self, command_list):
-        current_path      = os.path.dirname(__file__)
+        current_path = os.path.dirname(__file__)
         command_stub_path = os.path.join(current_path, 'commandstub.py')
-        
+
         for command in command_list:
             os.symlink(command_stub_path, os.path.join(self.stubs_dir, command))
 
@@ -111,10 +111,10 @@ class IntegrationTestBase (unittest.TestCase):
 
     def set_base_dir (self, base_dir):
         if base_dir:
-            self.base_dir         = base_dir
+            self.base_dir = base_dir
             self.cleanup_base_dir = False
         else:
-            self.base_dir         = tempfile.mkdtemp(prefix='integration-test-')
+            self.base_dir = tempfile.mkdtemp(prefix='integration-test-')
             self.cleanup_base_dir = True
 
         self.stubs_dir = os.path.join(self.base_dir, STUBS_DIRECTORY)
