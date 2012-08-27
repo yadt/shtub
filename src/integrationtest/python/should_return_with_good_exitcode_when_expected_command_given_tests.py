@@ -54,7 +54,7 @@ class Test (unittest.TestCase):
                                          shell=True,
                                          cwd=test_dir)
 
-        stdout, stderr = shell_process.communicate(bytes('Hello world.'))
+        stdout, stderr = shell_process.communicate(b'Hello world.')
 
         self.assertEqual(0, shell_process.returncode)
 
