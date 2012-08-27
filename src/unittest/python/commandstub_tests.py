@@ -23,8 +23,12 @@ if major == 2 and minor == 6:
 else:
     import unittest
 
+if major == 3:
+    from io import StringIO
+else:
+    from StringIO import StringIO
+
 from mock import ANY, Mock, call, patch
-from StringIO import StringIO
 
 from shtub import BASEDIR, LOG_FILENAME, commandstub
 from shtub.answer import Answer

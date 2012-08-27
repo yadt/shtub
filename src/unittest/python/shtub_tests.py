@@ -14,11 +14,16 @@
 #   You should have received a copy of the GNU General Public License
 #   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import sys
 import unittest
 
 from mock import Mock, call, patch
 
-from StringIO import StringIO
+major, minor, micro, releaselevel, serial = sys.version_info
+if major == 3:
+    from io import StringIO
+else:
+    from StringIO import StringIO
 
 from shtub import serialize_executions, deserialize_executions, deserialize_expectations
 from shtub.answer import Answer
@@ -37,13 +42,13 @@ class ShtubTests (unittest.TestCase):
         mock_json.return_value = [{'command'   : 'command',
                                    'arguments' : ['-arg1', '-arg2', '-arg3'],
                                    'stdin'     : 'stdin'}]
-                
+
         actual_executions = deserialize_executions('executions.json')
-        
+
         self.assertEquals(call('executions.json', 'r'), mock_open.call_args)
         self.assertEquals(call(), fake_file.read.call_args)
         self.assertEquals(call(json_string), mock_json.call_args)
-        
+
         expected_executions = [Execution('command', ['-arg1', '-arg2', '-arg3'], 'stdin')]
         self.assertEquals(expected_executions, actual_executions)
 
@@ -62,15 +67,15 @@ class ShtubTests (unittest.TestCase):
                                                         'stderr'      : 'stderr',
                                                         'return_code' : 15}]
                                  }]
-                
+
         actual_expectations = deserialize_expectations('executions.json')
-        
+
         self.assertEquals(call('executions.json', 'r'), mock_open.call_args)
         self.assertEquals(call(), fake_file.read.call_args)
         self.assertEquals(call(json_string), mock_json.call_args)
-        
+
         expected_expectations = [Expectation('command', ['-arg1', '-arg2', '-arg3'], 'stdin', [Answer('stdout', 'stderr', 15)], 0)]
-        
+
         self.assertEquals(expected_expectations, actual_expectations)
 
     @patch('json.dumps')
@@ -81,22 +86,22 @@ class ShtubTests (unittest.TestCase):
         executions = [Execution('command', ['-arg1', '-arg2', '-arg3'], 'stdin')]
 
         serialize_executions('executions.json', executions)
-        
-        expected_dictionary = {'command'   : 'command', 
-                               'arguments' : ['-arg1', '-arg2', '-arg3'], 
+
+        expected_dictionary = {'command'   : 'command',
+                               'arguments' : ['-arg1', '-arg2', '-arg3'],
                                'stdin'     : 'stdin'}
-        
+
         self.assertEquals(call([expected_dictionary], sort_keys=True, indent=4), mock_json.call_args)
         self.assertEquals(call('executions.json', 'w'), mock_open.call_args)
         self.assertEquals(call('[{"some": "json"}]'), fake_file.write.call_args)
 
     def return_file_when_calling (self, mock_open, content=None):
         file_handle = Mock()
-        
+
         mock_open.return_value.__enter__ = Mock(return_value=file_handle)
         mock_open.return_value.__exit__ = Mock()
-        
+
         if content is not None:
             mock_open.return_value.read.return_value = content
-        
+
         return file_handle

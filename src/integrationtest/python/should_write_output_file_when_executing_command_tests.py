@@ -14,11 +14,16 @@
 #   You should have received a copy of the GNU General Public License
 #   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import sys
 import unittest
 
 from os.path import join
 
-from StringIO import StringIO
+major, minor, micro, releaselevel, serial = sys.version_info
+if major == 3:
+    from io import StringIO
+else:
+    from StringIO import StringIO
 
 from shtub import BASEDIR
 import integrationtest_support
@@ -47,7 +52,7 @@ class Test (integrationtest_support.IntegrationTestSupport):
 
         output_filename_00 = join(self.base_dir, 'test-execution', '00-command_wrapper')
         self.assert_file_content(output_filename_00, expected_file_content)
-        
+
         output_filename_01 = join(self.base_dir, 'test-execution', '01-command_wrapper')
         self.assert_file_content(output_filename_01, expected_file_content)
 
