@@ -37,7 +37,7 @@ class IntegrationTestSupport (shtub.testbase.IntegrationTestBase):
                            '\n'
                            ) % (stdin, command, joined_arguments)
 
-        with open(wrapper_filename, 'wb') as wrapper_file:
+        with open(wrapper_filename, 'wt') as wrapper_file:
             wrapper_file.write(wrapper_content)
 
         os.chmod(wrapper_filename, 0o755)

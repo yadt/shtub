@@ -32,7 +32,7 @@ class IntegrationTestSupportTest (integrationtest_support.IntegrationTestSupport
         expected_wrapper_content = ('#!/usr/bin/env bash\n'
                                     '\n'
                                     'echo -n stdin | command_stub -arg1 -arg2 -arg3\n'
-                                    '\n').encode('utf-8')
+                                    '\n')
         self.assert_file_content(command_wrapper_filename, expected_wrapper_content)
 
 
