@@ -26,6 +26,11 @@ from shtub import BASEDIR, STUBS_DIRECTORY
 from shtub.fixture import Fixture
 from shtub.verifier import Verifier
 
+STUB_SCRIPT_CONTENT = """#!/usr/bin/env python
+import shtub.commandstub
+
+shtub.commandstub.handle_stub_call()
+"""
 
 class IntegrationTestBase (unittest.TestCase):
     def setUp (self):
@@ -100,11 +105,7 @@ class IntegrationTestBase (unittest.TestCase):
         for command in command_list:
             command_file_name = os.path.join(self.stubs_dir, command)
             with open(command_file_name, "w") as command_file:
-                command_file.write("""#!/usr/bin/env python
-import shtub.commandstub
-
-shtub.commandstub.handle_stub_call()
-""")
+                command_file.write(STUB_SCRIPT_CONTENT)
             os.chmod(command_file_name, 0o755)
 
     def make_base_dir (self, base_dir):

@@ -19,6 +19,7 @@ import os
 
 import integrationtest_support
 
+from shtub.testbase import STUB_SCRIPT_CONTENT
 
 class Test (integrationtest_support.IntegrationTestSupport):
 
@@ -33,8 +34,8 @@ class Test (integrationtest_support.IntegrationTestSupport):
         self.assert_directory_exists(actual_testbase.stubs_dir)
 
         for stub_name in ['command_stub1', 'command_stub2']:
-            symlink_to_stub = os.path.join(actual_testbase.stubs_dir, stub_name)
-            self.assert_is_link(symlink_to_stub)
+            path_to_stub = os.path.join(actual_testbase.stubs_dir, stub_name)
+            self.assert_file_content(path_to_stub, STUB_SCRIPT_CONTENT)
 
         test_execution_directory = os.path.join(actual_testbase.base_dir, 'test-execution')
         self.assert_directory_exists(test_execution_directory)
