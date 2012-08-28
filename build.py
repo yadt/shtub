@@ -45,3 +45,5 @@ def set_properties (project):
     project.set_property('pychecker_args', ['-Q', '-b', 'unittest'])
     
     project.get_property('distutils_commands').append('bdist_egg')
+    project.get_property('distutils_commands').append('bdist_rpm')
+
