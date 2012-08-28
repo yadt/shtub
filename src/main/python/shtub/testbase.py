@@ -97,12 +97,15 @@ class IntegrationTestBase (unittest.TestCase):
 
 
     def stub_commands (self, command_list):
-        current_path = os.path.dirname(__file__)
-        command_stub_path = os.path.join(current_path, 'commandstub.py')
-
         for command in command_list:
-            os.symlink(command_stub_path, os.path.join(self.stubs_dir, command))
+            command_file_name = os.path.join(self.stubs_dir, command)
+            with open(command_file_name, "w") as command_file:
+                command_file.write("""#!/usr/bin/env python
+import shtub.commandstub
 
+shtub.commandstub.handle_stub_call()
+""")
+            os.chmod(command_file_name, 0o755)
 
     def make_base_dir (self, base_dir):
         os.makedirs(base_dir)
