@@ -22,10 +22,10 @@ use_plugin('python.core')
 use_plugin('python.coverage')
 use_plugin('python.unittest')
 use_plugin('python.integrationtest')
+use_plugin('python.install_dependencies')
 use_plugin('python.distutils')
 use_plugin('python.pychecker')
 use_plugin('python.pydev')
-use_plugin('python.pylint')
 
 authors = [Author('Alexander Metzner', 'alexander.metzner@gmail.com'),
            Author('Michael Gruber', 'aelgru@gmail.com'),
@@ -35,10 +35,13 @@ summary = 'shtub - shell command stub'
 url     = 'https://github.com/yadt/shtub'
 version = '0.2.7'
 
-default_task = ['analyze', 'publish']
+default_task = ['install_dependencies', 'analyze', 'publish']
 
 @init
 def set_properties (project):
+    project.build_depends_on('coverage')
+    project.build_depends_on('mock')
+        
     project.set_property('coverage_break_build', True)
     project.get_property('coverage_exceptions').append('shtub.testbase')
 
