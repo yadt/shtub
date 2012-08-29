@@ -27,13 +27,16 @@ else:
     from StringIO import StringIO
     builtin_string = '__builtin__'
 
-from shtub import serialize_executions, deserialize_executions, deserialize_expectations
+from shtub import VERSION, serialize_executions, deserialize_executions, deserialize_expectations
 from shtub.answer import Answer
 from shtub.execution import Execution
 from shtub.expectation import Expectation
 
 
 class ShtubTests (unittest.TestCase):
+    def test_if_this_test_fails_maybe_you_have_shtub_installed_locally (self):
+        self.assertEqual('${version}', VERSION)
+
     @patch('json.loads')
     @patch(builtin_string + '.open')
     def test_should_deserialize_executions (self, mock_open, mock_json):

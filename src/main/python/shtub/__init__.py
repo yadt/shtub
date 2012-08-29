@@ -27,6 +27,8 @@ from os.path import join
 from shtub.execution import Execution
 from shtub.expectation import Expectation
 
+VERSION = '${version}'
+
 BASEDIR = 'test-execution'
 
 EXPECTATIONS_FILENAME = join(BASEDIR, 'expectations')
