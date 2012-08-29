@@ -5,6 +5,7 @@ python:
   - "3.2"
 before_script: sudo apt-get install pychecker rpm python-rpm
 install:
+  - pip install pybuilder
   - "if [[ $TRAVIS_PYTHON_VERSION == '2.6' ]]; then pip install unittest2; fi"
 script: "pyb --debug"
 notifications:
