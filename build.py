@@ -14,6 +14,7 @@
 #   You should have received a copy of the GNU General Public License
 #   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import sys
 from pythonbuilder.core import use_plugin, init, Author
 
 use_plugin('filter_resources')
@@ -41,6 +42,10 @@ default_task = ['install_dependencies', 'analyze', 'publish']
 def set_properties (project):
     project.build_depends_on('coverage')
     project.build_depends_on('mock')
+    
+    major, minor, micro, releaselevel, serial = sys.version_info
+    if major == 2 and minor == 6:
+        project.build_depends_on('unittest2')
         
     project.set_property('coverage_break_build', True)
     project.get_property('coverage_exceptions').append('shtub.testbase')
