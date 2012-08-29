@@ -28,6 +28,7 @@ use_plugin('python.distutils')
 use_plugin('python.pychecker')
 use_plugin('python.pydev')
 
+name    = 'shtub'
 authors = [Author('Alexander Metzner', 'alexander.metzner@gmail.com'),
            Author('Michael Gruber', 'aelgru@gmail.com'),
            Author('Udo Juettner', 'udo.juettner@gmail.com')]
