@@ -9,5 +9,4 @@ install:
 script: "pyb --debug"
 notifications:
   email:
-    - michael.gruber@immobilienscout24.de
     - arne.hilmann@immobilienscout24.de
