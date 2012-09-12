@@ -31,7 +31,9 @@ class Expectation (Execution):
         contains corresponding answers.
     """
     
-    def __init__ (self, command, arguments=None, stdin=None,
+    # quickfix: stdin default is empty string to ensure no difference between execution
+    #           in tty and without.
+    def __init__ (self, command, arguments=None, stdin='',
                   answers=[], initial_answer=0):
         """
             will initialize a new object with the given properties.

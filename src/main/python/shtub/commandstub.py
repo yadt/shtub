@@ -121,8 +121,7 @@ def dispatch (execution):
             send_answer(answer)
             return
 
-    logging.error('Given execution does not fulfill requirements '
-                  'of any expectation.')
+    logging.error('Given execution does not fulfill requirements of any expectation.')
     sys.exit(255)
 
 
@@ -138,7 +137,9 @@ def read_stdin ():
     if len(read_list) > 0:
         return read_list[0].read()
 
-    return None
+    # quickfix: returning empty string instead of None, to make sure there are no differences
+    #           between execution in tty and without.
+    return ''
 
 
 def handle_stub_call ():
@@ -150,9 +151,7 @@ def handle_stub_call ():
     if not os.path.exists(BASEDIR):
         os.mkdir(BASEDIR)
 
-    logging_format = '%(asctime)s %(levelname)5s [%(name)s] ' \
-                   + 'process[%(process)d] thread[%(thread)d] ' \
-                   + '- %(message)s'
+    logging_format = '%(asctime)s %(levelname)5s [%(name)s] process[%(process)d] thread[%(thread)d] - %(message)s'
     logging.basicConfig(filename=LOG_FILENAME,
                         level=logging.INFO,
                         format=logging_format)

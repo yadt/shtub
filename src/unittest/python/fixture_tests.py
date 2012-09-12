@@ -64,7 +64,9 @@ class FixtureTest (unittest.TestCase):
         self.assertEqual(actual_return_value, actual_expectation)
         self.assertEqual('any_command', actual_expectation.command)
         self.assertEqual([], actual_expectation.arguments)
-        self.assertEqual(None, actual_expectation.stdin)
+        # quickfix: stdin default is empty string to ensure no difference between execution
+        #           in tty and without.
+        self.assertEqual('', actual_expectation.stdin)
 
 
     def test_should_append_a_new_expectation_with_default_properties (self):

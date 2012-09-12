@@ -41,8 +41,9 @@ class Fixture (object):
         self.base_dir     = basedir
         self.expectations = []
     
-    
-    def expect (self, command, arguments, stdin=None):
+    # quickfix: expecting empty string instead of None, to make sure there's no difference
+    #           between execution within tty and without
+    def expect (self, command, arguments, stdin=''):
         """
             creates a new expectation with the given properties and appends it
             to the expectations, then returns the expectation for invocation

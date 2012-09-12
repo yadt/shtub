@@ -166,7 +166,10 @@ class Tests (unittest.TestCase):
     def test_should_return_None_when_no_input_from_stdin (self, mock_select, mock_stdin):
         actual = commandstub.read_stdin()
 
-        self.assertIsNone(actual)
+        # quickfix: asserting empty string instead of None to ensure no differences between
+        #           execution in tty and without.
+        #self.assertIsNone(actual)
+        self.assertEqual('', actual)
 
     @patch('sys.stdin')
     @patch('shtub.commandstub.select')
