@@ -59,6 +59,8 @@ def set_properties (project):
     project.set_property('pychecker_args', ['-Q', '-b', 'unittest'])
 
     project.get_property('distutils_commands').append('bdist_egg')
-    project.get_property('distutils_commands').append('bdist_rpm')
+    
+    if not is_python_version(3, 2):
+        project.get_property('distutils_commands').append('bdist_rpm')
 
     project.get_property('filter_resources_glob').append('**/shtub/__init__.py')
