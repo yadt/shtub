@@ -40,18 +40,11 @@ version = '0.2.8'
 default_task = ['install_dependencies', 'analyze', 'publish']
 
 
-def is_python_version(expected_major, expected_minor):
-    major, minor, micro, releaselevel, serial = sys.version_info
-    return major == expected_major and minor == expected_minor
-        
 @init
 def set_properties (project):
     project.build_depends_on('coverage')
     project.build_depends_on('mock')
     
-    if is_python_version(2, 6):
-        project.build_depends_on('unittest2')
-        
     project.set_property('coverage_break_build', True)
     project.get_property('coverage_exceptions').append('shtub.testbase')
 

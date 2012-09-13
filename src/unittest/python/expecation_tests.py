@@ -15,12 +15,7 @@
 #   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import sys
-
-major, minor, micro, releaselevel, serial = sys.version_info
-if major == 2 and minor == 6:
-    import unittest2 as unittest
-else:
-    import unittest
+import unittest
 
 from shtub.answer import Answer
 from shtub.expectation import Expectation
@@ -295,7 +290,8 @@ class ExpectationTests (unittest.TestCase):
         answer = Answer('Hello world!', 'Hello error', 99)
 
         actual_result = expectation.then(answer)
-        self.assertIsNotNone(actual_result, 'Not returning anything!')
+        
+        self.assertTrue(actual_result is not None, 'Not returning anything!')
         self.assertEqual(expectation, actual_result)
 
 
@@ -304,7 +300,7 @@ class ExpectationTests (unittest.TestCase):
 
         actual_result = expectation.then_answer('Hello world!', 'Hello error', 99)
 
-        self.assertIsNotNone(actual_result, 'Not returning anything!')
+        self.assertTrue(actual_result is not None, 'Not returning anything!')
         self.assertEqual(expectation, actual_result)
 
 
@@ -313,7 +309,7 @@ class ExpectationTests (unittest.TestCase):
 
         actual_result = expectation.then_return(100)
 
-        self.assertIsNotNone(actual_result, 'Not returning anything!')
+        self.assertTrue(actual_result is not None, 'Not returning anything!')
         self.assertEqual(expectation, actual_result)
 
     def test_should_return_self_when_using_method_then_write (self):
@@ -321,7 +317,7 @@ class ExpectationTests (unittest.TestCase):
 
         actual_result = expectation.then_write('Hello world.')
 
-        self.assertIsNotNone(actual_result, 'Not returning anything!')
+        self.assertTrue(actual_result is not None, 'Not returning anything!')
         self.assertEqual(expectation, actual_result)
 
 

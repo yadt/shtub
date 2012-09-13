@@ -15,12 +15,7 @@
 #   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import sys
-
-major, minor, micro, releaselevel, serial = sys.version_info
-if major == 2 and minor == 6:
-    import unittest2 as unittest
-else:
-    import unittest
+import unittest
 
 from mock import patch, call
 
@@ -121,7 +116,7 @@ class FixtureTest (unittest.TestCase):
 
         actual_result = fixture.expect('any_command', ['any_arg'], 'any_stdin')
 
-        self.assertIsInstance(actual_result, Expectation)
+        self.assertTrue(isinstance(actual_result, Expectation))
         self.assertEqual('any_command', actual_result.command)
         self.assertEqual(['any_arg'], actual_result.arguments)
         self.assertEqual('any_stdin', actual_result.stdin)

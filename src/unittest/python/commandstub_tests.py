@@ -16,13 +16,9 @@
 
 import logging
 import sys
+import unittest
 
 major, minor, micro, releaselevel, serial = sys.version_info
-if major == 2 and minor == 6:
-    import unittest2 as unittest
-else:
-    import unittest
-
 if major == 3:
     from io import StringIO
     builtin_string = 'builtins'
@@ -124,7 +120,7 @@ class Tests (unittest.TestCase):
 
         commandstub.record_call(execution)
 
-        self.assertIsNone(mock_deserialize.call_args)
+        self.assertEqual(None, mock_deserialize.call_args)
 
 
     @patch('sys.stdout', new_callable=StringIO)
@@ -208,7 +204,7 @@ class Tests (unittest.TestCase):
 
 
         self.assertEqual(call('test-execution'), mock_exists.call_args)
-        self.assertIsNone(mock_mkdir.call_args)
+        self.assertEqual(None, mock_mkdir.call_args)
 
     @patch.object(sys, 'argv', ['command', '-arg1', '-arg2', '-arg3'])
     @patch('shtub.commandstub.read_stdin', return_value=None)
@@ -265,4 +261,3 @@ class Tests (unittest.TestCase):
         commandstub.unlock(file_handle_mock)
 
         self.assertEqual(call(), file_handle_mock.close.call_args)
-
