@@ -6,7 +6,7 @@ python:
 before_script: sudo apt-get install pychecker rpm python-rpm
 install:
   - pip install pybuilder
-script: "pyb --debug"
+script: "pyb install_dependencies analyze package --debug"
 notifications:
   email:
     - arne.hilmann@immobilienscout24.de
