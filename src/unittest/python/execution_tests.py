@@ -159,3 +159,10 @@ class ExecutionTests (unittest.TestCase):
         other_execution = Execution('any_command', ['any_arg2', 'any_arg1'], 'any_stdin')
 
         self.assertTrue(execution.fulfills(other_execution), 'comparison: command')
+
+    def test_should_mark_execution_as_fulfilled (self):
+        execution = Execution('any_command', ['any_arg1', 'any_arg2'], 'any_stdin')
+
+        execution.mark_as_fulfilled()
+        
+        self.assertTrue(execution.fulfilled)

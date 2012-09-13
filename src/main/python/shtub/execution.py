@@ -71,6 +71,13 @@ class Execution (object):
         return True
 
 
+    def mark_as_fulfilled (self):
+        """
+            marks the execution as fulfilled: the execution fulfilled a expectation.
+        """
+        
+        self.fulfilled = True
+
     def __eq__ (self, other):
         """
             returns True if the given execution has exactly the same properties.

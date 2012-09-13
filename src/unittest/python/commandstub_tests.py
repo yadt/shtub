@@ -39,7 +39,7 @@ class Tests (unittest.TestCase):
     @patch('shtub.commandstub.send_answer')
     @patch('logging.info')
     @patch('shtub.commandstub.deserialize_expectations')
-    def test_should_record_call_and_send_answer_when_execution_fulfills_expectations (self, \
+    def test_should_mark_execution_as_fulfilled_when_execution_fulfills_expectations (self, \
                         mock_deserialize, mock_logging_info, mock_answer, mock_record):
 
         answer = Answer('Hello world', 'Hello error', 15)
@@ -51,7 +51,42 @@ class Tests (unittest.TestCase):
 
         commandstub.dispatch(execution)
 
-        self.assertEqual(call(execution), mock_record.call_args)
+        self.assertTrue(execution.fulfilled)
+
+    @patch('shtub.commandstub.record_call')
+    @patch('shtub.commandstub.send_answer')
+    @patch('logging.info')
+    @patch('shtub.commandstub.deserialize_expectations')
+    def test_should_record_call_when_execution_fulfills_expectations (self, \
+                        mock_deserialize, mock_logging_info, mock_answer, mock_record):
+
+        answer = Answer('Hello world', 'Hello error', 15)
+        expectation = Expectation('command', ['-arg1', '-arg2', '-arg3'], 'stdin')
+        expectation.then(answer)
+        mock_deserialize.return_value = [expectation]
+
+        execution = Execution('command', ['-arg1', '-arg2', '-arg3'], 'stdin')
+
+        commandstub.dispatch(execution)
+
+        self.assertEqual(call(answer), mock_answer.call_args)
+
+    @patch('shtub.commandstub.record_call')
+    @patch('shtub.commandstub.send_answer')
+    @patch('logging.info')
+    @patch('shtub.commandstub.deserialize_expectations')
+    def test_should_send_answer_when_execution_fulfills_expectations (self, \
+                        mock_deserialize, mock_logging_info, mock_answer, mock_record):
+
+        answer = Answer('Hello world', 'Hello error', 15)
+        expectation = Expectation('command', ['-arg1', '-arg2', '-arg3'], 'stdin')
+        expectation.then(answer)
+        mock_deserialize.return_value = [expectation]
+
+        execution = Execution('command', ['-arg1', '-arg2', '-arg3'], 'stdin')
+
+        commandstub.dispatch(execution)
+
         self.assertEqual(call(answer), mock_answer.call_args)
 
     @patch('sys.exit')
