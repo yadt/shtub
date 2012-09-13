@@ -31,11 +31,11 @@ VERSION = '${version}'
 
 BASEDIR = 'test-execution'
 
-EXPECTATIONS_FILENAME = join(BASEDIR, 'expectations')
-LOCK_FILENAME = join(BASEDIR, 'lock')
-LOG_FILENAME = join(BASEDIR, 'log')
+EXPECTATIONS_FILENAME   = join(BASEDIR, 'expectations')
+LOCK_FILENAME           = join(BASEDIR, 'lock')
+LOG_FILENAME            = join(BASEDIR, 'log')
 RECORDED_CALLS_FILENAME = join(BASEDIR, 'recorded-calls')
-STUBS_DIRECTORY = join(BASEDIR, 'stubs')
+STUBS_DIRECTORY         = join(BASEDIR, 'stubs')
 
 READ_STDIN_TIMEOUT_IN_SECONDS = 1
 

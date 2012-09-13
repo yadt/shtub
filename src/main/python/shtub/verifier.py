@@ -26,6 +26,12 @@ from shtub import RECORDED_CALLS_FILENAME, deserialize_executions
 from shtub.execution import Execution
 
 
+class VerificationException (Exception):
+    """
+        to be raised when an error during verification occurs.
+    """
+    
+
 class Verifier (object):
     """
         Verifies command stub expectations. Please use instances of this class
@@ -96,7 +102,16 @@ class Verifier (object):
         """
     
         filename = os.path.join(self.base_dir, RECORDED_CALLS_FILENAME)
+        
+        if not os.path.exists(filename):
+            raise VerificationException('No executions recorded. Stubbed commands have never been called.')
+    
         self.recorded_calls = deserialize_executions(filename)
+        
+        for recorded_call in self.recorded_calls:
+            if not recorded_call.accepted:
+                raise VerificationException('Execution %s did not fulfill any expectation.' % recorded_call)
+        
         return self
 
 
