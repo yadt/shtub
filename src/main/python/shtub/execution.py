@@ -27,7 +27,7 @@ class Execution (object):
         Represents the parameters of a call to the command stub.
     """
     
-    def __init__ (self, command, arguments, stdin):
+    def __init__ (self, command, arguments, stdin, fulfilled=False):
         """
             initializes a new execution with the given properties.
             If arguments is not given it will be initialized as empty list.
@@ -36,6 +36,8 @@ class Execution (object):
         self.command   = command
         self.arguments = arguments or []
         self.stdin     = stdin
+        
+        self.fulfilled = fulfilled
     
     
     def as_dictionary (self):
@@ -45,7 +47,8 @@ class Execution (object):
         
         return {'command'   : self.command,
                 'arguments' : self.arguments,
-                'stdin'     : self.stdin}
+                'stdin'     : self.stdin,
+                'fulfilled' : self.fulfilled}
     
     
     def fulfills (self, expectation):
@@ -75,7 +78,8 @@ class Execution (object):
         
         return   self.command == other.command \
            and     self.stdin == other.stdin \
-           and self.arguments == other.arguments
+           and self.arguments == other.arguments \
+           and self.fulfilled == other.fulfilled
 
     
     def __ne__ (self, other):
@@ -104,4 +108,5 @@ class Execution (object):
         
         return Execution(dictionary['command'],
                          dictionary['arguments'],
-                         dictionary['stdin'])
+                         dictionary['stdin'],
+                         dictionary['fulfilled'])
