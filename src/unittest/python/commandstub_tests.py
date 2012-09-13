@@ -39,7 +39,7 @@ class Tests (unittest.TestCase):
     @patch('shtub.commandstub.send_answer')
     @patch('logging.info')
     @patch('shtub.commandstub.deserialize_expectations')
-    def test_should_mark_execution_as_fulfilled_when_execution_fulfills_expectations (self, \
+    def test_should_mark_execution_as_accepted_when_execution_fulfills_expectations (self, \
                         mock_deserialize, mock_logging_info, mock_answer, mock_record):
 
         answer = Answer('Hello world', 'Hello error', 15)
@@ -51,7 +51,7 @@ class Tests (unittest.TestCase):
 
         commandstub.dispatch(execution)
 
-        self.assertTrue(execution.fulfilled)
+        self.assertTrue(execution.accepted)
 
     @patch('shtub.commandstub.record_call')
     @patch('shtub.commandstub.send_answer')
