@@ -3,10 +3,14 @@ python:
   - "2.6"
   - "2.7"
   - "3.2"
-before_script: sudo apt-get install pychecker rpm python-rpm
+
+before_script:
+  - sudo apt-get install pychecker rpm python-rpm
 install:
   - pip install pybuilder
-script: "pyb install_dependencies analyze package --debug"
+
+script: "pyb install_dependencies analyze run_integration_tests --debug"
+
 notifications:
   email:
     - arne.hilmann@immobilienscout24.de
