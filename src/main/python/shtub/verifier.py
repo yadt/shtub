@@ -110,7 +110,7 @@ class Verifier (object):
         
         for recorded_call in self.recorded_calls:
             if not recorded_call.accepted:
-                raise VerificationException('Execution %s did not fulfill any expectation.' % recorded_call)
+                raise VerificationException('Unexpected %s: did not fulfill any expectation.' % str(recorded_call))
         
         return self
 
