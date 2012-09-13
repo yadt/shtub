@@ -36,8 +36,8 @@ class Test (integrationtest_support.IntegrationTestSupport):
 
         self.assertEqual(0, actual_return_code)
 
-        with self.verify() as verifier:
-            self.assertRaises(AssertionError, verifier.called, 'command_stub')
+        with self.verify() as verify:
+            self.assertRaises(AssertionError, verify.called, 'command_stub')
 
 
 if __name__ == '__main__':
