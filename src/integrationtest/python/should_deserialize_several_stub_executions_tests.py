@@ -41,7 +41,7 @@ class Test (integrationtest_support.IntegrationTestSupport):
         self.assertEqual(0, actual_return_code1)
         self.assertEqual(0, actual_return_code2)
 
-        path = join(self.base_dir, 'test-execution', 'recorded-calls')
+        path = join(self.base_dir, 'test-execution', 'executions')
 
         actual_calls = deserialize_executions(path)
 

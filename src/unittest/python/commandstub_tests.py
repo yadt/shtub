@@ -128,7 +128,7 @@ class Tests (unittest.TestCase):
 
         commandstub.record_call(execution)
 
-        self.assertEqual(call('test-execution/recorded-calls', ANY), mock_serialize.call_args)
+        self.assertEqual(call('test-execution/executions', ANY), mock_serialize.call_args)
 
         actual_recorded_calls = mock_serialize.call_args[0][1]
 
@@ -146,7 +146,7 @@ class Tests (unittest.TestCase):
 
         commandstub.record_call(execution)
 
-        self.assertEqual(call('test-execution/recorded-calls'), mock_deserialize.call_args)
+        self.assertEqual(call('test-execution/executions'), mock_deserialize.call_args)
 
 
     @patch('shtub.commandstub.unlock')

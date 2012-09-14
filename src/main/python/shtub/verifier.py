@@ -22,7 +22,7 @@
 __author__ = 'Alexander Metzner, Michael Gruber, Udo Juettner'
 
 import os.path
-from shtub import RECORDED_CALLS_FILENAME, deserialize_executions
+from shtub import EXECUTIONS_FILENAME, deserialize_executions
 from shtub.execution import Execution
 
 
@@ -98,7 +98,7 @@ class Verifier (object):
             will load the actual recorded calls and return itself.
         """
     
-        filename = os.path.join(self.base_dir, RECORDED_CALLS_FILENAME)
+        filename = os.path.join(self.base_dir, EXECUTIONS_FILENAME)
         
         if not os.path.exists(filename):
             raise VerificationException('No executions recorded. Stubbed commands have never been called.')

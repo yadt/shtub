@@ -30,11 +30,11 @@ import fcntl
 from select import select
 
 from shtub import (BASEDIR,
+                   EXECUTIONS_FILENAME,
                    EXPECTATIONS_FILENAME,
                    LOCK_FILENAME,
                    LOG_FILENAME,
                    READ_STDIN_TIMEOUT_IN_SECONDS,
-                   RECORDED_CALLS_FILENAME,
                    deserialize_executions,
                    deserialize_expectations,
                    serialize_executions)
@@ -75,11 +75,11 @@ def record_call (execution):
     lock_file_handle = lock()
     recorded_calls = []
 
-    if os.path.exists(RECORDED_CALLS_FILENAME):
-        recorded_calls = deserialize_executions(RECORDED_CALLS_FILENAME)
+    if os.path.exists(EXECUTIONS_FILENAME):
+        recorded_calls = deserialize_executions(EXECUTIONS_FILENAME)
 
     recorded_calls.append(execution)
-    serialize_executions(RECORDED_CALLS_FILENAME, recorded_calls)
+    serialize_executions(EXECUTIONS_FILENAME, recorded_calls)
     logging.info('Recorded %s calls.', len(recorded_calls))
 
     unlock(lock_file_handle)
