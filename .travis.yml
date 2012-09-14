@@ -7,10 +7,12 @@ python:
 
 before_script:
   - sudo apt-get install pychecker rpm python-rpm
+
 install:
   - pip install pybuilder
+  - pyb install_dependencies
 
-script: "pyb install_dependencies analyze run_integration_tests --debug"
+script: "pyb analyze run_integration_tests --debug"
 
 notifications:
   email:
