@@ -80,9 +80,8 @@ class VerfierTest (unittest.TestCase):
         
         mock_deserialize.return_value = [stub_execution]
         
-        with verifier as veri:
-            self.assertRaises(AssertionError, veri.verify, 'other_command', ['any_arg1', 'any_arg2'], 'any_stdin')
-
+        verify = verifier.__enter__()
+        self.assertRaises(AssertionError, verify.verify, 'other_command', ['any_arg1', 'any_arg2'], 'any_stdin')
         self.assertEqual(call('/hello/world/test-execution/recorded-calls'), mock_deserialize.call_args)
 
 
@@ -97,10 +96,10 @@ class VerfierTest (unittest.TestCase):
         
         mock_deserialize.return_value = [stub_execution1, stub_execution2]
         
-        with verifier as veri:
-            veri.verify('any_command1', ['1any_arg1', '1any_arg2'], 'any_stdin')
-            self.assertRaises(AssertionError, veri.verify, 'other_command', ['2any_arg1', '2any_arg2'], 'any_stdin2')
-
+        verify = verifier.__enter__()
+        verify.verify('any_command1', ['1any_arg1', '1any_arg2'], 'any_stdin')
+        
+        self.assertRaises(AssertionError, verify.verify, 'other_command', ['2any_arg1', '2any_arg2'], 'any_stdin2')
         self.assertEqual(call('/hello/world/test-execution/recorded-calls'), mock_deserialize.call_args)
 
 
@@ -178,13 +177,13 @@ class VerfierTest (unittest.TestCase):
         
         mock_deserialize.return_value = [stub_execution]
 
-        with verifier as verify:
-            self.assertRaises(AssertionError, verifier.called, 'other_command')
+        verify = verifier.__enter__()
+        self.assertRaises(AssertionError, verifier.called, 'other_command')
 
 
     @patch('os.path.exists')
     @patch('shtub.verifier.deserialize_executions')
-    def test_should_raise_exception_when_recorded_calls_available (self, mock_deserialize, mock_exists):
+    def test_should_raise_exception_when_no_recorded_calls_available (self, mock_deserialize, mock_exists):
         mock_exists.return_value = True
         verifier = Verifier('/hello/world')
         
@@ -192,6 +191,38 @@ class VerfierTest (unittest.TestCase):
 
         with verifier as verify:
             self.assertRaises(AssertionError, verifier.called, 'other_command')
+
+
+    @patch('os.path.exists')
+    @patch('shtub.verifier.deserialize_executions')
+    def test_should_raise_exception_when_more_recorded_calls_available_than_verified (self, mock_deserialize, mock_exists):
+        mock_exists.return_value = True
+        verifier = Verifier('/hello/world')
+        
+        stub_execution1 = Execution('command', ['-arg1', '-arg2'], 'stdin', accepted=True)
+        stub_execution2 = Execution('command', ['-arg1', '-arg2'], 'stdin', accepted=True)
+        
+        mock_deserialize.return_value = [stub_execution1, stub_execution2]
+        
+        verify = verifier.__enter__()
+        verify.called('command')
+        self.assertRaises(VerificationException, verify.__exit__, None, None, None)
+
+
+    @patch('os.path.exists')
+    @patch('shtub.verifier.deserialize_executions')
+    def test_should_return_false_when_an_exception_occured_in_the_with_statement (self, mock_deserialize, mock_exists):
+        mock_exists.return_value = True
+        verifier = Verifier('/hello/world')
+        
+        stub_execution1 = Execution('command', ['-arg1', '-arg2'], 'stdin', accepted=True)
+        stub_execution2 = Execution('command', ['-arg1', '-arg2'], 'stdin', accepted=True)
+        
+        mock_deserialize.return_value = [stub_execution1, stub_execution2]
+        
+        verify = verifier.__enter__()
+        verify.called('command')
+        self.assertFalse(verify.__exit__('exception_type', 'exception_value', 'traceback'))
 
 
 class VerfiableExecutionWrapperTests (unittest.TestCase):

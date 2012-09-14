@@ -16,28 +16,29 @@
 
 import unittest
 
-from os.path import join
-
 import integrationtest_support
 
+from shtub.verifier import VerificationException
 
-class Test (integrationtest_support.IntegrationTestSupport):
+class Tests (integrationtest_support.IntegrationTestSupport):
     def test (self):
-        self.prepare_default_testbed(['command_stub', 'command_stub1'])
-        self.create_command_wrapper('command_wrapper1', 'command_stub1', ['-arg1', '-arg2', '-arg3'], 'stdin1')
+        self.prepare_default_testbed(['command_stub'])
+        self.create_command_wrapper('command_wrapper', 'command_stub', ['-arg1', '-arg2', '-arg3'], 'stdin')
 
         with self.fixture() as when:
-            when.calling('command_stub').with_arguments('-arg0', '-arg1', '-arg2').and_input('stdin') \
-                .then_answer('Hello world 1', 'Hello error 1', 0)
-            when.calling('command_stub1').with_arguments('-arg1', '-arg2', '-arg3').and_input('stdin1') \
-                .then_answer('Hello world 2', 'Hello error 2', 0)
+            when.calling('command_stub').with_arguments('-arg1', '-arg2', '-arg3').and_input('stdin') \
+                .then_return(0)
 
-        actual_return_code = self.execute_command('command_wrapper1')
+        actual_return_code1 = self.execute_command('command_wrapper')
+        actual_return_code2 = self.execute_command('command_wrapper')
 
-        self.assertEqual(0, actual_return_code)
 
         verify = self.verify().__enter__()
-        self.assertRaises(AssertionError, verify.called, 'command_stub')
+        self.assertEqual(0, actual_return_code1)
+        self.assertEqual(0, actual_return_code2)
+        verify.called('command_stub').with_arguments('-arg1', '-arg2', '-arg3').and_input('stdin')
+
+        self.assertRaises(VerificationException, verify.__exit__, None, None, None)
 
 
 if __name__ == '__main__':

@@ -120,8 +120,19 @@ class Verifier (object):
             since this class is designed to be integrated in a "with" block it
             is implemented, but has no effect.
         """
+        if exception_type or exception_value or traceback:
+            return False
         
-        pass
+        count_of_recorded_calls = len(self.recorded_calls)
+        if count_of_recorded_calls > 0:
+            if count_of_recorded_calls == 1:
+                message = 'There is an unverified recorded call:\n'
+            else:
+                message = 'There are %s unverified recorded calls:\n' % count_of_recorded_calls
+            for recorded_call in self.recorded_calls:
+                message += "    %s\n" % str(recorded_call)
+                
+            raise VerificationException(message)
 
 
 class VerfiableExecutionWrapper (object):
