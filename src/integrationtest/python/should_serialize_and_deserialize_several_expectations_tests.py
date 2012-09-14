@@ -41,7 +41,7 @@ class Test (integrationtest_support.IntegrationTestSupport):
         self.assertEqual(0, actual_return_code1)
         self.assertEqual(0, actual_return_code2)
 
-        expectations_filename = join(self.base_dir, 'test-execution', 'expectations')
+        expectations_filename = join(self.base_dir, 'shtub', 'expectations')
         actual_expectations = deserialize_expectations(expectations_filename)
 
         self.assertEqual(2, len(actual_expectations))

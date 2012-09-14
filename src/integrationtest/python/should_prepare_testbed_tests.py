@@ -39,7 +39,7 @@ class Test (integrationtest_support.IntegrationTestSupport):
             path_to_stub = os.path.join(actual_testbase.stubs_dir, stub_name)
             self.assert_file_content(path_to_stub, STUB_SCRIPT_CONTENT)
 
-        test_execution_directory = os.path.join(actual_testbase.base_dir, 'test-execution')
+        test_execution_directory = os.path.join(actual_testbase.base_dir, 'shtub')
         self.assert_directory_exists(test_execution_directory)
 
 

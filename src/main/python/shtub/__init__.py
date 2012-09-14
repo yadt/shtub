@@ -29,7 +29,7 @@ from shtub.expectation import Expectation
 
 VERSION = '${version}'
 
-BASEDIR = 'test-execution'
+BASEDIR = 'shtub'
 
 EXECUTIONS_FILENAME   = join(BASEDIR, 'executions')
 EXPECTATIONS_FILENAME = join(BASEDIR, 'expectations')

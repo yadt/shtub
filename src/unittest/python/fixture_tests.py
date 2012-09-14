@@ -108,7 +108,7 @@ class FixtureTest (unittest.TestCase):
         with fixture as fix:
             self.assertEqual(fix, fixture)
 
-        self.assertEqual(call('/hello/world/test-execution/expectations', []), serialize_mock.call_args)
+        self.assertEqual(call('/hello/world/shtub/expectations', []), serialize_mock.call_args)
 
 
     def test_should_return_expectation_object (self):

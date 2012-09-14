@@ -41,7 +41,7 @@ class VerfierTest (unittest.TestCase):
         verifier = Verifier('/spam/eggs')
         
         self.assertRaises(VerificationException, verifier.__enter__)
-        self.assertEqual(call('/spam/eggs/test-execution/executions'), mock_exists.call_args)
+        self.assertEqual(call('/spam/eggs/shtub/executions'), mock_exists.call_args)
 
 
     @patch('os.path.exists')
@@ -53,7 +53,7 @@ class VerfierTest (unittest.TestCase):
         with verifier as veri:
             self.assertEqual(veri, verifier)
             
-        self.assertEqual(call('/hello/world/test-execution/executions'), mock_deserialize.call_args)
+        self.assertEqual(call('/hello/world/shtub/executions'), mock_deserialize.call_args)
 
 
     @patch('os.path.exists')
@@ -67,7 +67,7 @@ class VerfierTest (unittest.TestCase):
         with verifier as veri:
             self.assertRaises(AssertionError, veri.verify, 'any_stub', ['any_arguments'], 'any_stdin')
 
-        self.assertEqual(call('/hello/world/test-execution/executions'), mock_deserialize.call_args)
+        self.assertEqual(call('/hello/world/shtub/executions'), mock_deserialize.call_args)
 
 
     @patch('os.path.exists')
@@ -82,7 +82,7 @@ class VerfierTest (unittest.TestCase):
         
         verify = verifier.__enter__()
         self.assertRaises(AssertionError, verify.verify, 'other_command', ['any_arg1', 'any_arg2'], 'any_stdin')
-        self.assertEqual(call('/hello/world/test-execution/executions'), mock_deserialize.call_args)
+        self.assertEqual(call('/hello/world/shtub/executions'), mock_deserialize.call_args)
 
 
     @patch('os.path.exists')
@@ -100,7 +100,7 @@ class VerfierTest (unittest.TestCase):
         verify.verify('any_command1', ['1any_arg1', '1any_arg2'], 'any_stdin')
         
         self.assertRaises(AssertionError, verify.verify, 'other_command', ['2any_arg1', '2any_arg2'], 'any_stdin2')
-        self.assertEqual(call('/hello/world/test-execution/executions'), mock_deserialize.call_args)
+        self.assertEqual(call('/hello/world/shtub/executions'), mock_deserialize.call_args)
 
 
     @patch('os.path.exists')
@@ -119,7 +119,7 @@ class VerfierTest (unittest.TestCase):
             veri.verify('any_command2', ['2any_arg1', '2any_arg2'], 'any_stdin2')
             self.assertEqual(0, len(veri.recorded_calls))
 
-        self.assertEqual(call('/hello/world/test-execution/executions'), mock_deserialize.call_args)
+        self.assertEqual(call('/hello/world/shtub/executions'), mock_deserialize.call_args)
 
 
     @patch('os.path.exists')
@@ -164,7 +164,7 @@ class VerfierTest (unittest.TestCase):
             self.assertEqual(called_command.execution, stub_execution)
             self.assertEqual(0, len(verify.recorded_calls))
 
-        self.assertEqual(call('/hello/world/test-execution/executions'), mock_deserialize.call_args)
+        self.assertEqual(call('/hello/world/shtub/executions'), mock_deserialize.call_args)
 
 
     @patch('os.path.exists')

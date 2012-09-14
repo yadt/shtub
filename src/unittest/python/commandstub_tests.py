@@ -114,7 +114,7 @@ class Tests (unittest.TestCase):
 
         commandstub.dispatch(execution)
 
-        self.assertEqual(call('test-execution/expectations'), mock_deserialize.call_args)
+        self.assertEqual(call('shtub/expectations'), mock_deserialize.call_args)
 
 
     @patch('shtub.commandstub.unlock')
@@ -128,7 +128,7 @@ class Tests (unittest.TestCase):
 
         commandstub.record_call(execution)
 
-        self.assertEqual(call('test-execution/executions', ANY), mock_serialize.call_args)
+        self.assertEqual(call('shtub/executions', ANY), mock_serialize.call_args)
 
         actual_recorded_calls = mock_serialize.call_args[0][1]
 
@@ -146,7 +146,7 @@ class Tests (unittest.TestCase):
 
         commandstub.record_call(execution)
 
-        self.assertEqual(call('test-execution/executions'), mock_deserialize.call_args)
+        self.assertEqual(call('shtub/executions'), mock_deserialize.call_args)
 
 
     @patch('shtub.commandstub.unlock')
@@ -231,8 +231,8 @@ class Tests (unittest.TestCase):
 
         commandstub.handle_stub_call()
 
-        self.assertEqual(call('test-execution'), mock_exists.call_args)
-        self.assertEqual(call('test-execution'), mock_mkdir.call_args)
+        self.assertEqual(call('shtub'), mock_exists.call_args)
+        self.assertEqual(call('shtub'), mock_mkdir.call_args)
 
 
     @patch.object(sys, 'argv', ['command', '-arg1', '-arg2', '-arg3'])
@@ -247,7 +247,7 @@ class Tests (unittest.TestCase):
         commandstub.handle_stub_call()
 
 
-        self.assertEqual(call('test-execution'), mock_exists.call_args)
+        self.assertEqual(call('shtub'), mock_exists.call_args)
         self.assertEqual(None, mock_mkdir.call_args)
 
 
@@ -299,7 +299,7 @@ class Tests (unittest.TestCase):
         actual_file_handle = commandstub.lock()
 
         self.assertEqual(file_handle_mock, actual_file_handle)
-        self.assertEqual(call('test-execution/lock', mode='a'), mock_open.call_args)
+        self.assertEqual(call('shtub/lock', mode='a'), mock_open.call_args)
         self.assertEqual(call(file_handle_mock, mock_fcntl.LOCK_EX), mock_fcntl.flock.call_args)
 
 

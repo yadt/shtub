@@ -58,7 +58,7 @@ class Test (IntegrationTestSupport):
 
 
     def write_expectations_json_file(self, test_dir, expectation_json):
-        test_execution_dir = join(test_dir, 'test-execution')
+        test_execution_dir = join(test_dir, 'shtub')
         mkdir(test_execution_dir)
         
         expectations_filename = join(test_execution_dir, 'expectations')
