@@ -56,13 +56,11 @@ class Verifier (object):
         """
     
         if not self.recorded_calls:
-            raise AssertionError('No more recorded calls when verifying'
-                                 'command "%s" called.' % command)
+            raise AssertionError('No more recorded calls when verifying command "%s" called.' % command)
         
         actual_recorded_call = self.recorded_calls[0]
         if actual_recorded_call.command != command:
-            raise AssertionError('Recorded call (execution) '
-                                 'does not fulfill expectation:\n'
+            raise AssertionError('Recorded call (execution) does not fulfill expectation:\n'
                                  'Expected command "%s", but got "%s"\n'
                                  % (command, actual_recorded_call.command))
         
@@ -81,8 +79,7 @@ class Verifier (object):
         expectation = Execution(command, arguments, stdin)
 
         if not self.recorded_calls:
-            raise AssertionError('No more recorded calls when verifying %s'
-                                 % expectation)
+            raise AssertionError('No more recorded calls when verifying %s' % expectation)
         
         actual_recorded_call = self.recorded_calls[0]
         if not actual_recorded_call.fulfills(expectation):
@@ -167,8 +164,7 @@ class VerfiableExecutionWrapper (object):
         for argument in arguments:
             if argument not in self.execution.arguments:
                 raise AssertionError(
-                    'Stub "%s" has not been executed with at least '
-                    'expected arguments %s, but with %s.'
+                    'Stub "%s" has not been executed with at least expected arguments %s, but with %s.'
                     % (self.execution.command, arguments, self.execution.arguments))
         
         return self

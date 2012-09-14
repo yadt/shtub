@@ -36,7 +36,8 @@ class StubbingSshExampleTest (shtub.testbase.IntegrationTestBase):
 
 
     def _create_environment(self):
-        env = {'PATH':self._create_path(), 'PYTHONPATH':self._create_python_path()}
+        env = {'PATH'       : self._create_path(),
+               'PYTHONPATH' : self._create_python_path()}
         return env
 
 

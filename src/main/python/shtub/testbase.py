@@ -79,6 +79,7 @@ class IntegrationTestBase (unittest.TestCase):
 
         stdout, stderr = shell_process.communicate()
         self._write_output_file(command, stdout, stderr)
+        
         self.command_counter += 1
 
         return shell_process.returncode
@@ -104,8 +105,10 @@ class IntegrationTestBase (unittest.TestCase):
     def stub_commands (self, command_list):
         for command in command_list:
             command_file_name = os.path.join(self.stubs_dir, command)
+            
             with open(command_file_name, "w") as command_file:
                 command_file.write(STUB_SCRIPT_CONTENT)
+                
             os.chmod(command_file_name, 0o755)
 
     def make_base_dir (self, base_dir):

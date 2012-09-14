@@ -19,8 +19,7 @@ import unittest
 
 from os.path import join
 
-major, minor, micro, releaselevel, serial = sys.version_info
-if major == 3:
+if sys.version_info[0] == 3:
     from io import StringIO
 else:
     from StringIO import StringIO
