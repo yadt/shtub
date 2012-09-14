@@ -116,7 +116,7 @@ def dispatch (execution):
     for expectation in expectations:
         if execution.fulfills(expectation):
             logging.info('Execution fulfills %s', expectation)
-            execution.mark_as_accepted()
+            execution.mark_as_expected()
             record_call(execution)
             answer = expectation.next_answer()
             send_answer(answer)

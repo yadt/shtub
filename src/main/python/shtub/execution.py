@@ -71,7 +71,7 @@ class Execution (object):
         return True
 
 
-    def mark_as_accepted (self):
+    def mark_as_expected (self):
         """
             marks the execution as expected which means the execution fulfills a expectation.
         """
