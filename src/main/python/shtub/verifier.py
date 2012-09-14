@@ -119,7 +119,11 @@ class Verifier (object):
         """
             since this class is designed to be integrated in a "with" block it
             is implemented, but has no effect.
+
+            @return: False, when exception_type, exception_value or traceback given,
+                     otherwise None
         """
+        
         if exception_type or exception_value or traceback:
             return False
         

@@ -82,6 +82,9 @@ class Fixture (object):
         """
             since this class is designed to be used using the "with" statement
             this will save the list of expectations in the base directory.
+            
+            @return: False, when exception_type, exception_value or traceback given,
+                     otherwise None
         """
          
         if exception_type or exception_value or traceback:
