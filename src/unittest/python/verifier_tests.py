@@ -222,7 +222,10 @@ class VerfierTest (unittest.TestCase):
         
         verify = verifier.__enter__()
         verify.called('command')
-        self.assertFalse(verify.__exit__('exception_type', 'exception_value', 'traceback'))
+        
+        actual_result = verify.__exit__('exception_type', 'exception_value', 'traceback')
+        
+        self.assertFalse(actual_result)
 
 
 class VerfiableExecutionWrapperTests (unittest.TestCase):

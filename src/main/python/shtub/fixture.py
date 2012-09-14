@@ -83,8 +83,10 @@ class Fixture (object):
             since this class is designed to be used using the "with" statement
             this will save the list of expectations in the base directory.
         """
-        
-        __pychecker__ = 'unusednames=exception_type,exception_value,traceback'
+         
+        if exception_type or exception_value or traceback:
+            return False
+               
         filename = os.path.join(self.base_dir, EXPECTATIONS_FILENAME)
         
         serialize_executions(filename, self.expectations)
