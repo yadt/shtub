@@ -107,4 +107,4 @@ class IntegrationTestSupport (shtub.testbase.IntegrationTestBase):
 
     def assert_is_link(self, filename):
         file_is_a_link = os.path.islink(filename)
-        self.assertTrue(file_is_a_link, '%s is not a link!')
+        self.assertTrue(file_is_a_link, '%s is not a link!' % filename)
