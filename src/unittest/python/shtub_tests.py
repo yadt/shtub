@@ -47,7 +47,7 @@ class ShtubTests (unittest.TestCase):
         mock_json.return_value = [{'command'   : 'command',
                                    'arguments' : ['-arg1', '-arg2', '-arg3'],
                                    'stdin'     : 'stdin',
-                                   'accepted'  : False}]
+                                   'expected'  : False}]
 
         actual_executions = deserialize_executions('executions.json')
 
@@ -91,14 +91,14 @@ class ShtubTests (unittest.TestCase):
     def test_should_serialize_executions (self, mock_open, mock_json):
         fake_file = self.return_file_when_calling(mock_open)
         mock_json.return_value = '[{"some": "json"}]'
-        executions = [Execution('command', ['-arg1', '-arg2', '-arg3'], 'stdin', accepted=True)]
+        executions = [Execution('command', ['-arg1', '-arg2', '-arg3'], 'stdin', expected=True)]
 
         serialize_executions('executions.json', executions)
 
         expected_dictionary = {'command'   : 'command',
                                'arguments' : ['-arg1', '-arg2', '-arg3'],
                                'stdin'     : 'stdin',
-                               'accepted'  : True}
+                               'expected'  : True}
 
         self.assertEqual(call([expected_dictionary], sort_keys=True, indent=4), mock_json.call_args)
         self.assertEqual(call('executions.json', mode='w'), mock_open.call_args)

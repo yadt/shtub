@@ -62,6 +62,7 @@ class Expectation (Execution):
             answers_list.append(answer_dictionary)
         
         result = Execution.as_dictionary(self)
+        
         result['answers']        = answers_list
         result['current_answer'] = self.current_answer        
         return result

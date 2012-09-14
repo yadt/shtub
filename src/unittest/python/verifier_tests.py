@@ -76,7 +76,7 @@ class VerfierTest (unittest.TestCase):
         mock_exists.return_value = True
         verifier = Verifier('/hello/world')
         
-        stub_execution = Execution('any_command', ['any_arg1', 'any_arg2'], 'any_stdin', accepted=True)
+        stub_execution = Execution('any_command', ['any_arg1', 'any_arg2'], 'any_stdin', expected=True)
         
         mock_deserialize.return_value = [stub_execution]
         
@@ -91,8 +91,8 @@ class VerfierTest (unittest.TestCase):
         mock_exists.return_value = True
         verifier = Verifier('/hello/world')
         
-        stub_execution1 = Execution('any_command1', ['1any_arg1', '1any_arg2'], 'any_stdin', accepted=True)
-        stub_execution2 = Execution('any_command2', ['2any_arg1', '2any_arg2'], 'any_stdin2', accepted=True)
+        stub_execution1 = Execution('any_command1', ['1any_arg1', '1any_arg2'], 'any_stdin', expected=True)
+        stub_execution2 = Execution('any_command2', ['2any_arg1', '2any_arg2'], 'any_stdin2', expected=True)
         
         mock_deserialize.return_value = [stub_execution1, stub_execution2]
         
@@ -109,8 +109,8 @@ class VerfierTest (unittest.TestCase):
         mock_exists.return_value = True
         verifier = Verifier('/hello/world')
         
-        stub_execution1 = Execution('any_command1', ['1any_arg1', '1any_arg2'], 'any_stdin1', accepted=True)
-        stub_execution2 = Execution('any_command2', ['2any_arg1', '2any_arg2'], 'any_stdin2', accepted=True)
+        stub_execution1 = Execution('any_command1', ['1any_arg1', '1any_arg2'], 'any_stdin1', expected=True)
+        stub_execution2 = Execution('any_command2', ['2any_arg1', '2any_arg2'], 'any_stdin2', expected=True)
         
         mock_deserialize.return_value = [stub_execution1, stub_execution2]
         
@@ -141,7 +141,7 @@ class VerfierTest (unittest.TestCase):
         mock_exists.return_value = True
         verifier = Verifier('/hello/world')
         
-        stub_execution1 = Execution('any_command1', ['1any_arg1', '1any_arg2'], 'any_stdin1', accepted=True)
+        stub_execution1 = Execution('any_command1', ['1any_arg1', '1any_arg2'], 'any_stdin1', expected=True)
         stub_execution2 = Execution('any_command2', ['2any_arg1', '2any_arg2'], 'any_stdin2')
         
         mock_deserialize.return_value = [stub_execution1, stub_execution2]
@@ -155,7 +155,7 @@ class VerfierTest (unittest.TestCase):
         mock_exists.return_value = True
         verifier = Verifier('/hello/world')
         
-        stub_execution = Execution('command', ['-arg1', '-arg2'], 'stdin', accepted=True)
+        stub_execution = Execution('command', ['-arg1', '-arg2'], 'stdin', expected=True)
         
         mock_deserialize.return_value = [stub_execution]
         
@@ -173,7 +173,7 @@ class VerfierTest (unittest.TestCase):
         mock_exists.return_value = True
         verifier = Verifier('/hello/world')
         
-        stub_execution = Execution('command', ['-arg1', '-arg2'], 'stdin', accepted=True)
+        stub_execution = Execution('command', ['-arg1', '-arg2'], 'stdin', expected=True)
         
         mock_deserialize.return_value = [stub_execution]
 
@@ -199,8 +199,8 @@ class VerfierTest (unittest.TestCase):
         mock_exists.return_value = True
         verifier = Verifier('/hello/world')
         
-        stub_execution1 = Execution('command', ['-arg1', '-arg2'], 'stdin', accepted=True)
-        stub_execution2 = Execution('command', ['-arg1', '-arg2'], 'stdin', accepted=True)
+        stub_execution1 = Execution('command', ['-arg1', '-arg2'], 'stdin', expected=True)
+        stub_execution2 = Execution('command', ['-arg1', '-arg2'], 'stdin', expected=True)
         
         mock_deserialize.return_value = [stub_execution1, stub_execution2]
         
@@ -215,8 +215,8 @@ class VerfierTest (unittest.TestCase):
         mock_exists.return_value = True
         verifier = Verifier('/hello/world')
         
-        stub_execution1 = Execution('command', ['-arg1', '-arg2'], 'stdin', accepted=True)
-        stub_execution2 = Execution('command', ['-arg1', '-arg2'], 'stdin', accepted=True)
+        stub_execution1 = Execution('command', ['-arg1', '-arg2'], 'stdin', expected=True)
+        stub_execution2 = Execution('command', ['-arg1', '-arg2'], 'stdin', expected=True)
         
         mock_deserialize.return_value = [stub_execution1, stub_execution2]
         

@@ -23,23 +23,23 @@ class ExecutionTests (unittest.TestCase):
         values = {'command'   : 'any_command',
                   'arguments' : ['any_arguments'],
                   'stdin'     : 'any_stdin',
-                  'accepted'  : True}
+                  'expected'  : True}
 
         actual_execution = Execution.from_dictionary(values)
 
         self.assertEqual('any_command', actual_execution.command)
         self.assertEqual(['any_arguments'], actual_execution.arguments)
         self.assertEqual('any_stdin', actual_execution.stdin)
-        self.assertEqual(True, actual_execution.accepted)
+        self.assertEqual(True, actual_execution.expected)
 
 
     def test_should_create_object_with_given_properties (self):
-        actual_execution = Execution('any_command', ['any_arg1', 'any_arg2'], 'any_stdin', accepted=True)
+        actual_execution = Execution('any_command', ['any_arg1', 'any_arg2'], 'any_stdin', expected=True)
 
         self.assertEqual('any_command', actual_execution.command)
         self.assertEqual(['any_arg1', 'any_arg2'], actual_execution.arguments)
         self.assertEqual('any_stdin', actual_execution.stdin)
-        self.assertEqual(True, actual_execution.accepted)
+        self.assertEqual(True, actual_execution.expected)
 
 
     def test_should_create_object_with_given_properties_but_empty_arguments (self):
@@ -48,18 +48,18 @@ class ExecutionTests (unittest.TestCase):
         self.assertEqual('any_command', actual_execution.command)
         self.assertEqual([], actual_execution.arguments)
         self.assertEqual('any_stdin', actual_execution.stdin)
-        self.assertEqual(False, actual_execution.accepted)
+        self.assertEqual(False, actual_execution.expected)
 
 
     def test_should_convert_object_to_dictionary (self):
-        execution = Execution('any_command', ['any_arg1', 'any_arg2'], 'any_stdin', accepted=True)
+        execution = Execution('any_command', ['any_arg1', 'any_arg2'], 'any_stdin', expected=True)
 
         actual_dictionary = execution.as_dictionary()
 
         self.assertEqual('any_command', actual_dictionary['command'])
         self.assertEqual(['any_arg1', 'any_arg2'], actual_dictionary['arguments'])
         self.assertEqual('any_stdin', actual_dictionary['stdin'])
-        self.assertEqual(True, actual_dictionary['accepted'])
+        self.assertEqual(True, actual_dictionary['expected'])
 
 
     def test_should_return_false_when_objects_command_is_not_equal (self):
@@ -105,15 +105,15 @@ class ExecutionTests (unittest.TestCase):
 
 
     def test_should_return_false_when_one_object_is_not_fulfilled (self):
-        execution1 = Execution('any_command', ['any_arg1', 'any_arg2'], 'any_stdin', accepted=True)
+        execution1 = Execution('any_command', ['any_arg1', 'any_arg2'], 'any_stdin', expected=True)
         execution2 = Execution('any_command', ['any_arg1', 'any_arg2'], 'any_stdin')
 
         self.assertFalse(execution1 == execution2, 'comparison: stdin')
 
 
     def test_should_return_true_when_both_objects_are_fulfilled (self):
-        execution1 = Execution('any_command', ['any_arg1', 'any_arg2'], 'any_stdin', accepted=True)
-        execution2 = Execution('any_command', ['any_arg1', 'any_arg2'], 'any_stdin', accepted=True)
+        execution1 = Execution('any_command', ['any_arg1', 'any_arg2'], 'any_stdin', expected=True)
+        execution2 = Execution('any_command', ['any_arg1', 'any_arg2'], 'any_stdin', expected=True)
 
         self.assertTrue(execution1 == execution2, 'comparison: stdin')
 
@@ -121,7 +121,7 @@ class ExecutionTests (unittest.TestCase):
     def test_should_return_string_with_all_properties (self):
         execution = Execution('any_command', ['any_arg1', 'any_arg2'], 'any_stdin')
 
-        self.assertEqual("Execution {'accepted': False, 'stdin': 'any_stdin', 'command': 'any_command', 'arguments': ['any_arg1', 'any_arg2']}", str(execution))
+        self.assertEqual("Execution {'expected': False, 'stdin': 'any_stdin', 'command': 'any_command', 'arguments': ['any_arg1', 'any_arg2']}", str(execution))
 
 
     def test_should_return_false_if_other_has_different_arguments (self):
@@ -185,4 +185,4 @@ class ExecutionTests (unittest.TestCase):
 
         execution.mark_as_accepted()
         
-        self.assertTrue(execution.accepted)
+        self.assertTrue(execution.expected)

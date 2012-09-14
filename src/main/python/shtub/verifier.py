@@ -106,7 +106,7 @@ class Verifier (object):
         self.recorded_calls = deserialize_executions(filename)
         
         for recorded_call in self.recorded_calls:
-            if not recorded_call.accepted:
+            if not recorded_call.expected:
                 raise VerificationException('Unexpected %s: did not fulfill any expectation.' % str(recorded_call))
         
         return self

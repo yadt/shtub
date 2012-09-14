@@ -27,7 +27,7 @@ class Execution (object):
         Represents the parameters of a call to the command stub.
     """
     
-    def __init__ (self, command, arguments, stdin, accepted=False):
+    def __init__ (self, command, arguments, stdin, expected=False):
         """
             initializes a new execution with the given properties.
             If arguments is not given it will be initialized as empty list.
@@ -37,7 +37,7 @@ class Execution (object):
         self.arguments = arguments or []
         self.stdin     = stdin
         
-        self.accepted  = accepted
+        self.expected  = expected
     
     
     def as_dictionary (self):
@@ -48,7 +48,7 @@ class Execution (object):
         return {'command'   : self.command,
                 'arguments' : self.arguments,
                 'stdin'     : self.stdin,
-                'accepted'  : self.accepted}
+                'expected'  : self.expected}
     
     
     def fulfills (self, expectation):
@@ -73,10 +73,10 @@ class Execution (object):
 
     def mark_as_accepted (self):
         """
-            marks the execution as accepted which means the execution fulfills a expectation.
+            marks the execution as expected which means the execution fulfills a expectation.
         """
         
-        self.accepted = True
+        self.expected = True
 
 
     def __eq__ (self, other):
@@ -87,7 +87,7 @@ class Execution (object):
         return   self.command == other.command \
            and     self.stdin == other.stdin \
            and self.arguments == other.arguments \
-           and  self.accepted == other.accepted
+           and  self.expected == other.expected
 
     
     def __ne__ (self, other):
@@ -117,4 +117,4 @@ class Execution (object):
         return Execution(dictionary['command'],
                          dictionary['arguments'],
                          dictionary['stdin'],
-                         dictionary['accepted'])
+                         dictionary['expected'])
