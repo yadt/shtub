@@ -29,26 +29,19 @@ from shtub.commandstub import handle_stub_call
 class Test (IntegrationTestSupport):
     def test (self):
         test_dir = tempfile.mkdtemp()
-        test_execution_dir = join(test_dir, 'test-execution')
-        expectations_filename = join(test_execution_dir, 'expectations')
-        expectation_json = str('[{\n'
-                               '    "arguments": ["-arg1", "-arg2", "-arg3"],\n'
-                               '    "command": "not_commandstub.py",\n'
-                               '    "stdin": "Hello world.",\n'
-                               '    "current_answer": 0,\n'
-                               '    "answers": [\n'
-                               '        {\n'
-                               '            "stdout": "Hello world!",\n'
-                               '            "stderr": "Hello error!",\n'
-                               '            "return_code": 0\n'
-                               '        }\n'
-                               '    ]\n'
-                               '}]')
-
-        mkdir(test_execution_dir)
-
-        with open(expectations_filename, 'w') as expectations_file:
-            expectations_file.write(expectation_json)
+        self.write_expectations_json_file(test_dir, '[{\n'
+                                                    '    "arguments": ["-arg1", "-arg2", "-arg3"],\n'
+                                                    '    "command": "not_commandstub.py",\n'
+                                                    '    "stdin": "Hello world.",\n'
+                                                    '    "current_answer": 0,\n'
+                                                    '    "answers": [\n'
+                                                    '        {\n'
+                                                    '            "stdout": "Hello world!",\n'
+                                                    '            "stderr": "Hello error!",\n'
+                                                    '            "return_code": 0\n'
+                                                    '        }\n'
+                                                    '    ]\n'
+                                                    '}]')
 
         command_stub_path = abspath(join(dirname(__file__), '..', '..', 'main', 'python', 'shtub', 'commandstub.py'))
 
@@ -62,6 +55,16 @@ class Test (IntegrationTestSupport):
         stdout, stderr = shell_process.communicate(b'Hello world.')
 
         self.assertEqual(255, shell_process.returncode)
+
+
+    def write_expectations_json_file(self, test_dir, expectation_json):
+        test_execution_dir = join(test_dir, 'test-execution')
+        mkdir(test_execution_dir)
+        
+        expectations_filename = join(test_execution_dir, 'expectations')
+        
+        with open(expectations_filename, 'w') as expectations_file:
+            expectations_file.write(expectation_json)
 
 
 if __name__ == '__main__':

@@ -157,9 +157,9 @@ def handle_stub_call ():
                         level=logging.INFO,
                         format=logging_format)
 
-    command = os.path.basename(sys.argv[0])
+    command   = os.path.basename(sys.argv[0])
     arguments = sys.argv[1:]
-    stdin = read_stdin()
+    stdin     = read_stdin()
     execution = Execution(command, arguments, stdin)
 
     dispatch(execution)

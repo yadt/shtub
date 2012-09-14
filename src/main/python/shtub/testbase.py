@@ -53,8 +53,8 @@ class IntegrationTestBase (unittest.TestCase):
 
 
     def _write_output_file (self, command, stdout, stderr):
-        normalized = self._normalize_command_line(command)
-        filename = '%02d-%s' % (self.command_counter, normalized)
+        normalized  = self._normalize_command_line(command)
+        filename    = '%02d-%s' % (self.command_counter, normalized)
         output_path = os.path.join(self.base_dir, BASEDIR, filename)
 
         with open(output_path, 'wt') as output_file:
@@ -93,7 +93,7 @@ class IntegrationTestBase (unittest.TestCase):
 
 
     def prepare_testbed (self, env, stubs):
-        self.env = env
+        self.env   = env
         self.stubs = stubs
 
         os.mkdir(os.path.join(self.base_dir, BASEDIR))

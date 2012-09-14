@@ -120,7 +120,8 @@ class FixtureTest (unittest.TestCase):
         self.assertEqual('any_command', actual_result.command)
         self.assertEqual(['any_arg'], actual_result.arguments)
         self.assertEqual('any_stdin', actual_result.stdin)
-        
+
+
     def test_should_not_suppress_exceptions (self):
         fixture = Fixture('/spam/eggs')
         

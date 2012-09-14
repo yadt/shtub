@@ -185,8 +185,7 @@ class VerfiableExecutionWrapper (object):
         
         if self.execution.arguments != arguments:
             raise AssertionError(
-                'Stub "%s" has not been executed with '
-                'expected arguments %s, but with %s.'
+                'Stub "%s" has not been executed with expected arguments %s, but with %s.'
                 % (self.execution.command, arguments, self.execution.arguments))
         
         return self
@@ -201,9 +200,7 @@ class VerfiableExecutionWrapper (object):
         
         if self.execution.stdin != expected_stdin:
             raise AssertionError(
-                'Stub "%s" has received the expected stdin '
-                '"%s", but got "%s".'
+                'Stub "%s" has received the expected stdin "%s", but got "%s".'
                 % (self.execution.command, expected_stdin, self.execution.stdin))
         
         return self
-

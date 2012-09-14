@@ -18,14 +18,12 @@ import logging
 import sys
 import unittest
 
-major, minor, micro, releaselevel, serial = sys.version_info
-if major == 3:
+if sys.version_info[0] == 3:
     from io import StringIO
     builtin_string = 'builtins'
 else:
     from StringIO import StringIO
     builtin_string = '__builtin__'
-
 
 from mock import ANY, Mock, call, patch
 
@@ -53,6 +51,7 @@ class Tests (unittest.TestCase):
 
         self.assertTrue(execution.accepted)
 
+
     @patch('shtub.commandstub.record_call')
     @patch('shtub.commandstub.send_answer')
     @patch('logging.info')
@@ -70,6 +69,7 @@ class Tests (unittest.TestCase):
         commandstub.dispatch(execution)
 
         self.assertEqual(call(answer), mock_answer.call_args)
+
 
     @patch('shtub.commandstub.record_call')
     @patch('shtub.commandstub.send_answer')
@@ -89,6 +89,7 @@ class Tests (unittest.TestCase):
 
         self.assertEqual(call(answer), mock_answer.call_args)
 
+
     @patch('sys.exit')
     @patch('logging.error')
     @patch('logging.info')
@@ -102,6 +103,7 @@ class Tests (unittest.TestCase):
 
         self.assertEqual(call(255), mock_exit.call_args)
 
+
     @patch('sys.exit')
     @patch('logging.error')
     @patch('logging.info')
@@ -113,6 +115,7 @@ class Tests (unittest.TestCase):
         commandstub.dispatch(execution)
 
         self.assertEqual(call('test-execution/expectations'), mock_deserialize.call_args)
+
 
     @patch('shtub.commandstub.unlock')
     @patch('shtub.commandstub.lock')
@@ -131,6 +134,7 @@ class Tests (unittest.TestCase):
 
         self.assertEqual(str(execution), str(actual_recorded_calls[0]))
 
+
     @patch('shtub.commandstub.unlock')
     @patch('shtub.commandstub.lock')
     @patch('shtub.commandstub.serialize_executions')
@@ -143,6 +147,7 @@ class Tests (unittest.TestCase):
         commandstub.record_call(execution)
 
         self.assertEqual(call('test-execution/recorded-calls'), mock_deserialize.call_args)
+
 
     @patch('shtub.commandstub.unlock')
     @patch('shtub.commandstub.lock')
@@ -170,6 +175,7 @@ class Tests (unittest.TestCase):
         self.assertEqual('Hello error!', mock_stderr.getvalue())
         self.assertEqual(call(223), mock_exit.call_args)
 
+
     @patch('sys.stdout', new_callable=StringIO)
     @patch('sys.stderr', new_callable=StringIO)
     @patch('sys.exit')
@@ -192,6 +198,7 @@ class Tests (unittest.TestCase):
 
         self.assertEqual(call([sys.stdin], [], [], 1), mock_select.call_args)
 
+
     @patch('sys.stdin')
     @patch('shtub.commandstub.select', return_value=([], [], []))
     def test_should_return_None_when_no_input_from_stdin (self, mock_select, mock_stdin):
@@ -201,6 +208,7 @@ class Tests (unittest.TestCase):
         #           execution in tty and without.
         #self.assertIsNone(actual)
         self.assertEqual('', actual)
+
 
     @patch('sys.stdin')
     @patch('shtub.commandstub.select')
@@ -226,6 +234,7 @@ class Tests (unittest.TestCase):
         self.assertEqual(call('test-execution'), mock_exists.call_args)
         self.assertEqual(call('test-execution'), mock_mkdir.call_args)
 
+
     @patch.object(sys, 'argv', ['command', '-arg1', '-arg2', '-arg3'])
     @patch('shtub.commandstub.read_stdin', return_value=None)
     @patch('shtub.commandstub.dispatch')
@@ -240,6 +249,7 @@ class Tests (unittest.TestCase):
 
         self.assertEqual(call('test-execution'), mock_exists.call_args)
         self.assertEqual(None, mock_mkdir.call_args)
+
 
     @patch.object(sys, 'argv', ['command', '-arg1', '-arg2', '-arg3'])
     @patch('shtub.commandstub.read_stdin', return_value=None)
@@ -259,6 +269,7 @@ class Tests (unittest.TestCase):
                                        + '- %(message)s'),
                           mock_logging.call_args)
 
+
     @patch.object(sys, 'argv', ['command', '-arg1', '-arg2', '-arg3'])
     @patch('shtub.commandstub.read_stdin', return_value=None)
     @patch('shtub.commandstub.dispatch')
@@ -277,6 +288,7 @@ class Tests (unittest.TestCase):
 
         self.assertEqual(expected_execution, actual_execution)
 
+
     @patch('shtub.commandstub.fcntl')
     @patch(builtin_string + '.open')
     def test_should_create_lock (self, mock_open, mock_fcntl):
@@ -289,6 +301,7 @@ class Tests (unittest.TestCase):
         self.assertEqual(file_handle_mock, actual_file_handle)
         self.assertEqual(call('test-execution/lock', mode='a'), mock_open.call_args)
         self.assertEqual(call(file_handle_mock, mock_fcntl.LOCK_EX), mock_fcntl.flock.call_args)
+
 
     def test_should_unlock (self):
         file_handle_mock = Mock()

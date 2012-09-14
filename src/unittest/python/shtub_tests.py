@@ -19,8 +19,7 @@ import unittest
 
 from mock import Mock, call, patch
 
-major, minor, micro, releaselevel, serial = sys.version_info
-if major == 3:
+if sys.version_info[0] == 3:
     from io import StringIO
     builtin_string = 'builtins'
 else:
@@ -36,6 +35,7 @@ from shtub.expectation import Expectation
 class ShtubTests (unittest.TestCase):
     def test_if_this_test_fails_maybe_you_have_shtub_installed_locally (self):
         self.assertEqual('${version}', VERSION)
+
 
     @patch('json.loads')
     @patch(builtin_string + '.open')
@@ -57,6 +57,7 @@ class ShtubTests (unittest.TestCase):
 
         expected_executions = [Execution('command', ['-arg1', '-arg2', '-arg3'], 'stdin')]
         self.assertEqual(expected_executions, actual_executions)
+
 
     @patch('json.loads')
     @patch(builtin_string + '.open')
@@ -84,6 +85,7 @@ class ShtubTests (unittest.TestCase):
 
         self.assertEqual(expected_expectations, actual_expectations)
 
+
     @patch('json.dumps')
     @patch(builtin_string + '.open')
     def test_should_serialize_executions (self, mock_open, mock_json):
@@ -101,6 +103,7 @@ class ShtubTests (unittest.TestCase):
         self.assertEqual(call([expected_dictionary], sort_keys=True, indent=4), mock_json.call_args)
         self.assertEqual(call('executions.json', mode='w'), mock_open.call_args)
         self.assertEqual(call('[{"some": "json"}]'), fake_file.write.call_args)
+
 
     def return_file_when_calling (self, mock_open, content=None):
         file_handle = Mock()

@@ -32,7 +32,6 @@ class Tests (integrationtest_support.IntegrationTestSupport):
         actual_return_code1 = self.execute_command('command_wrapper')
         actual_return_code2 = self.execute_command('command_wrapper')
 
-
         verify = self.verify().__enter__()
         self.assertEqual(0, actual_return_code1)
         self.assertEqual(0, actual_return_code2)

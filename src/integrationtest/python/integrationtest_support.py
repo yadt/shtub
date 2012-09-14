@@ -18,8 +18,7 @@ import os
 import sys
 import stat
 
-major, minor, micro, releaselevel, serial = sys.version_info
-if major == 3:
+if sys.version_info[0] == 3:
     from io import StringIO
 else:
     from StringIO import StringIO
@@ -54,6 +53,7 @@ class IntegrationTestSupport (shtub.testbase.IntegrationTestBase):
 
         return path
 
+
     def create_python_path (self):
         current_file = os.path.abspath(__file__)
         pythonpath = os.path.abspath(os.path.join(current_file, '.'))
@@ -62,13 +62,17 @@ class IntegrationTestSupport (shtub.testbase.IntegrationTestBase):
 
         return pythonpath
 
-    def prepare_default_testbed (self, stubs_list):
-        path = self.create_path()
-        python_path = self.create_python_path()
-        env = {'PATH'       : path,
-                       'PYTHONPATH' : python_path}
 
+    def create_environment(self):
+        env = {'PATH'       : self.create_path(), 
+               'PYTHONPATH' : self.create_python_path()}
+        return env
+
+
+    def prepare_default_testbed (self, stubs_list):
+        env = self.create_environment()
         self.prepare_testbed(env, stubs_list)
+
 
     def assert_file_permissions (self, filename, expected_permissions):
         actual_permissions = stat.S_IMODE(os.stat(filename).st_mode)
@@ -76,17 +80,22 @@ class IntegrationTestSupport (shtub.testbase.IntegrationTestBase):
         expected_permissions_as_oct = str(oct(expected_permissions))
         self.assertEqual(expected_permissions_as_oct, actual_permissions_as_oct)
 
+
     def assert_file_exists (self, filename):
         file_exists = os.path.exists(filename)
         self.assertTrue(file_exists, 'file %s does not exist!' % filename)
 
+
     def assert_file_content (self, filename, expected_file_content):
-        actual_file_content = StringIO()
+        actual_file_content_buffer = StringIO()
+        
         with open(filename) as actual_file:
             for line in actual_file:
-                actual_file_content.write(line)
+                actual_file_content_buffer.write(line)
 
-        self.assertEqual(expected_file_content, actual_file_content.getvalue())
+        actual_file_content = actual_file_content_buffer.getvalue()
+        self.assertEqual(expected_file_content, actual_file_content)
+
 
     def assert_directory_exists(self, directory_name):
         it_exists = os.path.exists(directory_name)
@@ -95,8 +104,7 @@ class IntegrationTestSupport (shtub.testbase.IntegrationTestBase):
         is_a_directory = os.path.isdir(directory_name)
         self.assertTrue(is_a_directory, '%s is not a directory!' % directory_name)
 
+
     def assert_is_link(self, filename):
         file_is_a_link = os.path.islink(filename)
-        return self.assertTrue(file_is_a_link, '%s is not a link!')
-
-
+        self.assertTrue(file_is_a_link, '%s is not a link!')
