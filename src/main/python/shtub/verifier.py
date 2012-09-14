@@ -23,7 +23,7 @@ __author__ = 'Alexander Metzner, Michael Gruber, Udo Juettner'
 
 import os.path
 from shtub import EXECUTIONS_FILENAME, deserialize_executions
-from shtub.execution import Execution
+from shtub.commandinput import CommandInput
 
 
 class VerificationException (Exception):
@@ -59,10 +59,10 @@ class Verifier (object):
             raise VerificationException('No more further executions: command "%s" can not be verified.' % command)
         
         actual_execution = self.executions[0]
-        if actual_execution.command != command:
+        if actual_execution.command_input.command != command:
             raise VerificationException('Execution does not fulfill expectation:\n'
                                  'Expected command "%s", but got "%s"\n'
-                                 % (command, actual_execution.command))
+                                 % (command, actual_execution.command_input.command))
         
         self.executions = self.executions[1:]
         return VerfiableExecutionWrapper(actual_execution)
@@ -76,17 +76,17 @@ class Verifier (object):
             from the list of executions.
         """
     
-        expectation = Execution(command, arguments, stdin)
+        expected_input = CommandInput(command, arguments, stdin)
 
         if not self.executions:
-            raise VerificationException('No more further executions, when verifying %s' % expectation)
+            raise VerificationException('No more further executions, when verifying %s' % expected_input)
         
         actual_execution = self.executions[0]
-        if not actual_execution.fulfills(expectation):
-            raise VerificationException('Execution does not fulfill expectation:\n'
+        if not actual_execution.command_input.fulfills(expected_input):
+            raise VerificationException('Execution does not fulfill expected_input:\n'
                                  'Expected %s\n'
                                  'Actual   %s\n'
-                                 % (expectation, actual_execution))
+                                 % (expected_input, actual_execution))
         
         self.executions = self.executions[1:]
     
@@ -161,10 +161,10 @@ class VerfiableExecutionWrapper (object):
         arguments = list(expected_arguments)
         
         for argument in arguments:
-            if argument not in self.execution.arguments:
+            if argument not in self.execution.command_input.arguments:
                 raise VerificationException(
                     'Stub "%s" has not been executed with at least expected arguments %s, but with %s.'
-                    % (self.execution.command, arguments, self.execution.arguments))
+                    % (self.execution.command_input.command, arguments, self.execution.command_input.arguments))
         
         return self
 
@@ -178,10 +178,10 @@ class VerfiableExecutionWrapper (object):
         
         arguments = list(expected_arguments)
         
-        if self.execution.arguments != arguments:
+        if self.execution.command_input.arguments != arguments:
             raise VerificationException(
                 'Stub "%s" has not been executed with expected arguments %s, but with %s.'
-                % (self.execution.command, arguments, self.execution.arguments))
+                % (self.execution.command_input.command, arguments, self.execution.command_input.arguments))
         
         return self
 
@@ -193,9 +193,9 @@ class VerfiableExecutionWrapper (object):
             itself to make invocation chaining possible.
         """
         
-        if self.execution.stdin != expected_stdin:
+        if self.execution.command_input.stdin != expected_stdin:
             raise VerificationException(
                 'Stub "%s" has not received the expected stdin "%s", but got "%s".'
-                % (self.execution.command, expected_stdin, self.execution.stdin))
+                % (self.execution.command_input.command, expected_stdin, self.execution.command_input.stdin))
         
         return self

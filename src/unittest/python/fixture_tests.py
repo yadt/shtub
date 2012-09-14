@@ -57,11 +57,11 @@ class FixtureTest (unittest.TestCase):
         actual_expectation = actual_expectations[0]
 
         self.assertEqual(actual_return_value, actual_expectation)
-        self.assertEqual('any_command', actual_expectation.command)
-        self.assertEqual([], actual_expectation.arguments)
+        self.assertEqual('any_command', actual_expectation.command_input.command)
+        self.assertEqual([], actual_expectation.command_input.arguments)
         # quickfix: stdin default is empty string to ensure no difference between execution
         #           in tty and without.
-        self.assertEqual('', actual_expectation.stdin)
+        self.assertEqual('', actual_expectation.command_input.stdin)
 
 
     def test_should_append_a_new_expectation_with_default_properties (self):
@@ -74,9 +74,9 @@ class FixtureTest (unittest.TestCase):
 
         actual_expectation = actual_expectations[0]
 
-        self.assertEqual('any_command', actual_expectation.command)
-        self.assertEqual(['any_arg0'], actual_expectation.arguments)
-        self.assertEqual('any_stdin', actual_expectation.stdin)
+        self.assertEqual('any_command', actual_expectation.command_input.command)
+        self.assertEqual(['any_arg0'], actual_expectation.command_input.arguments)
+        self.assertEqual('any_stdin', actual_expectation.command_input.stdin)
 
 
     def test_should_append_two_new_expectations_in_correct_order (self):
@@ -90,15 +90,15 @@ class FixtureTest (unittest.TestCase):
 
         actual_first_expectation = actual_expectations[0]
 
-        self.assertEqual('any_command1', actual_first_expectation.command)
-        self.assertEqual(['1any_arg0', '1any_arg1', '1any_arg2'], actual_first_expectation.arguments)
-        self.assertEqual('any_stdin', actual_first_expectation.stdin)
+        self.assertEqual('any_command1', actual_first_expectation.command_input.command)
+        self.assertEqual(['1any_arg0', '1any_arg1', '1any_arg2'], actual_first_expectation.command_input.arguments)
+        self.assertEqual('any_stdin', actual_first_expectation.command_input.stdin)
 
         actual_second_expectation = actual_expectations[1]
 
-        self.assertEqual('any_command2', actual_second_expectation.command)
-        self.assertEqual(['2any_arg0', '2any_arg1', '2any_arg2'], actual_second_expectation.arguments)
-        self.assertEqual('any_stdin2', actual_second_expectation.stdin)
+        self.assertEqual('any_command2', actual_second_expectation.command_input.command)
+        self.assertEqual(['2any_arg0', '2any_arg1', '2any_arg2'], actual_second_expectation.command_input.arguments)
+        self.assertEqual('any_stdin2', actual_second_expectation.command_input.stdin)
 
 
     @patch('shtub.fixture.serialize_executions')
@@ -117,9 +117,9 @@ class FixtureTest (unittest.TestCase):
         actual_result = fixture.expect('any_command', ['any_arg'], 'any_stdin')
 
         self.assertTrue(isinstance(actual_result, Expectation))
-        self.assertEqual('any_command', actual_result.command)
-        self.assertEqual(['any_arg'], actual_result.arguments)
-        self.assertEqual('any_stdin', actual_result.stdin)
+        self.assertEqual('any_command', actual_result.command_input.command)
+        self.assertEqual(['any_arg'], actual_result.command_input.arguments)
+        self.assertEqual('any_stdin', actual_result.command_input.stdin)
 
 
     def test_should_not_suppress_exceptions (self):

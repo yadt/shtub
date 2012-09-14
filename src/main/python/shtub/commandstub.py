@@ -40,6 +40,7 @@ from shtub import (BASEDIR,
                    serialize_executions)
 
 from shtub.execution import Execution
+from shtub.commandinput import CommandInput
 
 
 def lock ():
@@ -102,27 +103,30 @@ def send_answer (answer):
     sys.exit(answer.return_code)
 
 
-def dispatch (execution):
+def dispatch (command_input):
     """
-        currently this will handle the given execution by testing whether it
-        fulfills an expectation. If so it will record the call (execution) and
-        send the next answer as defined in the expectation object.
+        currently this will handle the given command_input by testing whether it
+        fulfills an expectation. If so it will save a execution (with the expected flag
+        set to true) and send the next answer as defined in the expectation object.
     """
 
     expectations = deserialize_expectations(EXPECTATIONS_FILENAME)
 
-    logging.info('Got %s', execution)
+    logging.info('Got %s', command_input)
 
+    execution = Execution(command_input.command, command_input.arguments, command_input.stdin)
+    
     for expectation in expectations:
-        if execution.fulfills(expectation):
+        if command_input.fulfills(expectation.command_input):
             logging.info('Execution fulfills %s', expectation)
+            
             execution.mark_as_expected()
             record_call(execution)
             answer = expectation.next_answer()
             send_answer(answer)
             return
 
-    logging.error('Given execution does not fulfill requirements of any expectation.')
+    logging.error('Given command_input does not fulfill requirements of any expectation.')
     sys.exit(255)
 
 
@@ -160,9 +164,10 @@ def handle_stub_call ():
     command   = os.path.basename(sys.argv[0])
     arguments = sys.argv[1:]
     stdin     = read_stdin()
-    execution = Execution(command, arguments, stdin)
+    
+    command_input = CommandInput(command, arguments, stdin)
 
-    dispatch(execution)
+    dispatch(command_input)
 
 
 if __name__ == '__main__':

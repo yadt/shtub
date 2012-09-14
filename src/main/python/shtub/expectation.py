@@ -22,10 +22,9 @@
 __author__ = 'Alexander Metzner, Michael Gruber, Udo Juettner'
 
 from shtub.answer import Answer
-from shtub.execution import Execution
+from shtub.commandinput import CommandInput
 
-
-class Expectation (Execution):
+class Expectation (object):
     """
         Represents the parameters of a expected command stub execution and
         contains corresponding answers.
@@ -33,13 +32,13 @@ class Expectation (Execution):
     
     # quickfix: stdin default is empty string to ensure no difference between execution
     #           in tty and without.
-    def __init__ (self, command, arguments=None, stdin='', answers=[], initial_answer=0):
+    def __init__ (self, command, arguments=[], stdin='', answers=[], initial_answer=0):
         """
             will initialize a new object with the given properties.
             answers and initial_answer are not mandatory.
         """
         
-        super(Expectation, self).__init__(command, arguments, stdin)
+        self.command_input = CommandInput(command, arguments, stdin)
         
         self.answers        = []
         self.current_answer = initial_answer
@@ -61,10 +60,10 @@ class Expectation (Execution):
             answer_dictionary = answer.as_dictionary()
             answers_list.append(answer_dictionary)
         
-        result = Execution.as_dictionary(self)
-        
-        result['answers']        = answers_list
-        result['current_answer'] = self.current_answer        
+        result = {'command_input'  : self.command_input.as_dictionary(),
+                  'answers'        : answers_list,
+                  'current_answer' : self.current_answer}
+                
         return result
 
 
@@ -130,7 +129,7 @@ class Expectation (Execution):
             invocation chaining
         """
         
-        self.arguments = list(arguments)
+        self.command_input.arguments = list(arguments)
         
         return self
 
@@ -141,17 +140,13 @@ class Expectation (Execution):
             invocation chaining
         """
         
-        self.stdin = stdin
+        self.command_input.stdin = stdin
         
         return self
 
 
     def __eq__ (self, other):
-        """
-            returns True if all properties are equal
-        """
-        
-        return Execution.__eq__(self, other) \
+        return self.command_input == other.command_input \
            and self.current_answer == other.current_answer \
            and        self.answers == other.answers
 
@@ -178,9 +173,10 @@ class Expectation (Execution):
             answer = Answer.from_dictionary(answer_dictionary)
             answers.append(answer)
         
-        expectation = Expectation(dictionary['command'],
-                                  dictionary['arguments'],
-                                  dictionary['stdin'],
+        command_input_dictionary = dictionary['command_input']
+        expectation = Expectation(command_input_dictionary['command'],
+                                  command_input_dictionary['arguments'],
+                                  command_input_dictionary['stdin'],
                                   answers,
                                   dictionary['current_answer'])
         

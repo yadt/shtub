@@ -48,9 +48,9 @@ class Test (integrationtest_support.IntegrationTestSupport):
 
         actual_first_expectation = actual_expectations[0]
 
-        self.assertEqual('stdin1', actual_first_expectation.stdin)
-        self.assertEqual(['-arg1', '-arg2', '-arg3'], actual_first_expectation.arguments)
-        self.assertEqual('command_stub1', actual_first_expectation.command)
+        self.assertEqual('stdin1', actual_first_expectation.command_input.stdin)
+        self.assertEqual(['-arg1', '-arg2', '-arg3'], actual_first_expectation.command_input.arguments)
+        self.assertEqual('command_stub1', actual_first_expectation.command_input.command)
 
         actual_first_answer = actual_first_expectation.next_answer()
 
@@ -60,9 +60,9 @@ class Test (integrationtest_support.IntegrationTestSupport):
 
         actual_second_expectation = actual_expectations[1]
 
-        self.assertEqual(['-arg6', '-arg7', '-arg8'], actual_second_expectation.arguments)
-        self.assertEqual('stdin2', actual_second_expectation.stdin)
-        self.assertEqual('command_stub2', actual_second_expectation.command)
+        self.assertEqual(['-arg6', '-arg7', '-arg8'], actual_second_expectation.command_input.arguments)
+        self.assertEqual('stdin2', actual_second_expectation.command_input.stdin)
+        self.assertEqual('command_stub2', actual_second_expectation.command_input.command)
 
         actual_second_answer = actual_second_expectation.next_answer()
 

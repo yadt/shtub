@@ -42,11 +42,11 @@ class ShtubTests (unittest.TestCase):
     def test_should_deserialize_executions (self, mock_open, mock_json):
         fake_file = self.return_file_when_calling(mock_open)
         executions = [Execution('command', ['-arg1', '-arg2', '-arg3'], 'stdin')]
-        json_string = "[{'command': 'command', 'arguments': ['-arg1', '-arg2', '-arg3'], 'stdin': 'stdin'}]"
+        json_string = "[{'expected': false, 'command_input': {'stdin': 'stdin', 'command': 'command', 'arguments': ['-arg1', '-arg2', '-arg3']}}]"
         fake_file.read.return_value = json_string
-        mock_json.return_value = [{'command'   : 'command',
-                                   'arguments' : ['-arg1', '-arg2', '-arg3'],
-                                   'stdin'     : 'stdin',
+        mock_json.return_value = [{'command_input': {'command'   : 'command',
+                                                     'arguments' : ['-arg1', '-arg2', '-arg3'],
+                                                     'stdin'     : 'stdin'},
                                    'expected'  : False}]
 
         actual_executions = deserialize_executions('executions.json')
@@ -64,11 +64,11 @@ class ShtubTests (unittest.TestCase):
     def test_should_deserialize_expectations (self, mock_open, mock_json):
         fake_file = self.return_file_when_calling(mock_open)
         executions = [Expectation('command', ['-arg1', '-arg2', '-arg3'], 'stdin')]
-        json_string = "[{'command': 'command', 'arguments': ['-arg1', '-arg2', '-arg3'], 'stdin': 'stdin', 'current_answer': 0, 'answers': []} ]"
+        json_string = "[{'current_answer': 0, 'answers': [{'return_code': 15, 'stderr': 'stderr', 'stdout': 'stdout'}], 'command_input': {'stdin': 'stdin', 'command': 'command', 'arguments': ['-arg1', '-arg2', '-arg3']}}]"
         fake_file.read.return_value = json_string
-        mock_json.return_value = [{'command'        : 'command',
-                                   'arguments'      : ['-arg1', '-arg2', '-arg3'],
-                                   'stdin'          : 'stdin',
+        mock_json.return_value = [{'command_input': {'command'        : 'command',
+                                                     'arguments'      : ['-arg1', '-arg2', '-arg3'],
+                                                     'stdin'          : 'stdin'},
                                    'current_answer' : 0,
                                    'answers'        : [{'stdout'      : 'stdout',
                                                         'stderr'      : 'stderr',
@@ -95,9 +95,9 @@ class ShtubTests (unittest.TestCase):
 
         serialize_executions('executions.json', executions)
 
-        expected_dictionary = {'command'   : 'command',
-                               'arguments' : ['-arg1', '-arg2', '-arg3'],
-                               'stdin'     : 'stdin',
+        expected_dictionary = {'command_input': {'command'   : 'command',
+                                                 'arguments' : ['-arg1', '-arg2', '-arg3'],
+                                                 'stdin'     : 'stdin'},
                                'expected'  : True}
 
         self.assertEqual(call([expected_dictionary], sort_keys=True, indent=4), mock_json.call_args)

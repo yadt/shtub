@@ -30,45 +30,32 @@ from mock import ANY, Mock, call, patch
 from shtub import BASEDIR, LOG_FILENAME, commandstub
 from shtub.answer import Answer
 from shtub.execution import Execution
+from shtub.commandinput import CommandInput
 from shtub.expectation import Expectation
 
 class Tests (unittest.TestCase):
+    @patch('shtub.commandstub.Execution')
     @patch('shtub.commandstub.record_call')
     @patch('shtub.commandstub.send_answer')
     @patch('logging.info')
     @patch('shtub.commandstub.deserialize_expectations')
-    def test_should_mark_execution_as_expected_when_execution_fulfills_expectations (self, \
-                        mock_deserialize, mock_logging_info, mock_answer, mock_record):
-
+    def test_should_mark_execution_as_expected_and_record_call_when_execution_fulfills_expectations (self, \
+                        mock_deserialize, mock_logging_info, mock_answer, mock_record, mock_execution_class):
+        
+        mock_execution = Mock(Execution)
+        mock_execution_class.return_value = mock_execution
         answer = Answer('Hello world', 'Hello error', 15)
         expectation = Expectation('command', ['-arg1', '-arg2', '-arg3'], 'stdin')
         expectation.then(answer)
         mock_deserialize.return_value = [expectation]
 
-        execution = Execution('command', ['-arg1', '-arg2', '-arg3'], 'stdin')
+        command_input = CommandInput('command', ['-arg1', '-arg2', '-arg3'], 'stdin')
 
-        commandstub.dispatch(execution)
-
-        self.assertTrue(execution.expected)
-
-
-    @patch('shtub.commandstub.record_call')
-    @patch('shtub.commandstub.send_answer')
-    @patch('logging.info')
-    @patch('shtub.commandstub.deserialize_expectations')
-    def test_should_record_call_when_execution_fulfills_expectations (self, \
-                        mock_deserialize, mock_logging_info, mock_answer, mock_record):
-
-        answer = Answer('Hello world', 'Hello error', 15)
-        expectation = Expectation('command', ['-arg1', '-arg2', '-arg3'], 'stdin')
-        expectation.then(answer)
-        mock_deserialize.return_value = [expectation]
-
-        execution = Execution('command', ['-arg1', '-arg2', '-arg3'], 'stdin')
-
-        commandstub.dispatch(execution)
-
-        self.assertEqual(call(answer), mock_answer.call_args)
+        commandstub.dispatch(command_input)
+        
+        self.assertEqual(call('command', ['-arg1', '-arg2', '-arg3'], 'stdin'), mock_execution_class.call_args)
+        self.assertEqual(call(), mock_execution.mark_as_expected.call_args)
+        self.assertEqual(call(mock_execution), mock_record.call_args)
 
 
     @patch('shtub.commandstub.record_call')
@@ -83,9 +70,9 @@ class Tests (unittest.TestCase):
         expectation.then(answer)
         mock_deserialize.return_value = [expectation]
 
-        execution = Execution('command', ['-arg1', '-arg2', '-arg3'], 'stdin')
+        command_input = CommandInput('command', ['-arg1', '-arg2', '-arg3'], 'stdin')
 
-        commandstub.dispatch(execution)
+        commandstub.dispatch(command_input)
 
         self.assertEqual(call(answer), mock_answer.call_args)
 
@@ -97,9 +84,9 @@ class Tests (unittest.TestCase):
     def test_should_exit_with_error_code_255_when_execution_not_in_expectation (self, \
                         mock_deserialize, mock_logging_info, mock_logging_error, mock_exit):
 
-        execution = Execution('command', ['-arg1', '-arg2', '-arg3'], 'stdin')
+        command_input = CommandInput('command', ['-arg1', '-arg2', '-arg3'], 'stdin')
 
-        commandstub.dispatch(execution)
+        commandstub.dispatch(command_input)
 
         self.assertEqual(call(255), mock_exit.call_args)
 
@@ -110,9 +97,9 @@ class Tests (unittest.TestCase):
     @patch('shtub.commandstub.deserialize_expectations', return_value=[])
     def test_should_load_expectations (self, \
                         mock_deserialize, mock_logging_info, mock_logging_error, mock_exit):
-        execution = Execution('command', ['-arg1', '-arg2', '-arg3'], 'stdin')
+        command_input = CommandInput('command', ['-arg1', '-arg2', '-arg3'], 'stdin')
 
-        commandstub.dispatch(execution)
+        commandstub.dispatch(command_input)
 
         self.assertEqual(call('shtub/expectations'), mock_deserialize.call_args)
 
@@ -276,17 +263,14 @@ class Tests (unittest.TestCase):
     @patch('logging.basicConfig')
     @patch('os.mkdir')
     @patch('os.path.exists', return_value=True)
-    def test_should_dispatch_execution (self, \
-            mock_exists, mock_mkdir, mock_logging, mock_dispatch, mock_read_stdin):
-
+    def test_should_dispatch_execution (self, mock_exists, mock_mkdir, mock_logging, mock_dispatch, mock_read_stdin):
         commandstub.handle_stub_call()
 
         mock_dispatch.assert_called()
 
-        expected_execution = str(Execution('command', ['-arg1', '-arg2', '-arg3'], stdin=None))
+        expected_input = str(CommandInput('command', ['-arg1', '-arg2', '-arg3'], stdin=None))
         actual_execution = str(mock_dispatch.call_args[0][0])
-
-        self.assertEqual(expected_execution, actual_execution)
+        self.assertEqual(expected_input, actual_execution)
 
 
     @patch('shtub.commandstub.fcntl')

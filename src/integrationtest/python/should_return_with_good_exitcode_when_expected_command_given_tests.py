@@ -26,9 +26,10 @@ class Test (unittest.TestCase):
     def test (self):
         test_dir = tempfile.mkdtemp()
         self.write_expectations_json_file(test_dir, '[{\n'
-                                                    '    "arguments": ["-arg1", "-arg2", "-arg3"],\n'
-                                                    '    "command": "commandstub.py",\n'
-                                                    '    "stdin": "Hello world.",\n'
+                                                    '    "command_input": {\n'
+                                                    '        "arguments": ["-arg1", "-arg2", "-arg3"],\n'
+                                                    '        "command": "commandstub.py",\n'
+                                                    '        "stdin": "Hello world."},\n'
                                                     '    "current_answer": 0,\n'
                                                     '    "answers": [\n'
                                                     '        {\n'

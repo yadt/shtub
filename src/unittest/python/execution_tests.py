@@ -20,34 +20,34 @@ from shtub.execution import Execution
 
 class ExecutionTests (unittest.TestCase):
     def test_should_convert_dictionary_to_object (self):
-        values = {'command'   : 'any_command',
-                  'arguments' : ['any_arguments'],
-                  'stdin'     : 'any_stdin',
-                  'expected'  : True}
+        values = {'command_input': {'command'   : 'any_command',
+                                    'arguments' : ['any_arguments'],
+                                    'stdin'     : 'any_stdin'},
+                  'expected'     : True}
 
         actual_execution = Execution.from_dictionary(values)
 
-        self.assertEqual('any_command', actual_execution.command)
-        self.assertEqual(['any_arguments'], actual_execution.arguments)
-        self.assertEqual('any_stdin', actual_execution.stdin)
+        self.assertEqual('any_command', actual_execution.command_input.command)
+        self.assertEqual(['any_arguments'], actual_execution.command_input.arguments)
+        self.assertEqual('any_stdin', actual_execution.command_input.stdin)
         self.assertEqual(True, actual_execution.expected)
 
 
     def test_should_create_object_with_given_properties (self):
         actual_execution = Execution('any_command', ['any_arg1', 'any_arg2'], 'any_stdin', expected=True)
 
-        self.assertEqual('any_command', actual_execution.command)
-        self.assertEqual(['any_arg1', 'any_arg2'], actual_execution.arguments)
-        self.assertEqual('any_stdin', actual_execution.stdin)
+        self.assertEqual('any_command', actual_execution.command_input.command)
+        self.assertEqual(['any_arg1', 'any_arg2'], actual_execution.command_input.arguments)
+        self.assertEqual('any_stdin', actual_execution.command_input.stdin)
         self.assertEqual(True, actual_execution.expected)
 
 
     def test_should_create_object_with_given_properties_but_empty_arguments (self):
         actual_execution = Execution('any_command', [], 'any_stdin')
 
-        self.assertEqual('any_command', actual_execution.command)
-        self.assertEqual([], actual_execution.arguments)
-        self.assertEqual('any_stdin', actual_execution.stdin)
+        self.assertEqual('any_command', actual_execution.command_input.command)
+        self.assertEqual([], actual_execution.command_input.arguments)
+        self.assertEqual('any_stdin', actual_execution.command_input.stdin)
         self.assertEqual(False, actual_execution.expected)
 
 
@@ -56,9 +56,9 @@ class ExecutionTests (unittest.TestCase):
 
         actual_dictionary = execution.as_dictionary()
 
-        self.assertEqual('any_command', actual_dictionary['command'])
-        self.assertEqual(['any_arg1', 'any_arg2'], actual_dictionary['arguments'])
-        self.assertEqual('any_stdin', actual_dictionary['stdin'])
+        self.assertEqual('any_command', actual_dictionary['command_input']['command'])
+        self.assertEqual(['any_arg1', 'any_arg2'], actual_dictionary['command_input']['arguments'])
+        self.assertEqual('any_stdin', actual_dictionary['command_input']['stdin'])
         self.assertEqual(True, actual_dictionary['expected'])
 
 
@@ -121,63 +121,7 @@ class ExecutionTests (unittest.TestCase):
     def test_should_return_string_with_all_properties (self):
         execution = Execution('any_command', ['any_arg1', 'any_arg2'], 'any_stdin')
 
-        self.assertEqual("Execution {'expected': False, 'stdin': 'any_stdin', 'command': 'any_command', 'arguments': ['any_arg1', 'any_arg2']}", str(execution))
-
-
-    def test_should_return_false_if_other_has_different_arguments (self):
-        execution = Execution('any_command', ['any_arg1', 'any_arg2'], 'any_stdin')
-        other_execution = Execution('any_command', ['other_argument1', 'other_argument2'], 'any_stdin')
-
-        self.assertFalse(execution.fulfills(other_execution))
-
-
-    def test_should_return_false_if_other_has_at_least_one_different_argument (self):
-        execution = Execution('any_command', ['any_arg1', 'any_arg2'], 'any_stdin')
-        other_execution = Execution('any_command', ['any_arg1', 'any_arg2', 'other_argument'], 'any_stdin')
-
-        self.assertFalse(execution.fulfills(other_execution))
-
-
-    def test_should_return_true_if_other_has_no_arguments (self):
-        execution = Execution('any_command', ['any_arg1', 'any_arg2'], 'any_stdin')
-        other_execution = Execution('any_command', [], 'any_stdin')
-
-        self.assertTrue(execution.fulfills(other_execution))
-
-
-    def test_should_return_true_if_other_has_exactly_one_matching_argument_and_no_others (self):
-        execution = Execution('any_command', ['any_arg1', 'any_arg2'], 'any_stdin')
-        other_execution = Execution('any_command', ['any_arg1'], 'any_stdin')
-
-        self.assertTrue(execution.fulfills(other_execution))
-
-
-    def test_should_return_true_if_other_has_equal_arguments (self):
-        execution = Execution('any_command', ['any_arg1', 'any_arg2'], 'any_stdin')
-        other_execution = Execution('any_command', ['any_arg2', 'any_arg1'], 'any_stdin')
-
-        self.assertTrue(execution.fulfills(other_execution))
-
-
-    def test_should_return_false_when_other_has_different_command_but_equal_arguments (self):
-        execution = Execution('any_command', ['any_arg1', 'any_arg2'], 'any_stdin')
-        other_execution = Execution('other_command', ['any_arg2', 'any_arg1'], 'any_stdin')
-
-        self.assertFalse(execution.fulfills(other_execution), 'comparison: command')
-
-
-    def test_should_return_false_when_other_has_different_stdin (self):
-        execution = Execution('any_command', ['any_arg1', 'any_arg2'], 'any_stdin')
-        other_execution = Execution('any_command', ['any_arg1', 'any_arg2'], 'other_stdin')
-
-        self.assertFalse(execution.fulfills(other_execution), 'comparison: stdin')
-
-
-    def test_should_return_true_when_other_equal_command_and_arguments (self):
-        execution = Execution('any_command', ['any_arg1', 'any_arg2'], 'any_stdin')
-        other_execution = Execution('any_command', ['any_arg2', 'any_arg1'], 'any_stdin')
-
-        self.assertTrue(execution.fulfills(other_execution), 'comparison: command')
+        self.assertEqual("Execution {'expected': False, 'command_input': {'stdin': 'any_stdin', 'command': 'any_command', 'arguments': ['any_arg1', 'any_arg2']}}", str(execution))
 
 
     def test_should_mark_execution_as_fulfilled (self):

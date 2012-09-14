@@ -49,15 +49,15 @@ class Test (integrationtest_support.IntegrationTestSupport):
 
         actual_first_call = actual_calls[0]
 
-        self.assertEqual('command_stub1', actual_first_call.command)
-        self.assertEqual(['-arg1', '-arg2', '-arg3'], actual_first_call.arguments)
-        self.assertEqual('stdin1', actual_first_call.stdin)
+        self.assertEqual('command_stub1', actual_first_call.command_input.command)
+        self.assertEqual(['-arg1', '-arg2', '-arg3'], actual_first_call.command_input.arguments)
+        self.assertEqual('stdin1', actual_first_call.command_input.stdin)
 
         actual_second_call = actual_calls[1]
 
-        self.assertEqual('command_stub2', actual_second_call.command)
-        self.assertEqual(['-arg6', '-arg7', '-arg8'], actual_second_call.arguments)
-        self.assertEqual('stdin2', actual_second_call.stdin)
+        self.assertEqual('command_stub2', actual_second_call.command_input.command)
+        self.assertEqual(['-arg6', '-arg7', '-arg8'], actual_second_call.command_input.arguments)
+        self.assertEqual('stdin2', actual_second_call.command_input.stdin)
 
 
 if __name__ == '__main__':

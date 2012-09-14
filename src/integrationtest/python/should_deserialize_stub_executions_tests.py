@@ -38,15 +38,15 @@ class Test (integrationtest_support.IntegrationTestSupport):
 
         path = join(self.base_dir, 'shtub', 'executions')
 
-        actual_calls = deserialize_executions(path)
+        actual_executions = deserialize_executions(path)
 
-        self.assertEqual(1, len(actual_calls))
+        self.assertEqual(1, len(actual_executions))
 
-        actual_call = actual_calls[0]
+        actual_execution = actual_executions[0]
 
-        self.assertEqual('command_stub', actual_call.command)
-        self.assertEqual(['-arg1', '-arg2', '-arg3'], actual_call.arguments)
-        self.assertEqual('stdin', actual_call.stdin)
+        self.assertEqual('command_stub', actual_execution.command_input.command)
+        self.assertEqual(['-arg1', '-arg2', '-arg3'], actual_execution.command_input.arguments)
+        self.assertEqual('stdin', actual_execution.command_input.stdin)
 
 
 if __name__ == '__main__':

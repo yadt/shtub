@@ -25,9 +25,11 @@ import integrationtest_support
 
 class Test (integrationtest_support.IntegrationTestSupport):
     def test (self):
+        # given
         self.prepare_default_testbed(['command_stub'])
         self.create_command_wrapper('command_wrapper', 'command_stub', ['-arg1', '-arg2', '-arg3'], 'stdin')
 
+        # when
         with self.fixture() as when:
             when.calling('command_stub').with_arguments('-arg1', '-arg2', '-arg3').and_input('stdin') \
                 .then_answer('Hello world.', 'Hello error!', 2)
@@ -35,13 +37,13 @@ class Test (integrationtest_support.IntegrationTestSupport):
         expectations_filename = join(self.base_dir, 'shtub', 'expectations')
         actual_expectations = deserialize_expectations(expectations_filename)
 
+        # then
         self.assertEqual(1, len(actual_expectations))
-
         actual_expectation = actual_expectations[0]
 
-        self.assertEqual(['-arg1', '-arg2', '-arg3'], actual_expectation.arguments)
-        self.assertEqual('stdin', actual_expectation.stdin)
-        self.assertEqual('command_stub', actual_expectation.command)
+        self.assertEqual(['-arg1', '-arg2', '-arg3'], actual_expectation.command_input.arguments)
+        self.assertEqual('stdin', actual_expectation.command_input.stdin)
+        self.assertEqual('command_stub', actual_expectation.command_input.command)
 
         actual_answer = actual_expectation.next_answer()
 
