@@ -20,6 +20,7 @@ from os.path import join
 
 import integrationtest_support
 
+from shtub.verifier import VerificationException
 
 class Test (integrationtest_support.IntegrationTestSupport):
     def test (self):
@@ -36,7 +37,7 @@ class Test (integrationtest_support.IntegrationTestSupport):
 
         with self.verify() as verify:
             called_command = verify.called('command_stub')
-            self.assertRaises(AssertionError, called_command.with_arguments, '-arg0', '-arg1', '-arg2')
+            self.assertRaises(VerificationException, called_command.with_arguments, '-arg0', '-arg1', '-arg2')
 
 
 if __name__ == '__main__':

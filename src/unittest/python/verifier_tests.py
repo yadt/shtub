@@ -32,7 +32,7 @@ class VerfierTest (unittest.TestCase):
     def test_should_initialize_recoreded_calls (self):
         actual_verifier = Verifier('/abc/def')
 
-        self.assertEqual([], actual_verifier.recorded_calls)
+        self.assertEqual([], actual_verifier.executions)
 
 
     @patch('os.path.exists')
@@ -65,7 +65,7 @@ class VerfierTest (unittest.TestCase):
         mock_deserialize.return_value = []
         
         with verifier as veri:
-            self.assertRaises(AssertionError, veri.verify, 'any_stub', ['any_arguments'], 'any_stdin')
+            self.assertRaises(VerificationException, veri.verify, 'any_stub', ['any_arguments'], 'any_stdin')
 
         self.assertEqual(call('/hello/world/shtub/executions'), mock_deserialize.call_args)
 
@@ -81,7 +81,7 @@ class VerfierTest (unittest.TestCase):
         mock_deserialize.return_value = [stub_execution]
         
         verify = verifier.__enter__()
-        self.assertRaises(AssertionError, verify.verify, 'other_command', ['any_arg1', 'any_arg2'], 'any_stdin')
+        self.assertRaises(VerificationException, verify.verify, 'other_command', ['any_arg1', 'any_arg2'], 'any_stdin')
         self.assertEqual(call('/hello/world/shtub/executions'), mock_deserialize.call_args)
 
 
@@ -99,7 +99,7 @@ class VerfierTest (unittest.TestCase):
         verify = verifier.__enter__()
         verify.verify('any_command1', ['1any_arg1', '1any_arg2'], 'any_stdin')
         
-        self.assertRaises(AssertionError, verify.verify, 'other_command', ['2any_arg1', '2any_arg2'], 'any_stdin2')
+        self.assertRaises(VerificationException, verify.verify, 'other_command', ['2any_arg1', '2any_arg2'], 'any_stdin2')
         self.assertEqual(call('/hello/world/shtub/executions'), mock_deserialize.call_args)
 
 
@@ -114,10 +114,10 @@ class VerfierTest (unittest.TestCase):
         
         mock_deserialize.return_value = [stub_execution1, stub_execution2]
         
-        with verifier as veri:
-            veri.verify('any_command1', ['1any_arg1', '1any_arg2'], 'any_stdin1')
-            veri.verify('any_command2', ['2any_arg1', '2any_arg2'], 'any_stdin2')
-            self.assertEqual(0, len(veri.recorded_calls))
+        with verifier as verify:
+            verify.verify('any_command1', ['1any_arg1', '1any_arg2'], 'any_stdin1')
+            verify.verify('any_command2', ['2any_arg1', '2any_arg2'], 'any_stdin2')
+            self.assertEqual(0, len(verify.executions))
 
         self.assertEqual(call('/hello/world/shtub/executions'), mock_deserialize.call_args)
 
@@ -162,7 +162,7 @@ class VerfierTest (unittest.TestCase):
         with verifier as verify:
             called_command = verify.called('command')
             self.assertEqual(called_command.execution, stub_execution)
-            self.assertEqual(0, len(verify.recorded_calls))
+            self.assertEqual(0, len(verify.executions))
 
         self.assertEqual(call('/hello/world/shtub/executions'), mock_deserialize.call_args)
 
@@ -178,7 +178,7 @@ class VerfierTest (unittest.TestCase):
         mock_deserialize.return_value = [stub_execution]
 
         verify = verifier.__enter__()
-        self.assertRaises(AssertionError, verifier.called, 'other_command')
+        self.assertRaises(VerificationException, verifier.called, 'other_command')
 
 
     @patch('os.path.exists')
@@ -190,7 +190,7 @@ class VerfierTest (unittest.TestCase):
         mock_deserialize.return_value = []
 
         with verifier as verify:
-            self.assertRaises(AssertionError, verifier.called, 'other_command')
+            self.assertRaises(VerificationException, verifier.called, 'other_command')
 
 
     @patch('os.path.exists')
@@ -251,7 +251,7 @@ class VerfiableExecutionWrapperTests (unittest.TestCase):
         execution = Execution('command', ['-arg1', '-arg2', '-arg3'], 'stdin')
         wrapper = VerfiableExecutionWrapper(execution)
         
-        self.assertRaises(AssertionError, wrapper.at_least_with_arguments, '-arg0')
+        self.assertRaises(VerificationException, wrapper.at_least_with_arguments, '-arg0')
 
 
     def test_should_verify_given_arguments (self):
@@ -267,7 +267,7 @@ class VerfiableExecutionWrapperTests (unittest.TestCase):
         execution = Execution('command', ['-arg1', '-arg2', '-arg3'], 'stdin')
         wrapper = VerfiableExecutionWrapper(execution)
         
-        self.assertRaises(AssertionError, wrapper.with_arguments, '-arg1', '-arg2', 'arg3')
+        self.assertRaises(VerificationException, wrapper.with_arguments, '-arg1', '-arg2', 'arg3')
 
 
     def test_should_verify_given_input (self):
@@ -283,7 +283,7 @@ class VerfiableExecutionWrapperTests (unittest.TestCase):
         execution = Execution('command', ['-arg1', '-arg2', '-arg3'], 'stdin')
         wrapper = VerfiableExecutionWrapper(execution)
         
-        self.assertRaises(AssertionError, wrapper.with_input, 'hello world')
+        self.assertRaises(VerificationException, wrapper.with_input, 'hello world')
 
 
     def test_should_verify_input_using_with_or_and (self):

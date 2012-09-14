@@ -43,71 +43,70 @@ class Verifier (object):
             initializes a new verifier using the given base directory.
         """
 
-        self.base_dir       = basedir
-        self.recorded_calls = []
+        self.base_dir   = basedir
+        self.executions = []
 
 
     def called (self, command):
         """
-            raises an exception when no more recorded calls are available or
-            when the current recorded call does not have the expected command
+            raises an exception when no more executions are available or
+            when the current execution does not have the expected command
             attribute, otherwise it will return the execution and remove the
-            current recorded call from the list of recorded calls.
+            current execution from the list of executions.
         """
     
-        if not self.recorded_calls:
-            raise AssertionError('No more recorded calls when verifying command "%s" called.' % command)
+        if not self.executions:
+            raise VerificationException('No more further executions: command "%s" can not be verified.' % command)
         
-        actual_recorded_call = self.recorded_calls[0]
-        if actual_recorded_call.command != command:
-            raise AssertionError('Recorded call (execution) does not fulfill expectation:\n'
+        actual_execution = self.executions[0]
+        if actual_execution.command != command:
+            raise VerificationException('Execution does not fulfill expectation:\n'
                                  'Expected command "%s", but got "%s"\n'
-                                 % (command, actual_recorded_call.command))
+                                 % (command, actual_execution.command))
         
-        self.recorded_calls = self.recorded_calls[1:]
-        return VerfiableExecutionWrapper(actual_recorded_call)
+        self.executions = self.executions[1:]
+        return VerfiableExecutionWrapper(actual_execution)
     
     
     def verify (self, command, arguments, stdin=None):
         """
-            raises an exception when no more recorded calls are available or
-            when the current recorded call does not fulfill the given
-            exception, otherwise it will pass and remove the current recorded
-            call from the list of recorded calls.
+            raises an exception when no more executions are available or
+            when the current execution does not fulfill the given
+            exception, otherwise it will pass and remove the current execution
+            from the list of executions.
         """
     
         expectation = Execution(command, arguments, stdin)
 
-        if not self.recorded_calls:
-            raise AssertionError('No more recorded calls when verifying %s' % expectation)
+        if not self.executions:
+            raise VerificationException('No more further executions, when verifying %s' % expectation)
         
-        actual_recorded_call = self.recorded_calls[0]
-        if not actual_recorded_call.fulfills(expectation):
-            raise AssertionError('Recorded call (execution) '
-                                 'does not fulfill expectation:\n'
+        actual_execution = self.executions[0]
+        if not actual_execution.fulfills(expectation):
+            raise VerificationException('Execution does not fulfill expectation:\n'
                                  'Expected %s\n'
                                  'Actual   %s\n'
-                                 % (expectation, actual_recorded_call))
+                                 % (expectation, actual_execution))
         
-        self.recorded_calls = self.recorded_calls[1:]
+        self.executions = self.executions[1:]
     
     
     def __enter__ (self):
         """
             since this class is designed to be integrated in a "with" block it
-            will load the actual recorded calls and return itself.
+            will load the actual executions and return itself.
         """
     
         filename = os.path.join(self.base_dir, EXECUTIONS_FILENAME)
         
         if not os.path.exists(filename):
-            raise VerificationException('No executions recorded. Stubbed commands have never been called.')
+            raise VerificationException('No executions found. Stubbed commands have never been called.')
     
-        self.recorded_calls = deserialize_executions(filename)
+        self.executions = deserialize_executions(filename)
         
-        for recorded_call in self.recorded_calls:
-            if not recorded_call.expected:
-                raise VerificationException('Unexpected %s: did not fulfill any expectation.' % str(recorded_call))
+        for execution in self.executions:
+            if not execution.expected:
+                raise VerificationException('Unexpected %s: did not fulfill any expectation.' % str(execution))
         
         return self
 
@@ -124,14 +123,14 @@ class Verifier (object):
         if exception_type or exception_value or traceback:
             return False
         
-        count_of_recorded_calls = len(self.recorded_calls)
-        if count_of_recorded_calls > 0:
-            if count_of_recorded_calls == 1:
-                message = 'There is an unverified recorded call:\n'
+        count_of_executions = len(self.executions)
+        if count_of_executions > 0:
+            if count_of_executions == 1:
+                message = 'There is an unverified execution:\n'
             else:
-                message = 'There are %s unverified recorded calls:\n' % count_of_recorded_calls
-            for recorded_call in self.recorded_calls:
-                message += "    %s\n" % str(recorded_call)
+                message = 'There are %s unverified executions:\n' % count_of_executions
+            for execution in self.executions:
+                message += "    %s\n" % str(execution)
                 
             raise VerificationException(message)
 
@@ -163,7 +162,7 @@ class VerfiableExecutionWrapper (object):
         
         for argument in arguments:
             if argument not in self.execution.arguments:
-                raise AssertionError(
+                raise VerificationException(
                     'Stub "%s" has not been executed with at least expected arguments %s, but with %s.'
                     % (self.execution.command, arguments, self.execution.arguments))
         
@@ -180,7 +179,7 @@ class VerfiableExecutionWrapper (object):
         arguments = list(expected_arguments)
         
         if self.execution.arguments != arguments:
-            raise AssertionError(
+            raise VerificationException(
                 'Stub "%s" has not been executed with expected arguments %s, but with %s.'
                 % (self.execution.command, arguments, self.execution.arguments))
         
@@ -195,8 +194,8 @@ class VerfiableExecutionWrapper (object):
         """
         
         if self.execution.stdin != expected_stdin:
-            raise AssertionError(
-                'Stub "%s" has received the expected stdin "%s", but got "%s".'
+            raise VerificationException(
+                'Stub "%s" has not received the expected stdin "%s", but got "%s".'
                 % (self.execution.command, expected_stdin, self.execution.stdin))
         
         return self
