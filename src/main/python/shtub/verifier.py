@@ -129,6 +129,7 @@ class Verifier (object):
                 message = 'There is an unverified execution:\n'
             else:
                 message = 'There are %s unverified executions:\n' % count_of_executions
+                
             for execution in self.executions:
                 message += "    %s\n" % str(execution)
                 

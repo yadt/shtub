@@ -195,7 +195,7 @@ class VerfierTest (unittest.TestCase):
 
     @patch('os.path.exists')
     @patch('shtub.verifier.deserialize_executions')
-    def test_should_raise_exception_when_more_recorded_calls_available_than_verified (self, mock_deserialize, mock_exists):
+    def test_should_raise_exception_when_one_more_recorded_calls_available_than_verified (self, mock_deserialize, mock_exists):
         mock_exists.return_value = True
         verifier = Verifier('/hello/world')
         
@@ -203,6 +203,23 @@ class VerfierTest (unittest.TestCase):
         stub_execution2 = Execution('command', ['-arg1', '-arg2'], 'stdin', expected=True)
         
         mock_deserialize.return_value = [stub_execution1, stub_execution2]
+        
+        verify = verifier.__enter__()
+        verify.called('command')
+        self.assertRaises(VerificationException, verify.__exit__, None, None, None)
+
+
+    @patch('os.path.exists')
+    @patch('shtub.verifier.deserialize_executions')
+    def test_should_raise_exception_when_more_recorded_calls_available_than_verified (self, mock_deserialize, mock_exists):
+        mock_exists.return_value = True
+        verifier = Verifier('/hello/world')
+        
+        stub_execution1 = Execution('command', ['-arg1', '-arg2'], 'stdin', expected=True)
+        stub_execution2 = Execution('command', ['-arg1', '-arg2'], 'stdin', expected=True)
+        stub_execution3 = Execution('command', ['-arg1', '-arg2'], 'stdin', expected=True)
+        
+        mock_deserialize.return_value = [stub_execution1, stub_execution2, stub_execution3]
         
         verify = verifier.__enter__()
         verify.called('command')
