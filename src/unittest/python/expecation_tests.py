@@ -340,3 +340,11 @@ class ExpectationTests (unittest.TestCase):
         expectation2 = Expectation('any_command', ['any_arg1', 'any_arg2'], 'any_stdin', [Answer('stdout1', 'stderr1', 13)], 1)
 
         self.assertTrue(expectation1 == expectation2, 'comparison error: objects are equal')
+        
+    def test_should_return_string_with_all_properties (self):
+        expectation = Expectation('any_command', ['any_arg1', 'any_arg2'], 'any_stdin', [Answer('stdout1', 'stderr1', 13)], 1)
+
+        self.assertEqual("Expectation {'current_answer': 1, 'answers': [{'return_code': 13, 'stderr': 'stderr1', 'stdout': 'stdout1'}], 'command_input': {'stdin': 'any_stdin', 'command': 'any_command', 'arguments': ['any_arg1', 'any_arg2']}}", str(expectation))
+
+
+
