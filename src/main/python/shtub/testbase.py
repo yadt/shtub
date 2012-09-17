@@ -18,7 +18,6 @@ __author__ = 'Alexander Metzner, Michael Gruber, Udo Juettner'
 
 import unittest
 import os
-#import shutil
 import subprocess
 import tempfile
 
@@ -36,11 +35,6 @@ class IntegrationTestBase (unittest.TestCase):
     def setUp (self):
         self.command_counter = 0
         self.set_base_dir(None)
-
-
-#    def tearDown (self):
-#       if self.cleanup_base_dir and os.path.exists(self.base_dir):
-#           shutil.rmtree(self.base_dir)
 
 
     def _normalize_command_line(self, command):
