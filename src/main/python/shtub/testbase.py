@@ -29,7 +29,7 @@ from shtub.verifier import Verifier
 STUB_SCRIPT_CONTENT = """#!/usr/bin/env python
 import shtub.commandstub
 
-shtub.commandstub.handle_stub_call()
+shtub.commandstub.handle_execution()
 """
 
 class IntegrationTestBase (unittest.TestCase):

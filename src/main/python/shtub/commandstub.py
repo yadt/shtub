@@ -65,23 +65,23 @@ def unlock (file_handle):
     file_handle.close()
 
 
-def record_call (execution):
+def record_execution (execution):
     """
-        loads the list of recent executions from the recorded-calls file,
+        loads the list of recent executions from the EXECUTIONS_FILENAME file,
         appends the given execution to the list, then writes the list back to
         the file again. To assure only one process is reading and writing the
         file a file lock is used.
     """
 
     lock_file_handle = lock()
-    recorded_calls = []
+    executions = []
 
     if os.path.exists(EXECUTIONS_FILENAME):
-        recorded_calls = deserialize_executions(EXECUTIONS_FILENAME)
+        executions = deserialize_executions(EXECUTIONS_FILENAME)
 
-    recorded_calls.append(execution)
-    serialize_executions(EXECUTIONS_FILENAME, recorded_calls)
-    logging.info('Recorded %s calls.', len(recorded_calls))
+    executions.append(execution)
+    serialize_executions(EXECUTIONS_FILENAME, executions)
+    logging.info('Recorded %s executions.', len(executions))
 
     unlock(lock_file_handle)
 
@@ -121,7 +121,7 @@ def dispatch (command_input):
             logging.info('Execution fulfills %s', expectation)
             
             execution.mark_as_expected()
-            record_call(execution)
+            record_execution(execution)
             answer = expectation.next_answer()
             send_answer(answer)
             return
@@ -147,7 +147,7 @@ def read_stdin ():
     return ''
 
 
-def handle_stub_call ():
+def handle_execution ():
     """
         creates the base directory, initializes the logging and will read in
         the arguments and input from stdin to create a new execution object.
@@ -171,4 +171,4 @@ def handle_stub_call ():
 
 
 if __name__ == '__main__':
-    handle_stub_call()
+    handle_execution()

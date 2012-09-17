@@ -35,7 +35,7 @@ from shtub.expectation import Expectation
 
 class Tests (unittest.TestCase):
     @patch('shtub.commandstub.Execution')
-    @patch('shtub.commandstub.record_call')
+    @patch('shtub.commandstub.record_execution')
     @patch('shtub.commandstub.send_answer')
     @patch('logging.info')
     @patch('shtub.commandstub.deserialize_expectations')
@@ -58,7 +58,7 @@ class Tests (unittest.TestCase):
         self.assertEqual(call(mock_execution), mock_record.call_args)
 
 
-    @patch('shtub.commandstub.record_call')
+    @patch('shtub.commandstub.record_execution')
     @patch('shtub.commandstub.send_answer')
     @patch('logging.info')
     @patch('shtub.commandstub.deserialize_expectations')
@@ -113,7 +113,7 @@ class Tests (unittest.TestCase):
                         mock_exists, mock_deserialize, mock_serialize, mock_lock, mock_unlock):
         execution = Execution('command', ['-arg1', '-arg2', '-arg3'], 'stdin')
 
-        commandstub.record_call(execution)
+        commandstub.record_execution(execution)
 
         self.assertEqual(call('shtub/executions', ANY), mock_serialize.call_args)
 
@@ -131,7 +131,7 @@ class Tests (unittest.TestCase):
                         mock_exists, mock_deserialize, mock_serialize, mock_lock, mock_unlock):
         execution = Execution('command', ['-arg1', '-arg2', '-arg3'], 'stdin')
 
-        commandstub.record_call(execution)
+        commandstub.record_execution(execution)
 
         self.assertEqual(call('shtub/executions'), mock_deserialize.call_args)
 
@@ -145,7 +145,7 @@ class Tests (unittest.TestCase):
                         mock_exists, mock_deserialize, mock_serialize, mock_lock, mock_unlock):
         execution = Execution('command', ['-arg1', '-arg2', '-arg3'], 'stdin')
 
-        commandstub.record_call(execution)
+        commandstub.record_execution(execution)
 
         self.assertEqual(None, mock_deserialize.call_args)
 
@@ -216,7 +216,7 @@ class Tests (unittest.TestCase):
     def test_should_create_basedir_if_does_not_exist (self, \
             mock_exists, mock_mkdir, mock_logging, mock_dispatch, mock_read_stdin):
 
-        commandstub.handle_stub_call()
+        commandstub.handle_execution()
 
         self.assertEqual(call('shtub'), mock_exists.call_args)
         self.assertEqual(call('shtub'), mock_mkdir.call_args)
@@ -231,7 +231,7 @@ class Tests (unittest.TestCase):
     def test_should_not_create_basedir_if_already_exist (self, \
             mock_exists, mock_mkdir, mock_logging, mock_dispatch, mock_read_stdin):
 
-        commandstub.handle_stub_call()
+        commandstub.handle_execution()
 
 
         self.assertEqual(call('shtub'), mock_exists.call_args)
@@ -247,7 +247,7 @@ class Tests (unittest.TestCase):
     def test_should_initialize_basic_logging_configuration (self, \
             mock_exists, mock_mkdir, mock_logging, mock_dispatch, mock_read_stdin):
 
-        commandstub.handle_stub_call()
+        commandstub.handle_execution()
 
         self.assertEqual(call(filename=LOG_FILENAME,
                               level=logging.INFO,
@@ -264,7 +264,7 @@ class Tests (unittest.TestCase):
     @patch('os.mkdir')
     @patch('os.path.exists', return_value=True)
     def test_should_dispatch_execution (self, mock_exists, mock_mkdir, mock_logging, mock_dispatch, mock_read_stdin):
-        commandstub.handle_stub_call()
+        commandstub.handle_execution()
 
         mock_dispatch.assert_called()
 

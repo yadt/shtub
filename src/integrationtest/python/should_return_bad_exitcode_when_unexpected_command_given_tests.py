@@ -23,8 +23,6 @@ from os.path import abspath, dirname, exists, join
 
 from integrationtest_support import IntegrationTestSupport
 
-from shtub.commandstub import handle_stub_call
-
 
 class Test (IntegrationTestSupport):
     def test (self):
