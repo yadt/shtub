@@ -18,14 +18,15 @@ import sys
 import unittest
 
 from shtub.answer import Answer
+from shtub.commandinput import CommandInput
 from shtub.expectation import Expectation
 
 
 class ExpectationTests (unittest.TestCase):
     def test_should_convert_dictionary_to_object (self):
-        values = {'command_input': {'command'        : 'any_command',
-                                    'arguments'      : ['any_arg1', 'any_arg2', 'any_argument3'],
-                                    'stdin'          : 'any_stdin'},
+        values = {'command_input'  : {'command'   : 'any_command',
+                                      'arguments' : ['any_arg1', 'any_arg2', 'any_argument3'],
+                                      'stdin'     : 'any_stdin'},
                   'current_answer' : 0,
                   'answers'        : [{'stdout'      : 'Hello world.',
                                        'stderr'      : 'Hello error!',
@@ -37,9 +38,7 @@ class ExpectationTests (unittest.TestCase):
 
         actual_expectation = Expectation.from_dictionary(values)
 
-        self.assertEqual('any_command', actual_expectation.command_input.command)
-        self.assertEqual(['any_arg1', 'any_arg2', 'any_argument3'], actual_expectation.command_input.arguments)
-        self.assertEqual('any_stdin', actual_expectation.command_input.stdin)
+        self.assertEqual(CommandInput('any_command', ['any_arg1', 'any_arg2', 'any_argument3'], 'any_stdin'), actual_expectation.command_input)
         self.assertEqual(0, actual_expectation.current_answer)
 
         actual_count_of_answers = len(actual_expectation.answers)
@@ -60,13 +59,11 @@ class ExpectationTests (unittest.TestCase):
 
 
     def test_should_create_new_object_with_given_properties (self):
-        expectation = Expectation('any_command', ['any_arg1', 'any_arg2'], 'any_stdin')
+        actual = Expectation('any_command', ['any_arg1', 'any_arg2'], 'any_stdin')
 
-        self.assertEqual('any_command', expectation.command_input.command)
-        self.assertEqual(['any_arg1', 'any_arg2'], expectation.command_input.arguments)
-        self.assertEqual('any_stdin', expectation.command_input.stdin)
-        self.assertEqual([], expectation.answers)
-        self.assertEqual(0, expectation.current_answer)
+        self.assertEqual(CommandInput('any_command', ['any_arg1', 'any_arg2'], 'any_stdin'), actual.command_input)
+        self.assertEqual([], actual.answers)
+        self.assertEqual(0, actual.current_answer)
 
 
     def test_should_create_new_object_with_given_properties_and_answers (self):
@@ -75,13 +72,11 @@ class ExpectationTests (unittest.TestCase):
         answer3 = Answer('Mno', 'Pqr', 2)
         answers = [answer1, answer2, answer3]
 
-        expectation = Expectation('any_command', ['any_arg1', 'any_arg2'], 'any_stdin', answers, 2)
+        actual = Expectation('any_command', ['any_arg1', 'any_arg2'], 'any_stdin', answers, 2)
 
-        self.assertEqual('any_command', expectation.command_input.command)
-        self.assertEqual(['any_arg1', 'any_arg2'], expectation.command_input.arguments)
-        self.assertEqual('any_stdin', expectation.command_input.stdin)
-        self.assertEqual([answer1, answer2, answer3], expectation.answers)
-        self.assertEqual(2, expectation.current_answer)
+        self.assertEqual(CommandInput('any_command', ['any_arg1', 'any_arg2'], 'any_stdin'), actual.command_input)
+        self.assertEqual([answer1, answer2, answer3], actual.answers)
+        self.assertEqual(2, actual.current_answer)
 
 
     def test_should_return_object_as_dictionary (self):
@@ -90,9 +85,10 @@ class ExpectationTests (unittest.TestCase):
 
         actual_dictionary = expectation.as_dictionary()
 
-        self.assertEqual('any_command', actual_dictionary['command_input']['command'])
-        self.assertEqual(['any_arg1', 'any_arg2'], actual_dictionary['command_input']['arguments'])
-        self.assertEqual('any_stdin', actual_dictionary['command_input']['stdin'])
+        expected_command_input = {'command':'any_command',
+                                  'arguments':['any_arg1', 'any_arg2'],
+                                  'stdin':'any_stdin'}
+        self.assertEqual(expected_command_input,actual_dictionary['command_input'])
         self.assertEqual(0, actual_dictionary['current_answer'])
         actual_answer_dictionary = actual_dictionary['answers'][0]
 
@@ -159,7 +155,9 @@ class ExpectationTests (unittest.TestCase):
     def test_should_have_property_answers_with_empty_list (self):
         expectation = Expectation('any_command', ['any_arg1', 'any_arg2'], 'any_stdin')
 
-        self.assertEqual([], expectation.answers)
+        actual_answers = expectation.answers
+        
+        self.assertEqual([], actual_answers)
 
 
     def test_should_raise_exception_when_asking_for_next_answer_when_no_answer_is_given (self):
@@ -345,6 +343,3 @@ class ExpectationTests (unittest.TestCase):
         expectation = Expectation('any_command', ['any_arg1', 'any_arg2'], 'any_stdin', [Answer('stdout1', 'stderr1', 13)], 1)
 
         self.assertEqual("Expectation {'current_answer': 1, 'answers': [{'return_code': 13, 'stderr': 'stderr1', 'stdout': 'stdout1'}], 'command_input': {'stdin': 'any_stdin', 'command': 'any_command', 'arguments': ['any_arg1', 'any_arg2']}}", str(expectation))
-
-
-

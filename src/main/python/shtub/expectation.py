@@ -146,7 +146,7 @@ class Expectation (object):
 
 
     def __eq__ (self, other):
-        return self.command_input == other.command_input \
+        return  self.command_input == other.command_input \
            and self.current_answer == other.current_answer \
            and        self.answers == other.answers
 

@@ -24,15 +24,17 @@ from shtub.execution import Execution
 
 class VerfierTest (unittest.TestCase):
     def test_should_create_object_with_given_base_dir (self):
-        actual_verifier = Verifier('/abc/def')
+        actual = Verifier('/abc/def')
         
-        self.assertEqual('/abc/def', actual_verifier.base_dir)
+        self.assertEqual('/abc/def', actual.base_dir)
 
 
     def test_should_initialize_recoreded_calls (self):
-        actual_verifier = Verifier('/abc/def')
+        verifier = Verifier('/abc/def')
 
-        self.assertEqual([], actual_verifier.executions)
+        actual_executions = verifier.executions
+        
+        self.assertEqual([], actual_executions)
 
 
     @patch('os.path.exists')
@@ -91,10 +93,10 @@ class VerfierTest (unittest.TestCase):
         mock_exists.return_value = True
         verifier = Verifier('/hello/world')
         
-        stub_execution1 = Execution('any_command1', ['1any_arg1', '1any_arg2'], 'any_stdin', expected=True)
-        stub_execution2 = Execution('any_command2', ['2any_arg1', '2any_arg2'], 'any_stdin2', expected=True)
+        execution1 = Execution('any_command1', ['1any_arg1', '1any_arg2'], 'any_stdin', expected=True)
+        execution2 = Execution('any_command2', ['2any_arg1', '2any_arg2'], 'any_stdin2', expected=True)
         
-        mock_deserialize.return_value = [stub_execution1, stub_execution2]
+        mock_deserialize.return_value = [execution1, execution2]
         
         verify = verifier.__enter__()
         verify.verify('any_command1', ['1any_arg1', '1any_arg2'], 'any_stdin')
@@ -109,10 +111,10 @@ class VerfierTest (unittest.TestCase):
         mock_exists.return_value = True
         verifier = Verifier('/hello/world')
         
-        stub_execution1 = Execution('any_command1', ['1any_arg1', '1any_arg2'], 'any_stdin1', expected=True)
-        stub_execution2 = Execution('any_command2', ['2any_arg1', '2any_arg2'], 'any_stdin2', expected=True)
+        execution1 = Execution('any_command1', ['1any_arg1', '1any_arg2'], 'any_stdin1', expected=True)
+        execution2 = Execution('any_command2', ['2any_arg1', '2any_arg2'], 'any_stdin2', expected=True)
         
-        mock_deserialize.return_value = [stub_execution1, stub_execution2]
+        mock_deserialize.return_value = [execution1, execution2]
         
         with verifier as verify:
             verify.verify('any_command1', ['1any_arg1', '1any_arg2'], 'any_stdin1')
@@ -128,9 +130,9 @@ class VerfierTest (unittest.TestCase):
         mock_exists.return_value = True
         verifier = Verifier('/hello/world')
         
-        stub_execution1 = Execution('any_command1', ['1any_arg1', '1any_arg2'], 'any_stdin1')
+        execution1 = Execution('any_command1', ['1any_arg1', '1any_arg2'], 'any_stdin1')
         
-        mock_deserialize.return_value = [stub_execution1]
+        mock_deserialize.return_value = [execution1]
         
         self.assertRaises(VerificationException, verifier.__enter__)
 
@@ -141,10 +143,10 @@ class VerfierTest (unittest.TestCase):
         mock_exists.return_value = True
         verifier = Verifier('/hello/world')
         
-        stub_execution1 = Execution('any_command1', ['1any_arg1', '1any_arg2'], 'any_stdin1', expected=True)
-        stub_execution2 = Execution('any_command2', ['2any_arg1', '2any_arg2'], 'any_stdin2')
+        execution1 = Execution('any_command1', ['1any_arg1', '1any_arg2'], 'any_stdin1', expected=True)
+        execution2 = Execution('any_command2', ['2any_arg1', '2any_arg2'], 'any_stdin2')
         
-        mock_deserialize.return_value = [stub_execution1, stub_execution2]
+        mock_deserialize.return_value = [execution1, execution2]
         
         self.assertRaises(VerificationException, verifier.__enter__)
 
@@ -199,10 +201,10 @@ class VerfierTest (unittest.TestCase):
         mock_exists.return_value = True
         verifier = Verifier('/hello/world')
         
-        stub_execution1 = Execution('command', ['-arg1', '-arg2'], 'stdin', expected=True)
-        stub_execution2 = Execution('command', ['-arg1', '-arg2'], 'stdin', expected=True)
+        execution1 = Execution('command', ['-arg1', '-arg2'], 'stdin', expected=True)
+        execution2 = Execution('command', ['-arg1', '-arg2'], 'stdin', expected=True)
         
-        mock_deserialize.return_value = [stub_execution1, stub_execution2]
+        mock_deserialize.return_value = [execution1, execution2]
         
         verify = verifier.__enter__()
         verify.called('command')
@@ -215,11 +217,11 @@ class VerfierTest (unittest.TestCase):
         mock_exists.return_value = True
         verifier = Verifier('/hello/world')
         
-        stub_execution1 = Execution('command', ['-arg1', '-arg2'], 'stdin', expected=True)
-        stub_execution2 = Execution('command', ['-arg1', '-arg2'], 'stdin', expected=True)
+        execution1 = Execution('command', ['-arg1', '-arg2'], 'stdin', expected=True)
+        execution2 = Execution('command', ['-arg1', '-arg2'], 'stdin', expected=True)
         stub_execution3 = Execution('command', ['-arg1', '-arg2'], 'stdin', expected=True)
         
-        mock_deserialize.return_value = [stub_execution1, stub_execution2, stub_execution3]
+        mock_deserialize.return_value = [execution1, execution2, stub_execution3]
         
         verify = verifier.__enter__()
         verify.called('command')
@@ -232,10 +234,10 @@ class VerfierTest (unittest.TestCase):
         mock_exists.return_value = True
         verifier = Verifier('/hello/world')
         
-        stub_execution1 = Execution('command', ['-arg1', '-arg2'], 'stdin', expected=True)
-        stub_execution2 = Execution('command', ['-arg1', '-arg2'], 'stdin', expected=True)
+        execution1 = Execution('command', ['-arg1', '-arg2'], 'stdin', expected=True)
+        execution2 = Execution('command', ['-arg1', '-arg2'], 'stdin', expected=True)
         
-        mock_deserialize.return_value = [stub_execution1, stub_execution2]
+        mock_deserialize.return_value = [execution1, execution2]
         
         verify = verifier.__enter__()
         verify.called('command')

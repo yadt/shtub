@@ -21,11 +21,11 @@ from shtub.answer import Answer
 
 class AnswerTest (unittest.TestCase):
     def test_should_create_new_instance_with_given_values (self):
-        actual_answer = Answer('Hello world!', 'Hello error!', 8)
+        actual = Answer('Hello world!', 'Hello error!', 8)
 
-        self.assertEqual('Hello world!', actual_answer.stdout)
-        self.assertEqual('Hello error!', actual_answer.stderr)
-        self.assertEqual(8, actual_answer.return_code)
+        self.assertEqual('Hello world!', actual.stdout)
+        self.assertEqual('Hello error!', actual.stderr)
+        self.assertEqual(8, actual.return_code)
 
 
     def test_should_return_answer_from_dictionary (self):

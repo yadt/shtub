@@ -25,18 +25,18 @@ import shtub.testbase
 
 class FixtureTest (unittest.TestCase):
     def test_should_create_object_with_given_base_dir_and_empty_list_of_expectations (self):
-        actual_fixture = Fixture('/abc/def')
+        actual = Fixture('/abc/def')
 
-        self.assertEqual('/abc/def', actual_fixture.base_dir)
-        self.assertEqual([], actual_fixture.expectations)
+        self.assertEqual('/abc/def', actual.base_dir)
+        self.assertEqual([], actual.expectations)
 
 
     def test_should_append_a_new_expectation (self):
         fixture = Fixture('/test123')
-
         fixture.expect('any_command', ['any_arg0', 'any_arg1', 'any_arg2'], 'any_stdin')
 
         actual_expectations = fixture.expectations
+        
         self.assertEqual(1, len(actual_expectations))
 
         actual_expectation = actual_expectations[0]
@@ -47,11 +47,11 @@ class FixtureTest (unittest.TestCase):
 
 
     def test_should_append_a_new_expectation (self):
-        when = Fixture('/test123')
+        fixture = Fixture('/test123')
 
-        actual_return_value = when.calling('any_command')
-
-        actual_expectations = when.expectations
+        actual_return_value = fixture.calling('any_command')
+        
+        actual_expectations = fixture.expectations
         self.assertEqual(1, len(actual_expectations))
 
         actual_expectation = actual_expectations[0]
