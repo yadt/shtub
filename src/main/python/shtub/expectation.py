@@ -98,7 +98,7 @@ class Expectation (object):
     
     def then_answer (self, stdout=None, stderr=None, return_code=0):
         """
-            a convinience method to "then" which will create a new answer
+            a convenience method to "then" which will create a new answer
             object with the given properties. 
         """
         
@@ -107,7 +107,7 @@ class Expectation (object):
         
     def then_return (self, return_code):
         """
-            a convinience method to "then" which will create a new answer
+            a convenience method to "then" which will create a new answer
             object with the given return_code. 
         """
         
@@ -116,7 +116,7 @@ class Expectation (object):
 
     def then_write (self, stdout=None, stderr=None):
         """
-            a convinience method to "then" which will create a new answer
+            a convenience method to "then" which will create a new answer
             object with the given stdout and stderr output. 
         """
         
