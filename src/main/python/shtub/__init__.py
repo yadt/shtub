@@ -27,7 +27,7 @@ from os.path import join
 from shtub.execution import Execution
 from shtub.expectation import Expectation
 
-VERSION = '${version}'
+__version__ = '${version}'
 
 BASEDIR = 'shtub'
 

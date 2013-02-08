@@ -26,7 +26,7 @@ else:
     from StringIO import StringIO
     builtin_string = '__builtin__'
 
-from shtub import VERSION, serialize_executions, deserialize_executions, deserialize_expectations
+from shtub import __version__, serialize_executions, deserialize_executions, deserialize_expectations
 from shtub.answer import Answer
 from shtub.execution import Execution
 from shtub.expectation import Expectation
@@ -34,7 +34,7 @@ from shtub.expectation import Expectation
 
 class ShtubTests (unittest.TestCase):
     def test_if_this_test_fails_maybe_you_have_shtub_installed_locally (self):
-        self.assertEqual('${version}', VERSION)
+        self.assertEqual('${version}', __version__)
 
 
     @patch('json.loads')
