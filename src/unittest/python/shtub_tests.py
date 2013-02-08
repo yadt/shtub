@@ -20,10 +20,8 @@ import unittest
 from mock import Mock, call, patch
 
 if sys.version_info[0] == 3:
-    from io import StringIO
     builtin_string = 'builtins'
 else:
-    from StringIO import StringIO
     builtin_string = '__builtin__'
 
 from shtub import __version__, serialize_executions, deserialize_executions, deserialize_expectations
@@ -41,7 +39,6 @@ class ShtubTests (unittest.TestCase):
     @patch(builtin_string + '.open')
     def test_should_deserialize_executions (self, mock_open, mock_json):
         fake_file = self.return_file_when_calling(mock_open)
-        executions = [Execution('command', ['-arg1', '-arg2', '-arg3'], 'stdin')]
         json_string = "[{'expected': false, 'command_input': {'stdin': 'stdin', 'command': 'command', 'arguments': ['-arg1', '-arg2', '-arg3']}}]"
         fake_file.read.return_value = json_string
         mock_json.return_value = [{'command_input': {'command'   : 'command',
@@ -63,7 +60,6 @@ class ShtubTests (unittest.TestCase):
     @patch(builtin_string + '.open')
     def test_should_deserialize_expectations (self, mock_open, mock_json):
         fake_file = self.return_file_when_calling(mock_open)
-        executions = [Expectation('command', ['-arg1', '-arg2', '-arg3'], 'stdin')]
         json_string = "[{'current_answer': 0, 'answers': [{'return_code': 15, 'stderr': 'stderr', 'stdout': 'stdout'}], 'command_input': {'stdin': 'stdin', 'command': 'command', 'arguments': ['-arg1', '-arg2', '-arg3']}}]"
         fake_file.read.return_value = json_string
         mock_json.return_value = [{'command_input': {'command'        : 'command',
