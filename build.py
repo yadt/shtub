@@ -37,7 +37,7 @@ summary = 'shtub - shell command stub'
 url     = 'https://github.com/yadt/shtub'
 version = '0.2.9'
 
-default_task = ['install_dependencies', 'analyze', 'publish']
+default_task = ['analyze', 'publish']
 
 
 @init
@@ -55,3 +55,12 @@ def set_properties (project):
     project.get_property('distutils_commands').append('bdist_rpm')
 
     project.get_property('filter_resources_glob').append('**/shtub/__init__.py')
+
+
+@init(environments='teamcity')
+def set_properties_for_teamcity_builds(project):
+    import os
+    project.version = '%s-%s' % (project.version, os.environ.get('BUILD_NUMBER', 0))
+    project.default_task = ['install_build_dependencies', 'publish']
+    project.set_property('install_dependencies_index_url', os.environ.get('PYPIPROXY_URL'))
+    project.set_property('install_dependencies_use_mirrors', False)
