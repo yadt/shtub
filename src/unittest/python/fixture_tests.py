@@ -14,14 +14,12 @@
 #   You should have received a copy of the GNU General Public License
 #   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import sys
 import unittest
 
 from mock import patch, call
 
 from shtub.fixture import Fixture
 from shtub.expectation import Expectation
-import shtub.testbase
 
 class FixtureTest (unittest.TestCase):
     def test_should_create_object_with_given_base_dir_and_empty_list_of_expectations (self):
