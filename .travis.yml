@@ -13,8 +13,3 @@ install:
   - pyb install_dependencies
 
 script: "pyb analyze run_integration_tests --debug"
-
-notifications:
-  email:
-    - arne.hilmann@immobilienscout24.de
-    - michael.gruber@immobilienscout24.de
