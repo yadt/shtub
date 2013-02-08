@@ -95,8 +95,7 @@ class Tests (unittest.TestCase):
     @patch('logging.error')
     @patch('logging.info')
     @patch('shtub.commandstub.deserialize_expectations', return_value=[])
-    def test_should_load_expectations (self, \
-                        mock_deserialize, mock_logging_info, mock_logging_error, mock_exit):
+    def test_should_load_expectations (self, mock_deserialize, mock_logging_info, mock_logging_error, mock_exit):
         command_input = CommandInput('command', ['-arg1', '-arg2', '-arg3'], 'stdin')
 
         commandstub.dispatch(command_input)
@@ -109,7 +108,7 @@ class Tests (unittest.TestCase):
     @patch('shtub.commandstub.serialize_executions')
     @patch('shtub.commandstub.deserialize_executions', return_value=[])
     @patch('os.path.exists', return_value=True)
-    def test_should_append_execution_and_serialize (self, \
+    def test_should_append_execution_and_serialize (self,
                         mock_exists, mock_deserialize, mock_serialize, mock_lock, mock_unlock):
         execution = Execution('command', ['-arg1', '-arg2', '-arg3'], 'stdin')
 
@@ -127,7 +126,7 @@ class Tests (unittest.TestCase):
     @patch('shtub.commandstub.serialize_executions')
     @patch('shtub.commandstub.deserialize_executions')
     @patch('os.path.exists', return_value=True)
-    def test_should_deserialize_when_file_exists (self, \
+    def test_should_deserialize_when_file_exists (self,
                         mock_exists, mock_deserialize, mock_serialize, mock_lock, mock_unlock):
         execution = Execution('command', ['-arg1', '-arg2', '-arg3'], 'stdin')
 
@@ -166,8 +165,7 @@ class Tests (unittest.TestCase):
     @patch('sys.stdout', new_callable=StringIO)
     @patch('sys.stderr', new_callable=StringIO)
     @patch('sys.exit')
-    def test_should_send_answer_without_writing_to_stdout_and_stderr (self, \
-                        mock_exit, mock_stderr, mock_stdout):
+    def test_should_send_answer_without_writing_to_stdout_and_stderr (self, mock_exit, mock_stderr, mock_stdout):
         answer = Answer(None, None, 123)
 
         commandstub.send_answer(answer)
@@ -179,8 +177,7 @@ class Tests (unittest.TestCase):
 
     @patch('sys.stdin')
     @patch('shtub.commandstub.select', return_value=([], [], []))
-    def test_should_use_a_one_second_timeout_when_waiting_for_stdin (self, \
-                        mock_select, mock_stdin):
+    def test_should_use_a_one_second_timeout_when_waiting_for_stdin (self, mock_select, mock_stdin):
         commandstub.read_stdin()
 
         self.assertEqual(call([sys.stdin], [], [], 1), mock_select.call_args)
