@@ -28,9 +28,9 @@ class Test (integrationtest_support.IntegrationTestSupport):
         self.create_command_wrapper('command_wrapper1', 'command_stub1', ['-arg1', '-arg2', '-arg3'], 'stdin1')
 
         with self.fixture() as when:
-            when.calling('command_stub').with_arguments('-arg0', '-arg1', '-arg2').and_input('stdin') \
+            when.calling('command_stub').at_least_with_arguments('-arg0', '-arg1', '-arg2').and_input('stdin') \
                 .then_answer('Hello world 1', 'Hello error 1', 0)
-            when.calling('command_stub1').with_arguments('-arg1', '-arg2', '-arg3').and_input('stdin1') \
+            when.calling('command_stub1').at_least_with_arguments('-arg1', '-arg2', '-arg3').and_input('stdin1') \
                 .then_answer('Hello world 2', 'Hello error 2', 0)
 
         actual_return_code = self.execute_command('command_wrapper1')

@@ -123,7 +123,7 @@ class Expectation (object):
         return self.then_answer(stdout=stdout, stderr=stderr)
     
     
-    def with_arguments (self, *arguments):
+    def at_least_with_arguments (self, *arguments):
         """
             sets the given arguments and returns the expectation itself for
             invocation chaining

@@ -27,14 +27,15 @@ use_plugin('python.install_dependencies')
 use_plugin('python.distutils')
 use_plugin('python.pydev')
 
-name    = 'shtub'
+name = 'shtub'
 authors = [Author('Alexander Metzner', 'alexander.metzner@gmail.com'),
            Author('Michael Gruber', 'aelgru@gmail.com'),
+           Author('Maximilien Riehl', 'maximilien.riehl@gmail.com'),
            Author('Udo Juettner', 'udo.juettner@gmail.com')]
 license = 'GNU GPL v3'
 summary = 'shtub - shell command stub'
-url     = 'https://github.com/yadt/shtub'
-version = '0.2.9'
+url = 'https://github.com/yadt/shtub'
+version = '0.2.10'
 
 default_task = ['analyze', 'publish']
 

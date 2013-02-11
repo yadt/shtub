@@ -169,7 +169,7 @@ class ExpectationTests (unittest.TestCase):
     def test_should_set_arguments (self):
         expectation = Expectation('any_command')
 
-        actual_return_value = expectation.with_arguments('-arg1', '-arg2', '-arg3')
+        actual_return_value = expectation.at_least_with_arguments('-arg1', '-arg2', '-arg3')
 
         self.assertEqual(expectation, actual_return_value)
         self.assertEqual(['-arg1', '-arg2', '-arg3'], expectation.command_input.arguments)

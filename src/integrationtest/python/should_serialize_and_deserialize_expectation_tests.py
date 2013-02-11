@@ -31,7 +31,7 @@ class Test (integrationtest_support.IntegrationTestSupport):
 
         # when
         with self.fixture() as when:
-            when.calling('command_stub').with_arguments('-arg1', '-arg2', '-arg3').and_input('stdin') \
+            when.calling('command_stub').at_least_with_arguments('-arg1', '-arg2', '-arg3').and_input('stdin') \
                 .then_answer('Hello world.', 'Hello error!', 2)
 
         expectations_filename = join(self.base_dir, 'shtub', 'expectations')
