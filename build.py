@@ -25,7 +25,6 @@ use_plugin('python.unittest')
 use_plugin('python.integrationtest')
 use_plugin('python.install_dependencies')
 use_plugin('python.distutils')
-use_plugin('python.pychecker')
 use_plugin('python.pydev')
 
 name    = 'shtub'
@@ -42,14 +41,10 @@ default_task = ['analyze', 'publish']
 
 @init
 def set_properties (project):
-    project.build_depends_on('coverage')
     project.build_depends_on('mock')
     
     project.set_property('coverage_break_build', True)
     project.get_property('coverage_exceptions').append('shtub.testbase')
-
-    project.set_property('pychecker_break_build', True)
-    project.set_property('pychecker_args', ['-Q', '-b', 'unittest'])
 
     project.get_property('distutils_commands').append('bdist_egg')
     project.get_property('distutils_commands').append('bdist_rpm')
