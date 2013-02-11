@@ -21,6 +21,7 @@
 
 __author__ = 'Alexander Metzner, Michael Gruber, Udo Juettner'
 
+import re
 import os.path
 from shtub import EXECUTIONS_FILENAME, deserialize_executions
 from shtub.commandinput import CommandInput
@@ -42,7 +43,6 @@ class Verifier (object):
         """
             initializes a new verifier using the given base directory.
         """
-
         self.base_dir   = basedir
         self.executions = []
 
@@ -54,7 +54,6 @@ class Verifier (object):
             attribute, otherwise it will return the execution and remove the
             current execution from the list of executions.
         """
-    
         if not self.executions:
             raise VerificationException('No more further executions: command "%s" can not be verified.' % command)
         
@@ -65,7 +64,7 @@ class Verifier (object):
                                  % (command, actual_execution.command_input.command))
         
         self.executions = self.executions[1:]
-        return VerfiableExecutionWrapper(actual_execution)
+        return VerifiableExecutionWrapper(actual_execution)
     
     
     def verify (self, command, arguments, stdin=None):
@@ -75,7 +74,6 @@ class Verifier (object):
             exception, otherwise it will pass and remove the current execution
             from the list of executions.
         """
-    
         expected_input = CommandInput(command, arguments, stdin)
 
         if not self.executions:
@@ -96,7 +94,6 @@ class Verifier (object):
             since this class is designed to be integrated in a "with" block it
             will load the actual executions and return itself.
         """
-    
         filename = os.path.join(self.base_dir, EXECUTIONS_FILENAME)
         
         if not os.path.exists(filename):
@@ -136,7 +133,7 @@ class Verifier (object):
             raise VerificationException(message)
 
 
-class VerfiableExecutionWrapper (object):
+class VerifiableExecutionWrapper (object):
     """
         Verifier.called returns this wrapper to make a fluent interface
         possible.
@@ -147,18 +144,17 @@ class VerfiableExecutionWrapper (object):
         """
             stores the given execution and assures and_input = with_input.
         """
-        
         self.execution = execution
         self.and_input = self.with_input
+        self.and_at_least_one_argument_matches = self.at_least_one_argument_matches
 
 
     def at_least_with_arguments (self, *expected_arguments):
         """
-            raises a exception if the expeceted arguments are not in the
+            raises an exception if the expeceted arguments are not in the
             arguments of the wrapped execution. Returns the wrapper itself
             to make invocation chaining possible.
         """
-        
         arguments = list(expected_arguments)
         
         for argument in arguments:
@@ -172,11 +168,10 @@ class VerfiableExecutionWrapper (object):
 
     def with_arguments (self, *expected_arguments):
         """
-            raises a exception if the arguments of the wrapped execution are
+            raises an exception if the arguments of the wrapped execution are
             different than the expected arguments. Returns the wrapper itself
             to make invocation chaining possible.
         """
-        
         arguments = list(expected_arguments)
         
         if self.execution.command_input.arguments != arguments:
@@ -189,14 +184,27 @@ class VerfiableExecutionWrapper (object):
 
     def with_input (self, expected_stdin):
         """
-            raises a exception if the input from stdin in the wrapped execution
+            raises an exception if the input from stdin in the wrapped execution
             is different than the expected stdin input. Returns the wrapper
             itself to make invocation chaining possible.
         """
-        
         if self.execution.command_input.stdin != expected_stdin:
             raise VerificationException(
                 'Stub "%s" has not received the expected stdin "%s", but got "%s".'
                 % (self.execution.command_input.command, expected_stdin, self.execution.command_input.stdin))
         
         return self
+
+    def at_least_one_argument_matches(self, pattern):
+        """
+            raises an exception if none of the arguments matches the given pattern.
+        """
+        compiled_pattern = re.compile(pattern)
+
+        for argument in self.execution.command_input.arguments:
+            if compiled_pattern.match(argument):
+                return self
+
+        raise VerificationException(
+            'Stub "{0}" has not been executed with at least one argument matching pattern "{1}",\ngot arguments {2}' \
+                .format(self.execution.command_input.command, pattern, self.execution.command_input.arguments))
