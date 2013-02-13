@@ -39,15 +39,15 @@ class Verifier (object):
         in "with" statements.
     """
     
-    def __init__ (self, basedir):
+    def __init__(self, basedir):
         """
             initializes a new verifier using the given base directory.
         """
-        self.base_dir   = basedir
+        self.base_dir = basedir
         self.executions = []
 
 
-    def called (self, command):
+    def called(self, command):
         """
             raises an exception when no more executions are available or
             when the current execution does not have the expected command
@@ -60,13 +60,13 @@ class Verifier (object):
         actual_execution = self.executions.pop(0)
         if actual_execution.command_input.command != command:
             raise VerificationException('Execution does not fulfill expectation:\n'
-                                 'Expected command "%s", but got "%s"\n'
-                                 % (command, actual_execution.command_input.command))
+                                        'Expected command "%s", but got "%s"\n'
+                                        % (command, actual_execution.command_input.command))
         
         return CommandInputVerifier(actual_execution.command_input)
     
     
-    def verify (self, command, arguments, stdin=None):
+    def verify(self, command, arguments, stdin=None):
         """
             raises an exception when no more executions are available or
             when the current execution does not fulfill the given
@@ -81,9 +81,9 @@ class Verifier (object):
         actual_execution = self.executions[0]
         if not actual_execution.command_input.fulfills(expected_input):
             raise VerificationException('Execution does not fulfill expected_input:\n'
-                                 'Expected %s\n'
-                                 'Actual   %s\n'
-                                 % (expected_input, actual_execution))
+                                        'Expected %s\n'
+                                        'Actual   %s\n'
+                                        % (expected_input, actual_execution))
         
         self.executions = self.executions[1:]
     
@@ -212,3 +212,4 @@ class CommandInputVerifier (object):
         raise VerificationException(
             'Stub "{0}" has not been executed with at least one argument matching pattern "{1}",\ngot arguments {2}' \
                 .format(self.command, pattern, self.arguments))
+    
