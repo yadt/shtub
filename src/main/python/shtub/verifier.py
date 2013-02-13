@@ -212,4 +212,3 @@ class CommandInputVerifier (object):
         raise VerificationException(
             'Stub "{0}" has not been executed with at least one argument matching pattern "{1}",\ngot arguments {2}' \
                 .format(self.command, pattern, self.arguments))
-    
