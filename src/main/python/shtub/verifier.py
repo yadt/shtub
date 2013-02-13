@@ -57,13 +57,12 @@ class Verifier (object):
         if not self.executions:
             raise VerificationException('No more further executions: command "%s" can not be verified.' % command)
         
-        actual_execution = self.executions[0]
+        actual_execution = self.executions.pop(0)
         if actual_execution.command_input.command != command:
             raise VerificationException('Execution does not fulfill expectation:\n'
                                  'Expected command "%s", but got "%s"\n'
                                  % (command, actual_execution.command_input.command))
         
-        self.executions = self.executions[1:]
         return CommandInputVerifier(actual_execution.command_input)
     
     
