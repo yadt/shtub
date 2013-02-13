@@ -18,11 +18,12 @@ import unittest
 
 from mock import patch, call
 
-from shtub.verifier import Verifier, VerifiableExecutionWrapper, VerificationException
+from shtub.verifier import Verifier, CommandInputVerifier, VerificationException
 from shtub.execution import Execution
+from shtub.commandinput import CommandInput
 
 
-class VerfierTest (unittest.TestCase):
+class VerifierTest (unittest.TestCase):
     def test_should_create_object_with_given_base_dir (self):
         actual = Verifier('/abc/def')
         
@@ -163,7 +164,6 @@ class VerfierTest (unittest.TestCase):
         
         with verifier as verify:
             called_command = verify.called('command')
-            self.assertEqual(called_command.execution, stub_execution)
             self.assertEqual(0, len(verify.executions))
 
         self.assertEqual(call('/hello/world/shtub/executions'), mock_deserialize.call_args)
@@ -247,10 +247,10 @@ class VerfierTest (unittest.TestCase):
         self.assertFalse(actual_result)
 
 
-class VerfiableExecutionWrapperTests (unittest.TestCase):
+class CommandInputVerifierTests (unittest.TestCase):
     def test_should_verify_at_least_given_argument (self):
-        execution = Execution('command', ['-arg1', '-arg2', '-arg3'], 'stdin')
-        wrapper = VerifiableExecutionWrapper(execution)
+        command_input = CommandInput('command', ['-arg1', '-arg2', '-arg3'], 'stdin')
+        wrapper = CommandInputVerifier(command_input)
         
         actual_value = wrapper.at_least_with_arguments('-arg1')
         
@@ -258,8 +258,8 @@ class VerfiableExecutionWrapperTests (unittest.TestCase):
 
 
     def test_should_verify_at_least_given_arguments (self):
-        execution = Execution('command', ['-arg1', '-arg2', '-arg3'], 'stdin')
-        wrapper = VerifiableExecutionWrapper(execution)
+        command_input = CommandInput('command', ['-arg1', '-arg2', '-arg3'], 'stdin')
+        wrapper = CommandInputVerifier(command_input)
         
         actual_value = wrapper.at_least_with_arguments('-arg1', '-arg2')
         
@@ -267,15 +267,15 @@ class VerfiableExecutionWrapperTests (unittest.TestCase):
 
 
     def test_should_raise_exception_when_given_argument_is_not_execution (self):
-        execution = Execution('command', ['-arg1', '-arg2', '-arg3'], 'stdin')
-        wrapper = VerifiableExecutionWrapper(execution)
+        command_input = CommandInput('command', ['-arg1', '-arg2', '-arg3'], 'stdin')
+        wrapper = CommandInputVerifier(command_input)
         
         self.assertRaises(VerificationException, wrapper.at_least_with_arguments, '-arg0')
 
 
     def test_should_verify_given_arguments (self):
-        execution = Execution('command', ['-arg1', '-arg2', '-arg3'], 'stdin')
-        wrapper = VerifiableExecutionWrapper(execution)
+        command_input = CommandInput('command', ['-arg1', '-arg2', '-arg3'], 'stdin')
+        wrapper = CommandInputVerifier(command_input)
         
         actual_value = wrapper.with_arguments('-arg1', '-arg2', '-arg3')
         
@@ -283,15 +283,15 @@ class VerfiableExecutionWrapperTests (unittest.TestCase):
 
 
     def test_should_raise_exception_when_given_arguments_are_different (self):
-        execution = Execution('command', ['-arg1', '-arg2', '-arg3'], 'stdin')
-        wrapper = VerifiableExecutionWrapper(execution)
+        command_input = CommandInput('command', ['-arg1', '-arg2', '-arg3'], 'stdin')
+        wrapper = CommandInputVerifier(command_input)
         
         self.assertRaises(VerificationException, wrapper.with_arguments, '-arg1', '-arg2', 'arg3')
 
 
     def test_should_verify_given_input (self):
-        execution = Execution('command', ['-arg1', '-arg2', '-arg3'], 'stdin')
-        wrapper = VerifiableExecutionWrapper(execution)
+        command_input = CommandInput('command', ['-arg1', '-arg2', '-arg3'], 'stdin')
+        wrapper = CommandInputVerifier(command_input)
         
         actual_value = wrapper.with_input('stdin')
         
@@ -299,59 +299,59 @@ class VerfiableExecutionWrapperTests (unittest.TestCase):
 
 
     def test_should_raise_exception_when_given_input_is_different (self):
-        execution = Execution('command', ['-arg1', '-arg2', '-arg3'], 'stdin')
-        wrapper = VerifiableExecutionWrapper(execution)
+        command_input = CommandInput('command', ['-arg1', '-arg2', '-arg3'], 'stdin')
+        wrapper = CommandInputVerifier(command_input)
         
         self.assertRaises(VerificationException, wrapper.with_input, 'hello world')
 
 
     def test_should_verify_input_using_with_or_and (self):
-        execution = Execution('command', ['-arg1', '-arg2', '-arg3'], 'stdin')
-        wrapper = VerifiableExecutionWrapper(execution)
+        command_input = CommandInput('command', ['-arg1', '-arg2', '-arg3'], 'stdin')
+        wrapper = CommandInputVerifier(command_input)
         
         self.assertEqual(wrapper.and_input, wrapper.with_input)
 
     def test_should_raise_exception_when_no_argument_matches_given_string(self):
-        execution = Execution('command', ['arg1', 'arg2', 'arg3'], 'stdin')
-        wrapper = VerifiableExecutionWrapper(execution)
+        command_input = CommandInput('command', ['arg1', 'arg2', 'arg3'], 'stdin')
+        wrapper = CommandInputVerifier(command_input)
 
         self.assertRaises(VerificationException, wrapper.at_least_one_argument_matches, 'spameggs')
 
     def test_should_verify_argument_when_argument_equals_given_pattern(self):
-        execution = Execution('command', ['arg1'], 'stdin')
-        wrapper = VerifiableExecutionWrapper(execution)
+        command_input = CommandInput('command', ['arg1'], 'stdin')
+        wrapper = CommandInputVerifier(command_input)
 
         actual_value = wrapper.at_least_one_argument_matches('arg1')
 
         self.assertEqual(wrapper, actual_value)
 
     def test_should_verify_argument_when_argument_matches_given_pattern(self):
-        execution = Execution('command', ['arg1'], 'stdin')
-        wrapper = VerifiableExecutionWrapper(execution)
+        command_input = CommandInput('command', ['arg1'], 'stdin')
+        wrapper = CommandInputVerifier(command_input)
 
         actual_value = wrapper.at_least_one_argument_matches('^arg')
 
         self.assertEqual(wrapper, actual_value)
 
     def test_should_verify_arguments_when_at_least_one_argument_matches_given_pattern(self):
-        execution = Execution('command', ['arg1', 'borg', 'spam', 'eggs'], 'stdin')
-        wrapper = VerifiableExecutionWrapper(execution)
+        command_input = CommandInput('command', ['arg1', 'borg', 'spam', 'eggs'], 'stdin')
+        wrapper = CommandInputVerifier(command_input)
 
         actual_value = wrapper.at_least_one_argument_matches('.*pam$')
 
         self.assertEqual(wrapper, actual_value)
 
     def test_should_verify_more_complex_pattern_given(self):
-        execution = Execution('command', ['arg1', 'borg', 'spam', '123abc'], 'stdin')
-        wrapper = VerifiableExecutionWrapper(execution)
+        command_input = CommandInput('command', ['arg1', 'borg', 'spam', '123abc'], 'stdin')
+        wrapper = CommandInputVerifier(command_input)
 
         actual_value = wrapper.at_least_one_argument_matches('\d{3}[a-c]{3}')
 
         self.assertEqual(wrapper, actual_value)
 
     def test_should_verify_at_least_one_argument_matches_using_and (self):
-        execution = Execution('command', ['-arg1', '-arg2', '-arg3'], 'stdin')
-        wrapper = VerifiableExecutionWrapper(execution)
+        command_input = CommandInput('command', ['-arg1', '-arg2', '-arg3'], 'stdin')
+        wrapper = CommandInputVerifier(command_input)
 
         self.assertEqual(wrapper.and_at_least_one_argument_matches, wrapper.at_least_one_argument_matches)
 

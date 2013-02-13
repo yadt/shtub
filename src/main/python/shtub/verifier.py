@@ -64,7 +64,7 @@ class Verifier (object):
                                  % (command, actual_execution.command_input.command))
         
         self.executions = self.executions[1:]
-        return VerifiableExecutionWrapper(actual_execution)
+        return CommandInputVerifier(actual_execution.command_input)
     
     
     def verify (self, command, arguments, stdin=None):
@@ -133,23 +133,25 @@ class Verifier (object):
             raise VerificationException(message)
 
 
-class VerifiableExecutionWrapper (object):
+class CommandInputVerifier (object):
     """
         Verifier.called returns this wrapper to make a fluent interface
         possible.
     """
     
-    
-    def __init__ (self, execution):
+    def __init__(self, command_input):
         """
             stores the given execution and assures and_input = with_input.
         """
-        self.execution = execution
+        self.command = command_input.command
+        self.arguments = command_input.arguments
+        self.stdin = command_input.stdin
+
         self.and_input = self.with_input
         self.and_at_least_one_argument_matches = self.at_least_one_argument_matches
 
 
-    def at_least_with_arguments (self, *expected_arguments):
+    def at_least_with_arguments(self, *expected_arguments):
         """
             raises an exception if the expeceted arguments are not in the
             arguments of the wrapped execution. Returns the wrapper itself
@@ -158,15 +160,15 @@ class VerifiableExecutionWrapper (object):
         arguments = list(expected_arguments)
         
         for argument in arguments:
-            if argument not in self.execution.command_input.arguments:
+            if argument not in self.arguments:
                 raise VerificationException(
                     'Stub "%s" has not been executed with at least expected arguments %s, but with %s.'
-                    % (self.execution.command_input.command, arguments, self.execution.command_input.arguments))
+                    % (self.command, arguments, self.arguments))
         
         return self
 
 
-    def with_arguments (self, *expected_arguments):
+    def with_arguments(self, *expected_arguments):
         """
             raises an exception if the arguments of the wrapped execution are
             different than the expected arguments. Returns the wrapper itself
@@ -174,24 +176,24 @@ class VerifiableExecutionWrapper (object):
         """
         arguments = list(expected_arguments)
         
-        if self.execution.command_input.arguments != arguments:
+        if self.arguments != arguments:
             raise VerificationException(
                 'Stub "%s" has not been executed with expected arguments %s, but with %s.'
-                % (self.execution.command_input.command, arguments, self.execution.command_input.arguments))
+                % (self.command, arguments, self.arguments))
         
         return self
 
 
-    def with_input (self, expected_stdin):
+    def with_input(self, expected_stdin):
         """
             raises an exception if the input from stdin in the wrapped execution
             is different than the expected stdin input. Returns the wrapper
             itself to make invocation chaining possible.
         """
-        if self.execution.command_input.stdin != expected_stdin:
+        if self.stdin != expected_stdin:
             raise VerificationException(
                 'Stub "%s" has not received the expected stdin "%s", but got "%s".'
-                % (self.execution.command_input.command, expected_stdin, self.execution.command_input.stdin))
+                % (self.command, expected_stdin, self.stdin))
         
         return self
 
@@ -201,10 +203,10 @@ class VerifiableExecutionWrapper (object):
         """
         compiled_pattern = re.compile(pattern)
 
-        for argument in self.execution.command_input.arguments:
+        for argument in self.arguments:
             if compiled_pattern.match(argument):
                 return self
 
         raise VerificationException(
             'Stub "{0}" has not been executed with at least one argument matching pattern "{1}",\ngot arguments {2}' \
-                .format(self.execution.command_input.command, pattern, self.execution.command_input.arguments))
+                .format(self.command, pattern, self.arguments))
