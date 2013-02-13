@@ -141,7 +141,9 @@ class CommandInputVerifier (object):
     
     def __init__(self, command_input):
         """
-            stores the given execution and assures and_input = with_input.
+            stores command, arguments and stdin and assures
+            and_input = with_input,
+            and_at_least_one_argument_matches = at_least_one_argument_matches
         """
         self.command = command_input.command
         self.arguments = command_input.arguments
@@ -196,6 +198,7 @@ class CommandInputVerifier (object):
                 % (self.command, expected_stdin, self.stdin))
         
         return self
+
 
     def at_least_one_argument_matches(self, pattern):
         """
