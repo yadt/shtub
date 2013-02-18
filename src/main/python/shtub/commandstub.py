@@ -136,14 +136,11 @@ def read_stdin ():
         is going to return the complete input if there is any. If there is no
         input it is going to return None.
     """
-
     read_list, _, _ = select([sys.stdin], [], [], READ_STDIN_TIMEOUT_IN_SECONDS)
 
     if len(read_list) > 0:
         return read_list[0].read()
 
-    # quickfix: returning empty string instead of None, to make sure there are no differences
-    #           between execution in tty and without.
     return ''
 
 

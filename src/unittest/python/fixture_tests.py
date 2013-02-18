@@ -57,8 +57,6 @@ class FixtureTest (unittest.TestCase):
         self.assertEqual(actual_return_value, actual_stub_configuration)
         self.assertEqual('any_command', actual_stub_configuration.command_input.command)
         self.assertEqual([], actual_stub_configuration.command_input.arguments)
-        # quickfix: stdin default is empty string to ensure no difference between execution
-        #           in tty and without.
         self.assertEqual('', actual_stub_configuration.command_input.stdin)
 
 

@@ -40,8 +40,6 @@ class Fixture (object):
         self.base_directory = base_directory
         self.stub_configurations = []
     
-    # quickfix: expecting empty string instead of None, to make sure there's no difference
-    #           between execution within tty and without
     def expect (self, command, arguments, stdin=''):
         """
             creates a new stub configuration with the given properties and appends it

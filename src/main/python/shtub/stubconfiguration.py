@@ -29,8 +29,6 @@ class StubConfiguration(object):
         Represents the configuration of a command stub and contains the corresponding answers.
     """
     
-    # quickfix: stdin default is empty string to ensure no difference between execution
-    #           in tty and without.
     def __init__ (self, command, arguments=[], stdin='', answers=[], initial_answer=0):
         """
             will initialize a new object with the given properties.
