@@ -50,7 +50,7 @@ class Execution (object):
     
     def mark_as_expected (self):
         """
-            marks the execution as expected which means the execution fulfills a expectation.
+            marks the execution as expected which means the execution fulfills a stub configuration.
         """
         
         self.expected = True

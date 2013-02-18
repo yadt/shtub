@@ -24,10 +24,9 @@ __author__ = 'Alexander Metzner, Michael Gruber, Udo Juettner'
 from shtub.answer import Answer
 from shtub.commandinput import CommandInput
 
-class Expectation (object):
+class StubConfiguration(object):
     """
-        Represents the parameters of a expected command stub execution and
-        contains corresponding answers.
+        Represents the configuration of a command stub and contains the corresponding answers.
     """
     
     # quickfix: stdin default is empty string to ensure no difference between execution
@@ -51,7 +50,7 @@ class Expectation (object):
     
     def as_dictionary (self):
         """
-            returns a dictionary representation of this expectation.
+            returns a dictionary representation of this stub configuration.
         """
         
         answers_list = []
@@ -125,8 +124,7 @@ class Expectation (object):
     
     def at_least_with_arguments (self, *arguments):
         """
-            sets the given arguments and returns the expectation itself for
-            invocation chaining
+            sets the given arguments and returns self for invocation chaining
         """
         
         self.command_input.arguments = list(arguments)
@@ -136,8 +134,7 @@ class Expectation (object):
     
     def with_input (self, stdin):
         """
-            sets the given arguments and returns the expectation itself for
-            invocation chaining
+            sets the given arguments and returns self for invocation chaining
         """
         
         self.command_input.stdin = stdin
@@ -153,20 +150,16 @@ class Expectation (object):
 
     def __str__ (self):
         """
-            returns a string representation of this expectation using
-            as_dictionary
+            returns a string representation of this stub configuration using the method "as_dictionary"
         """
-        
-        return 'Expectation %s' % (self.as_dictionary())
+        return 'StubConfiguration %s' % (self.as_dictionary())
     
     
     @staticmethod
     def from_dictionary (dictionary):
         """
-            returns a new expectation object with the properties from the given
-            dictionary.
+            returns a new stub configuration object with the properties from the given dictionary
         """
-        
         answers = []
         
         for answer_dictionary in dictionary['answers']:
@@ -174,10 +167,10 @@ class Expectation (object):
             answers.append(answer)
         
         command_input_dictionary = dictionary['command_input']
-        expectation = Expectation(command_input_dictionary['command'],
-                                  command_input_dictionary['arguments'],
-                                  command_input_dictionary['stdin'],
-                                  answers,
-                                  dictionary['current_answer'])
+        stub_configuration = StubConfiguration(command_input_dictionary['command'],
+                                               command_input_dictionary['arguments'],
+                                               command_input_dictionary['stdin'],
+                                               answers,
+                                               dictionary['current_answer'])
         
-        return expectation
+        return stub_configuration

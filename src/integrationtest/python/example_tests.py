@@ -19,7 +19,7 @@ import os
 import shtub.testbase
 
 class StubbingSshExampleTest (shtub.testbase.IntegrationTestBase):
-    def test_should_stub_ssh_then_execute_ssh_and_verify_expectation (self):
+    def test_should_stub_ssh_then_execute_ssh_and_verify(self):
         env = self._create_environment()
         self.prepare_testbed(env, ['ssh'])
 

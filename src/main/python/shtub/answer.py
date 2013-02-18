@@ -16,22 +16,20 @@
 
 """
     This module provides a class called Answer, which represents the answer
-    the command stub will send when an expectation is fulfilled.
+    the command stub will send when an stub configuration is fulfilled.
 """
 
 __author__ = 'Michael Gruber'
 
 class Answer (object):
     """
-        represents a answer the command stub is sending back when an expectation
-        is fulfilled.
+        represents a answer the command stub is sending back when an stub configuration is fulfilled.
     """
     
     def __init__(self, stdout, stderr, return_code):
         """
             initializes with the given properties.
         """
-        
         self.stdout      = stdout
         self.stderr      = stderr
         self.return_code = return_code
@@ -41,7 +39,6 @@ class Answer (object):
         """
             returns a dictionary representation of this object.
         """
-        
         return {'stdout'      : self.stdout,
                 'stderr'      : self.stderr,
                 'return_code' : self.return_code}

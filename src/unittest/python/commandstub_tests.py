@@ -31,23 +31,23 @@ from shtub import BASEDIR, LOG_FILENAME, commandstub
 from shtub.answer import Answer
 from shtub.execution import Execution
 from shtub.commandinput import CommandInput
-from shtub.expectation import Expectation
+from shtub.stubconfiguration import StubConfiguration
 
 class Tests (unittest.TestCase):
     @patch('shtub.commandstub.Execution')
     @patch('shtub.commandstub.record_execution')
     @patch('shtub.commandstub.send_answer')
     @patch('logging.info')
-    @patch('shtub.commandstub.deserialize_expectations')
-    def test_should_mark_execution_as_expected_and_record_call_when_execution_fulfills_expectations (self, \
+    @patch('shtub.commandstub.deserialize_stub_configurations')
+    def test_should_mark_execution_as_expected_and_record_call_when_execution_fulfills_stub_configuration(self, \
                         mock_deserialize, mock_logging_info, mock_answer, mock_record, mock_execution_class):
         
         mock_execution = Mock(Execution)
         mock_execution_class.return_value = mock_execution
         answer = Answer('Hello world', 'Hello error', 15)
-        expectation = Expectation('command', ['-arg1', '-arg2', '-arg3'], 'stdin')
-        expectation.then(answer)
-        mock_deserialize.return_value = [expectation]
+        stub_configuration = StubConfiguration('command', ['-arg1', '-arg2', '-arg3'], 'stdin')
+        stub_configuration.then(answer)
+        mock_deserialize.return_value = [stub_configuration]
 
         command_input = CommandInput('command', ['-arg1', '-arg2', '-arg3'], 'stdin')
 
@@ -61,14 +61,14 @@ class Tests (unittest.TestCase):
     @patch('shtub.commandstub.record_execution')
     @patch('shtub.commandstub.send_answer')
     @patch('logging.info')
-    @patch('shtub.commandstub.deserialize_expectations')
-    def test_should_send_answer_when_execution_fulfills_expectations (self, \
+    @patch('shtub.commandstub.deserialize_stub_configurations')
+    def test_should_send_answer_when_execution_fulfills_stub_configurations (self, \
                         mock_deserialize, mock_logging_info, mock_answer, mock_record):
 
         answer = Answer('Hello world', 'Hello error', 15)
-        expectation = Expectation('command', ['-arg1', '-arg2', '-arg3'], 'stdin')
-        expectation.then(answer)
-        mock_deserialize.return_value = [expectation]
+        stub_configuration = StubConfiguration('command', ['-arg1', '-arg2', '-arg3'], 'stdin')
+        stub_configuration.then(answer)
+        mock_deserialize.return_value = [stub_configuration]
 
         command_input = CommandInput('command', ['-arg1', '-arg2', '-arg3'], 'stdin')
 
@@ -80,8 +80,8 @@ class Tests (unittest.TestCase):
     @patch('sys.exit')
     @patch('logging.error')
     @patch('logging.info')
-    @patch('shtub.commandstub.deserialize_expectations', return_value=[])
-    def test_should_exit_with_error_code_255_when_execution_not_in_expectation (self, \
+    @patch('shtub.commandstub.deserialize_stub_configurations', return_value=[])
+    def test_should_exit_with_error_code_255_when_execution_not_in_stub_configuration (self, \
                         mock_deserialize, mock_logging_info, mock_logging_error, mock_exit):
 
         command_input = CommandInput('command', ['-arg1', '-arg2', '-arg3'], 'stdin')
@@ -94,13 +94,13 @@ class Tests (unittest.TestCase):
     @patch('sys.exit')
     @patch('logging.error')
     @patch('logging.info')
-    @patch('shtub.commandstub.deserialize_expectations', return_value=[])
-    def test_should_load_expectations (self, mock_deserialize, mock_logging_info, mock_logging_error, mock_exit):
+    @patch('shtub.commandstub.deserialize_stub_configurations', return_value=[])
+    def test_should_load_configured_stubs(self, mock_deserialize, mock_logging_info, mock_logging_error, mock_exit):
         command_input = CommandInput('command', ['-arg1', '-arg2', '-arg3'], 'stdin')
 
         commandstub.dispatch(command_input)
 
-        self.assertEqual(call('shtub/expectations'), mock_deserialize.call_args)
+        self.assertEqual(call('shtub/configured-stubs'), mock_deserialize.call_args)
 
 
     @patch('shtub.commandstub.unlock')

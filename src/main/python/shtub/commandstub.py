@@ -31,12 +31,12 @@ from select import select
 
 from shtub import (BASEDIR,
                    EXECUTIONS_FILENAME,
-                   EXPECTATIONS_FILENAME,
+                   CONFIGURED_STUBS_FILENAME,
                    LOCK_FILENAME,
                    LOG_FILENAME,
                    READ_STDIN_TIMEOUT_IN_SECONDS,
                    deserialize_executions,
-                   deserialize_expectations,
+                   deserialize_stub_configurations,
                    serialize_executions)
 
 from shtub.execution import Execution
@@ -106,27 +106,27 @@ def send_answer (answer):
 def dispatch (command_input):
     """
         currently this will handle the given command_input by testing whether it
-        fulfills an expectation. If so it will save a execution (with the expected flag
-        set to true) and send the next answer as defined in the expectation object.
+        fulfills a stub configuration. If so it will save a execution (with the expected flag
+        set to true) and send the next answer as defined in the stub configuration object.
     """
 
-    expectations = deserialize_expectations(EXPECTATIONS_FILENAME)
+    stub_configurations = deserialize_stub_configurations(CONFIGURED_STUBS_FILENAME)
 
     logging.info('Got %s', command_input)
 
     execution = Execution(command_input.command, command_input.arguments, command_input.stdin)
     
-    for expectation in expectations:
-        if command_input.fulfills(expectation.command_input):
-            logging.info('Execution fulfills %s', expectation)
+    for stub_configuration in stub_configurations:
+        if command_input.fulfills(stub_configuration.command_input):
+            logging.info('Execution fulfills %s', stub_configuration)
             
             execution.mark_as_expected()
             record_execution(execution)
-            answer = expectation.next_answer()
+            answer = stub_configuration.next_answer()
             send_answer(answer)
             return
 
-    logging.error('Given command_input does not fulfill requirements of any expectation.')
+    logging.error('Given command_input does not fulfill requirements of any stub configuration.')
     sys.exit(255)
 
 
@@ -161,9 +161,9 @@ def handle_execution ():
                         level=logging.INFO,
                         format=logging_format)
 
-    command   = os.path.basename(sys.argv[0])
+    command = os.path.basename(sys.argv[0])
     arguments = sys.argv[1:]
-    stdin     = read_stdin()
+    stdin = read_stdin()
     
     command_input = CommandInput(command, arguments, stdin)
 

@@ -19,102 +19,102 @@ import unittest
 from mock import patch, call
 
 from shtub.fixture import Fixture
-from shtub.expectation import Expectation
+from shtub.stubconfiguration import StubConfiguration
 
 class FixtureTest (unittest.TestCase):
-    def test_should_create_object_with_given_base_dir_and_empty_list_of_expectations (self):
+    def test_should_create_object_with_given_base_dir_and_empty_list_of_stub_configurations(self):
         actual = Fixture('/abc/def')
 
-        self.assertEqual('/abc/def', actual.base_dir)
-        self.assertEqual([], actual.expectations)
+        self.assertEqual('/abc/def', actual.base_directory)
+        self.assertEqual([], actual.stub_configurations)
 
 
-    def test_should_append_a_new_expectation (self):
+    def test_should_append_a_new_stub_configuration(self):
         fixture = Fixture('/test123')
         fixture.expect('any_command', ['any_arg0', 'any_arg1', 'any_arg2'], 'any_stdin')
 
-        actual_expectations = fixture.expectations
+        actual_stub_configurations = fixture.stub_configurations
         
-        self.assertEqual(1, len(actual_expectations))
+        self.assertEqual(1, len(actual_stub_configurations))
 
-        actual_expectation = actual_expectations[0]
+        actual_stub_configuration = actual_stub_configurations[0]
 
-        self.assertEqual('any_command', actual_expectation.command)
-        self.assertEqual(['any_arg0', 'any_arg1', 'any_arg2'], actual_expectation.arguments)
-        self.assertEqual('any_stdin', actual_expectation.stdin)
+        self.assertEqual('any_command', actual_stub_configuration.command)
+        self.assertEqual(['any_arg0', 'any_arg1', 'any_arg2'], actual_stub_configuration.arguments)
+        self.assertEqual('any_stdin', actual_stub_configuration.stdin)
 
 
-    def test_should_append_a_new_expectation (self):
+    def test_should_append_a_new_stub_configuration(self):
         fixture = Fixture('/test123')
 
         actual_return_value = fixture.calling('any_command')
         
-        actual_expectations = fixture.expectations
-        self.assertEqual(1, len(actual_expectations))
+        actual_stub_configurations = fixture.stub_configurations
+        self.assertEqual(1, len(actual_stub_configurations))
 
-        actual_expectation = actual_expectations[0]
+        actual_stub_configuration = actual_stub_configurations[0]
 
-        self.assertEqual(actual_return_value, actual_expectation)
-        self.assertEqual('any_command', actual_expectation.command_input.command)
-        self.assertEqual([], actual_expectation.command_input.arguments)
+        self.assertEqual(actual_return_value, actual_stub_configuration)
+        self.assertEqual('any_command', actual_stub_configuration.command_input.command)
+        self.assertEqual([], actual_stub_configuration.command_input.arguments)
         # quickfix: stdin default is empty string to ensure no difference between execution
         #           in tty and without.
-        self.assertEqual('', actual_expectation.command_input.stdin)
+        self.assertEqual('', actual_stub_configuration.command_input.stdin)
 
 
-    def test_should_append_a_new_expectation_with_default_properties (self):
+    def test_should_append_a_new_stub_configuration_with_default_properties (self):
         fixture = Fixture('/test123')
 
         fixture.expect('any_command', ['any_arg0'], 'any_stdin')
 
-        actual_expectations = fixture.expectations
-        self.assertEqual(1, len(actual_expectations))
+        actual_stub_configurations = fixture.stub_configurations
+        self.assertEqual(1, len(actual_stub_configurations))
 
-        actual_expectation = actual_expectations[0]
+        actual_stub_configuration = actual_stub_configurations[0]
 
-        self.assertEqual('any_command', actual_expectation.command_input.command)
-        self.assertEqual(['any_arg0'], actual_expectation.command_input.arguments)
-        self.assertEqual('any_stdin', actual_expectation.command_input.stdin)
+        self.assertEqual('any_command', actual_stub_configuration.command_input.command)
+        self.assertEqual(['any_arg0'], actual_stub_configuration.command_input.arguments)
+        self.assertEqual('any_stdin', actual_stub_configuration.command_input.stdin)
 
 
-    def test_should_append_two_new_expectations_in_correct_order (self):
+    def test_should_append_two_new_stub_configurations_in_correct_order (self):
         fixture = Fixture('/test123')
 
         fixture.expect('any_command1', ['1any_arg0', '1any_arg1', '1any_arg2'], 'any_stdin')
         fixture.expect('any_command2', ['2any_arg0', '2any_arg1', '2any_arg2'], 'any_stdin2')
 
-        actual_expectations = fixture.expectations
-        self.assertEqual(2, len(actual_expectations))
+        actual_stub_configurations = fixture.stub_configurations
+        self.assertEqual(2, len(actual_stub_configurations))
 
-        actual_first_expectation = actual_expectations[0]
+        actual_first_stub_configuration = actual_stub_configurations[0]
 
-        self.assertEqual('any_command1', actual_first_expectation.command_input.command)
-        self.assertEqual(['1any_arg0', '1any_arg1', '1any_arg2'], actual_first_expectation.command_input.arguments)
-        self.assertEqual('any_stdin', actual_first_expectation.command_input.stdin)
+        self.assertEqual('any_command1', actual_first_stub_configuration.command_input.command)
+        self.assertEqual(['1any_arg0', '1any_arg1', '1any_arg2'], actual_first_stub_configuration.command_input.arguments)
+        self.assertEqual('any_stdin', actual_first_stub_configuration.command_input.stdin)
 
-        actual_second_expectation = actual_expectations[1]
+        actual_second_stub_configuration = actual_stub_configurations[1]
 
-        self.assertEqual('any_command2', actual_second_expectation.command_input.command)
-        self.assertEqual(['2any_arg0', '2any_arg1', '2any_arg2'], actual_second_expectation.command_input.arguments)
-        self.assertEqual('any_stdin2', actual_second_expectation.command_input.stdin)
+        self.assertEqual('any_command2', actual_second_stub_configuration.command_input.command)
+        self.assertEqual(['2any_arg0', '2any_arg1', '2any_arg2'], actual_second_stub_configuration.command_input.arguments)
+        self.assertEqual('any_stdin2', actual_second_stub_configuration.command_input.stdin)
 
 
     @patch('shtub.fixture.serialize_executions')
-    def test_should_return_fixture_itself_when_entering_with_statement_and_serialize_expectations_when_exiting (self, serialize_mock):
+    def test_should_return_fixture_itself_when_entering_with_statement_and_serialize_stub_configurations_when_exiting (self, serialize_mock):
         fixture = Fixture('/hello/world')
 
         with fixture as fix:
             self.assertEqual(fix, fixture)
 
-        self.assertEqual(call('/hello/world/shtub/expectations', []), serialize_mock.call_args)
+        self.assertEqual(call('/hello/world/shtub/configured-stubs', []), serialize_mock.call_args)
 
 
-    def test_should_return_expectation_object (self):
+    def test_should_return_stub_configuration_object (self):
         fixture = Fixture('/test123')
 
         actual_result = fixture.expect('any_command', ['any_arg'], 'any_stdin')
 
-        self.assertTrue(isinstance(actual_result, Expectation))
+        self.assertTrue(isinstance(actual_result, StubConfiguration))
         self.assertEqual('any_command', actual_result.command_input.command)
         self.assertEqual(['any_arg'], actual_result.command_input.arguments)
         self.assertEqual('any_stdin', actual_result.command_input.stdin)

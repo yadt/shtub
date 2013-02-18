@@ -24,10 +24,10 @@ if sys.version_info[0] == 3:
 else:
     builtin_string = '__builtin__'
 
-from shtub import __version__, serialize_executions, deserialize_executions, deserialize_expectations
+from shtub import __version__, serialize_executions, deserialize_executions, deserialize_stub_configurations
 from shtub.answer import Answer
 from shtub.execution import Execution
-from shtub.expectation import Expectation
+from shtub.stubconfiguration import StubConfiguration
 
 
 class ShtubTests (unittest.TestCase):
@@ -37,7 +37,7 @@ class ShtubTests (unittest.TestCase):
 
     @patch('json.loads')
     @patch(builtin_string + '.open')
-    def test_should_deserialize_executions (self, mock_open, mock_json):
+    def test_should_deserialize_stub_configuration (self, mock_open, mock_json):
         fake_file = self.return_file_when_calling(mock_open)
         json_string = "[{'expected': false, 'command_input': {'stdin': 'stdin', 'command': 'command', 'arguments': ['-arg1', '-arg2', '-arg3']}}]"
         fake_file.read.return_value = json_string
@@ -46,19 +46,19 @@ class ShtubTests (unittest.TestCase):
                                                      'stdin'     : 'stdin'},
                                    'expected'  : False}]
 
-        actual_executions = deserialize_executions('executions.json')
+        actual_stub_configuration = deserialize_executions('stub_configuration.json')
 
-        self.assertEqual(call('executions.json', mode='r'), mock_open.call_args)
+        self.assertEqual(call('stub_configuration.json', mode='r'), mock_open.call_args)
         self.assertEqual(call(), fake_file.read.call_args)
         self.assertEqual(call(json_string), mock_json.call_args)
 
-        expected_executions = [Execution('command', ['-arg1', '-arg2', '-arg3'], 'stdin')]
-        self.assertEqual(expected_executions, actual_executions)
+        expected_stub_configuration = [Execution('command', ['-arg1', '-arg2', '-arg3'], 'stdin')]
+        self.assertEqual(expected_stub_configuration, actual_stub_configuration)
 
 
     @patch('json.loads')
     @patch(builtin_string + '.open')
-    def test_should_deserialize_expectations (self, mock_open, mock_json):
+    def test_should_deserialize_stub_configurations(self, mock_open, mock_json):
         fake_file = self.return_file_when_calling(mock_open)
         json_string = "[{'current_answer': 0, 'answers': [{'return_code': 15, 'stderr': 'stderr', 'stdout': 'stdout'}], 'command_input': {'stdin': 'stdin', 'command': 'command', 'arguments': ['-arg1', '-arg2', '-arg3']}}]"
         fake_file.read.return_value = json_string
@@ -71,25 +71,25 @@ class ShtubTests (unittest.TestCase):
                                                         'return_code' : 15}]
                                  }]
 
-        actual_expectations = deserialize_expectations('executions.json')
+        actual_stub_configurations = deserialize_stub_configurations('stub_configuration.json')
 
-        self.assertEqual(call('executions.json', mode='r'), mock_open.call_args)
+        self.assertEqual(call('stub_configuration.json', mode='r'), mock_open.call_args)
         self.assertEqual(call(), fake_file.read.call_args)
         self.assertEqual(call(json_string), mock_json.call_args)
 
-        expected_expectations = [Expectation('command', ['-arg1', '-arg2', '-arg3'], 'stdin', [Answer('stdout', 'stderr', 15)], 0)]
+        expected_stub_configurations = [StubConfiguration('command', ['-arg1', '-arg2', '-arg3'], 'stdin', [Answer('stdout', 'stderr', 15)], 0)]
 
-        self.assertEqual(expected_expectations, actual_expectations)
+        self.assertEqual(expected_stub_configurations, actual_stub_configurations)
 
 
     @patch('json.dumps')
     @patch(builtin_string + '.open')
-    def test_should_serialize_executions (self, mock_open, mock_json):
+    def test_should_serialize_stub_configuration (self, mock_open, mock_json):
         fake_file = self.return_file_when_calling(mock_open)
         mock_json.return_value = '[{"some": "json"}]'
-        executions = [Execution('command', ['-arg1', '-arg2', '-arg3'], 'stdin', expected=True)]
+        stub_configuration = [Execution('command', ['-arg1', '-arg2', '-arg3'], 'stdin', expected=True)]
 
-        serialize_executions('executions.json', executions)
+        serialize_executions('stub_configuration.json', stub_configuration)
 
         expected_dictionary = {'command_input': {'command'   : 'command',
                                                  'arguments' : ['-arg1', '-arg2', '-arg3'],
@@ -97,7 +97,7 @@ class ShtubTests (unittest.TestCase):
                                'expected'  : True}
 
         self.assertEqual(call([expected_dictionary], sort_keys=True, indent=4), mock_json.call_args)
-        self.assertEqual(call('executions.json', mode='w'), mock_open.call_args)
+        self.assertEqual(call('stub_configuration.json', mode='w'), mock_open.call_args)
         self.assertEqual(call('[{"some": "json"}]'), fake_file.write.call_args)
 
 

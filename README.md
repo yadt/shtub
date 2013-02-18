@@ -4,15 +4,14 @@ shtub [![Build Status](https://secure.travis-ci.org/yadt/shtub.png?branch=master
 shell command stub
 
 Integration test framework which *stubs shell commands*.
-The stubs can be configured with *expectations* and send back corresponding
-*answers* if expectations are fulfilled. The expectations can be *verified*
-(correct arguments and order).
+The *stubs* can be *configured* and send back corresponding *answers*.
+The executions of *stubs* can be *verified* (correct arguments and call order).
 
 
  A simple example stubbing the "ssh" command:
 ```python
 class StubbingSshExampleTest (shtub.testbase.IntegrationTestBase):
-    def test_should_stub_ssh_then_execute_ssh_and_verify_expectation (self):
+    def test_should_stub_ssh_then_execute_ssh_and_verify(self):
         # given
         env = {'PATH': ..., 'PYTHONPATH': ...}
         stubs_list = ['ssh']

@@ -18,7 +18,7 @@ import unittest
 
 from os.path import join
 
-from shtub import deserialize_expectations
+from shtub import deserialize_stub_configurations
 
 import integrationtest_support
 
@@ -34,18 +34,18 @@ class Test (integrationtest_support.IntegrationTestSupport):
             when.calling('command_stub').at_least_with_arguments('-arg1', '-arg2', '-arg3').and_input('stdin') \
                 .then_answer('Hello world.', 'Hello error!', 2)
 
-        expectations_filename = join(self.base_dir, 'shtub', 'expectations')
-        actual_expectations = deserialize_expectations(expectations_filename)
+        stub_configurations_filename = join(self.base_dir, 'shtub', 'configured-stubs')
+        actual_stub_configurations = deserialize_stub_configurations(stub_configurations_filename)
 
         # then
-        self.assertEqual(1, len(actual_expectations))
-        actual_expectation = actual_expectations[0]
+        self.assertEqual(1, len(actual_stub_configurations))
+        actual_stub_configuration = actual_stub_configurations[0]
 
-        self.assertEqual(['-arg1', '-arg2', '-arg3'], actual_expectation.command_input.arguments)
-        self.assertEqual('stdin', actual_expectation.command_input.stdin)
-        self.assertEqual('command_stub', actual_expectation.command_input.command)
+        self.assertEqual(['-arg1', '-arg2', '-arg3'], actual_stub_configuration.command_input.arguments)
+        self.assertEqual('stdin', actual_stub_configuration.command_input.stdin)
+        self.assertEqual('command_stub', actual_stub_configuration.command_input.command)
 
-        actual_answer = actual_expectation.next_answer()
+        actual_answer = actual_stub_configuration.next_answer()
 
         self.assertEqual('Hello world.', actual_answer.stdout)
         self.assertEqual('Hello error!', actual_answer.stderr)

@@ -25,45 +25,41 @@ import json
 from os.path import join
 
 from shtub.execution import Execution
-from shtub.expectation import Expectation
+from shtub.stubconfiguration import StubConfiguration
 
 __version__ = '${version}'
 
 BASEDIR = 'shtub'
 
-EXECUTIONS_FILENAME   = join(BASEDIR, 'executions')
-EXPECTATIONS_FILENAME = join(BASEDIR, 'expectations')
-LOCK_FILENAME         = join(BASEDIR, 'lock')
-LOG_FILENAME          = join(BASEDIR, 'log')
-STUBS_DIRECTORY       = join(BASEDIR, 'stubs')
+EXECUTIONS_FILENAME = join(BASEDIR, 'executions')
+CONFIGURED_STUBS_FILENAME = join(BASEDIR, 'configured-stubs')
+LOCK_FILENAME = join(BASEDIR, 'lock')
+LOG_FILENAME = join(BASEDIR, 'log')
+STUBS_DIRECTORY = join(BASEDIR, 'stubs')
 
 READ_STDIN_TIMEOUT_IN_SECONDS = 1
 
 
-def deserialize_expectations (filename):
+def deserialize_stub_configurations (filename):
     """
-        loads the given json file and returns a list of expectations.
+        loads the given json file and returns a list of stub configurations.
     """
-
-    expectations = _load_json_file(filename)
-    return list(map(lambda e: Expectation.from_dictionary(e), expectations))
+    stub_configurations = _load_json_file(filename)
+    return list(map(lambda e: StubConfiguration.from_dictionary(e), stub_configurations))
 
 
 def deserialize_executions (filename):
     """
         loads the given json file and returns a list of executions.
     """
-
     executions = _load_json_file(filename)
     return list(map(lambda e: Execution.from_dictionary(e), executions))
 
 
 def serialize_executions (filename, executions):
     """
-        writes the given execution objects into a json file with the given
-        filename.
+        writes the given execution objects into a json file with the given filename.
     """
-
     dictionaries = list(map(lambda e: e.as_dictionary(), executions))
     json_string = json.dumps(dictionaries, sort_keys=True, indent=4)
 
@@ -75,7 +71,6 @@ def _load_json_file (filename):
     """
         loads the given json file and returns the json content as dictionary.
     """
-
     with open(filename, mode='r') as json_file:
         file_content = json_file.read()
         dictionary = json.loads(file_content)

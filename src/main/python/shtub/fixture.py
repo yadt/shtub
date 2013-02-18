@@ -16,57 +16,55 @@
 
 """
     this module provides the class Fixture, which represents the test fixture,
-    e.g. it offers methods to create expectations for the command stub. 
+    e.g. it offers methods to configure the command stub.
 """
 
 __author__ = 'Alexander Metzner, Michael Gruber, Udo Juettner'
 
 import os
 
-from shtub import EXPECTATIONS_FILENAME, serialize_executions
-from shtub.expectation import Expectation
+from shtub import CONFIGURED_STUBS_FILENAME, serialize_executions
+from shtub.stubconfiguration import StubConfiguration
+
 
 class Fixture (object):
     """
-        Represents the testing context which can be configured by defining
-        expectations and corresponding answers. Please use instances of this
-        class in a "with" statement.
+        Represents the testing context which contains stub configurations and corresponding answers.
+        Please use instances of this class in a "with" statement.
     """
-    
-    def __init__ (self, basedir):
+    def __init__ (self, base_directory):
         """
             initializes a new fixture with the given base directory.
         """
         
-        self.base_dir     = basedir
-        self.expectations = []
+        self.base_directory = base_directory
+        self.stub_configurations = []
     
     # quickfix: expecting empty string instead of None, to make sure there's no difference
     #           between execution within tty and without
     def expect (self, command, arguments, stdin=''):
         """
-            creates a new expectation with the given properties and appends it
-            to the expectations, then returns the expectation for invocation
+            creates a new stub configuration with the given properties and appends it
+            to the expectations, then returns the stub configuration for invocation
             chaining.
         """
-        
-        expectation = Expectation(command, arguments, stdin)
-        self.expectations.append(expectation)
-        
-        return expectation
-    
+
+        stub_configuration = StubConfiguration(command, arguments, stdin)
+        self.stub_configurations.append(stub_configuration)
+
+        return stub_configuration
+
     
     def calling (self, command):
         """
-            creates a new expecation with the given command and appends it to
-            the expectations, then returns the expecation for invocation
+            creates a new StubConfiguration with the given command and appends it to
+            the stub_configurations, then returns the stub_configuration for invocation
             chaining.
         """
-    
-        expectation = Expectation(command)
-        self.expectations.append(expectation)
+        stub_configuration = StubConfiguration(command)
+        self.stub_configurations.append(stub_configuration)
         
-        return expectation
+        return stub_configuration
 
     
     def __enter__ (self):
@@ -74,14 +72,13 @@ class Fixture (object):
             since this class is designed to be used using the "with" statement
             this returns the fixture itself.
         """
-        
         return self
     
     
     def __exit__ (self, exception_type, exception_value, traceback):
         """
-            since this class is designed to be used using the "with" statement
-            this will save the list of expectations in the base directory.
+            since this class is designed to be used in a "with" statement
+            this will save the list of stub_configurations in the base directory.
             
             @return: False, when exception_type, exception_value or traceback given,
                      otherwise None
@@ -90,6 +87,6 @@ class Fixture (object):
         if exception_type or exception_value or traceback:
             return False
                
-        filename = os.path.join(self.base_dir, EXPECTATIONS_FILENAME)
+        filename = os.path.join(self.base_directory, CONFIGURED_STUBS_FILENAME)
         
-        serialize_executions(filename, self.expectations)
+        serialize_executions(filename, self.stub_configurations)

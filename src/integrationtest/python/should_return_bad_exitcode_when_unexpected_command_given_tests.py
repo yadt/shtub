@@ -27,7 +27,7 @@ from integrationtest_support import IntegrationTestSupport
 class Test (IntegrationTestSupport):
     def test (self):
         test_dir = tempfile.mkdtemp()
-        self.write_expectations_json_file(test_dir, '[{\n'
+        self.write_stub_configurations_json_file(test_dir, '[{\n'
                                                     '    "command_input" : {\n'
                                                     '         "arguments": ["-arg1", "-arg2", "-arg3"],\n'
                                                     '         "command": "not_commandstub.py",\n'
@@ -56,14 +56,14 @@ class Test (IntegrationTestSupport):
         self.assertEqual(255, shell_process.returncode)
 
 
-    def write_expectations_json_file(self, test_dir, expectation_json):
+    def write_stub_configurations_json_file(self, test_dir, stub_configuration_json):
         test_execution_dir = join(test_dir, 'shtub')
         mkdir(test_execution_dir)
         
-        expectations_filename = join(test_execution_dir, 'expectations')
+        stub_configurations_filename = join(test_execution_dir, 'configured-stubs')
         
-        with open(expectations_filename, 'w') as expectations_file:
-            expectations_file.write(expectation_json)
+        with open(stub_configurations_filename, 'w') as stub_configurations_file:
+            stub_configurations_file.write(stub_configuration_json)
 
 
 if __name__ == '__main__':

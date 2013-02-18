@@ -18,7 +18,7 @@ import unittest
 
 from os.path import join
 
-from shtub import deserialize_expectations
+from shtub import deserialize_stub_configurations
 
 import integrationtest_support
 
@@ -41,30 +41,30 @@ class Test (integrationtest_support.IntegrationTestSupport):
         self.assertEqual(0, actual_return_code1)
         self.assertEqual(0, actual_return_code2)
 
-        expectations_filename = join(self.base_dir, 'shtub', 'expectations')
-        actual_expectations = deserialize_expectations(expectations_filename)
+        stub_configurations_filename = join(self.base_dir, 'shtub', 'configured-stubs')
+        actual_stub_configurations = deserialize_stub_configurations(stub_configurations_filename)
 
-        self.assertEqual(2, len(actual_expectations))
+        self.assertEqual(2, len(actual_stub_configurations))
 
-        actual_first_expectation = actual_expectations[0]
+        actual_first_stub_configuration = actual_stub_configurations[0]
 
-        self.assertEqual('stdin1', actual_first_expectation.command_input.stdin)
-        self.assertEqual(['-arg1', '-arg2', '-arg3'], actual_first_expectation.command_input.arguments)
-        self.assertEqual('command_stub1', actual_first_expectation.command_input.command)
+        self.assertEqual('stdin1', actual_first_stub_configuration.command_input.stdin)
+        self.assertEqual(['-arg1', '-arg2', '-arg3'], actual_first_stub_configuration.command_input.arguments)
+        self.assertEqual('command_stub1', actual_first_stub_configuration.command_input.command)
 
-        actual_first_answer = actual_first_expectation.next_answer()
+        actual_first_answer = actual_first_stub_configuration.next_answer()
 
         self.assertEqual('Hello world 1', actual_first_answer.stdout)
         self.assertEqual('Hello error 1', actual_first_answer.stderr)
         self.assertEqual(0, actual_first_answer.return_code)
 
-        actual_second_expectation = actual_expectations[1]
+        actual_second_stub_configuration = actual_stub_configurations[1]
 
-        self.assertEqual(['-arg6', '-arg7', '-arg8'], actual_second_expectation.command_input.arguments)
-        self.assertEqual('stdin2', actual_second_expectation.command_input.stdin)
-        self.assertEqual('command_stub2', actual_second_expectation.command_input.command)
+        self.assertEqual(['-arg6', '-arg7', '-arg8'], actual_second_stub_configuration.command_input.arguments)
+        self.assertEqual('stdin2', actual_second_stub_configuration.command_input.stdin)
+        self.assertEqual('command_stub2', actual_second_stub_configuration.command_input.command)
 
-        actual_second_answer = actual_second_expectation.next_answer()
+        actual_second_answer = actual_second_stub_configuration.next_answer()
 
         self.assertEqual('Hello world 2', actual_second_answer.stdout)
         self.assertEqual('Hello error 2', actual_second_answer.stderr)

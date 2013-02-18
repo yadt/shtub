@@ -75,7 +75,7 @@ class VerifierTest (unittest.TestCase):
 
     @patch('os.path.exists')
     @patch('shtub.verifier.deserialize_executions')
-    def test_should_raise_exception_when_recorded_call_does_not_fit_expectation (self, mock_deserialize, mock_exists):
+    def test_should_raise_exception_when_recorded_call_does_not_fit_stub_configuration (self, mock_deserialize, mock_exists):
         mock_exists.return_value = True
         verifier = Verifier('/hello/world')
         
@@ -90,7 +90,7 @@ class VerifierTest (unittest.TestCase):
 
     @patch('os.path.exists')
     @patch('shtub.verifier.deserialize_executions')
-    def test_should_raise_exception_when_second_recorded_call_does_not_fit_expectation (self, mock_deserialize, mock_exists):
+    def test_should_raise_exception_when_second_recorded_call_does_not_fit_stub_configuration (self, mock_deserialize, mock_exists):
         mock_exists.return_value = True
         verifier = Verifier('/hello/world')
         
@@ -108,7 +108,7 @@ class VerifierTest (unittest.TestCase):
 
     @patch('os.path.exists')
     @patch('shtub.verifier.deserialize_executions')
-    def test_should_verify_all_recorded_calls_when_all_recorded_calls_fit_expectation (self, mock_deserialize, mock_exists):
+    def test_should_verify_all_recorded_calls_when_all_recorded_calls_fit_stub_configuration (self, mock_deserialize, mock_exists):
         mock_exists.return_value = True
         verifier = Verifier('/hello/world')
         

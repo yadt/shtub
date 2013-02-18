@@ -35,8 +35,7 @@ class VerificationException (Exception):
 
 class Verifier (object):
     """
-        Verifies command stub expectations. Please use instances of this class
-        in "with" statements.
+        Verifies command stub executions. Please use instances of this class in "with" statements.
     """
     
     def __init__(self, basedir):
@@ -59,7 +58,7 @@ class Verifier (object):
         
         actual_execution = self.executions.pop(0)
         if actual_execution.command_input.command != command:
-            raise VerificationException('Execution does not fulfill expectation:\n'
+            raise VerificationException('Execution does not fulfill stub configuration:\n'
                                         'Expected command "%s", but got "%s"\n'
                                         % (command, actual_execution.command_input.command))
         
@@ -102,7 +101,7 @@ class Verifier (object):
         
         for execution in self.executions:
             if not execution.expected:
-                raise VerificationException('Unexpected %s: did not fulfill any expectation.' % str(execution))
+                raise VerificationException('Unexpected %s: did not fulfill any stub configuration.' % str(execution))
         
         return self
 
