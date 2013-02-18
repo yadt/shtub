@@ -32,7 +32,7 @@ __version__ = '${version}'
 BASEDIR = 'shtub'
 
 EXECUTIONS_FILENAME = join(BASEDIR, 'executions')
-CONFIGURED_STUBS_FILENAME = join(BASEDIR, 'configured-stubs')
+CONFIGURED_STUBS_FILENAME = join(BASEDIR, 'stub-configurations')
 LOCK_FILENAME = join(BASEDIR, 'lock')
 LOG_FILENAME = join(BASEDIR, 'log')
 STUBS_DIRECTORY = join(BASEDIR, 'stubs')

@@ -100,7 +100,7 @@ class Tests (unittest.TestCase):
 
         commandstub.dispatch(command_input)
 
-        self.assertEqual(call('shtub/configured-stubs'), mock_deserialize.call_args)
+        self.assertEqual(call('shtub/stub-configurations'), mock_deserialize.call_args)
 
 
     @patch('shtub.commandstub.unlock')

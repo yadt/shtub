@@ -34,7 +34,7 @@ class Test (integrationtest_support.IntegrationTestSupport):
             when.calling('command_stub').at_least_with_arguments('-arg1', '-arg2', '-arg3').and_input('stdin') \
                 .then_answer('Hello world.', 'Hello error!', 2)
 
-        stub_configurations_filename = join(self.base_dir, 'shtub', 'configured-stubs')
+        stub_configurations_filename = join(self.base_dir, 'shtub', 'stub-configurations')
         actual_stub_configurations = deserialize_stub_configurations(stub_configurations_filename)
 
         # then

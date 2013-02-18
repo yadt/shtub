@@ -60,7 +60,7 @@ class Test (IntegrationTestSupport):
         test_execution_dir = join(test_dir, 'shtub')
         mkdir(test_execution_dir)
         
-        stub_configurations_filename = join(test_execution_dir, 'configured-stubs')
+        stub_configurations_filename = join(test_execution_dir, 'stub-configurations')
         
         with open(stub_configurations_filename, 'w') as stub_configurations_file:
             stub_configurations_file.write(stub_configuration_json)

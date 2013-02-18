@@ -104,7 +104,7 @@ class FixtureTest (unittest.TestCase):
         with fixture as fix:
             self.assertEqual(fix, fixture)
 
-        self.assertEqual(call('/hello/world/shtub/configured-stubs', []), serialize_mock.call_args)
+        self.assertEqual(call('/hello/world/shtub/stub-configurations', []), serialize_mock.call_args)
 
 
     def test_should_return_stub_configuration_object (self):

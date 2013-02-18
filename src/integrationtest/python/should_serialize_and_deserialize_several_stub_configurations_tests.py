@@ -41,7 +41,7 @@ class Test (integrationtest_support.IntegrationTestSupport):
         self.assertEqual(0, actual_return_code1)
         self.assertEqual(0, actual_return_code2)
 
-        stub_configurations_filename = join(self.base_dir, 'shtub', 'configured-stubs')
+        stub_configurations_filename = join(self.base_dir, 'shtub', 'stub-configurations')
         actual_stub_configurations = deserialize_stub_configurations(stub_configurations_filename)
 
         self.assertEqual(2, len(actual_stub_configurations))
