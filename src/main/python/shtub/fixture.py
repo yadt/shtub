@@ -40,19 +40,7 @@ class Fixture (object):
         self.base_directory = base_directory
         self.stub_configurations = []
     
-    def expect (self, command, arguments, stdin=''):
-        """
-            creates a new stub configuration with the given properties and appends it
-            to the expectations, then returns the stub configuration for invocation
-            chaining.
-        """
 
-        stub_configuration = StubConfiguration(command, arguments, stdin)
-        self.stub_configurations.append(stub_configuration)
-
-        return stub_configuration
-
-    
     def calling (self, command):
         """
             creates a new StubConfiguration with the given command and appends it to

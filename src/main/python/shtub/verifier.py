@@ -65,28 +65,6 @@ class Verifier (object):
         return CommandInputVerifier(actual_execution.command_input)
     
     
-    def verify(self, command, arguments, stdin=None):
-        """
-            raises an exception when no more executions are available or
-            when the current execution does not fulfill the given
-            exception, otherwise it will pass and remove the current execution
-            from the list of executions.
-        """
-        expected_input = CommandInput(command, arguments, stdin)
-
-        if not self.executions:
-            raise VerificationException('No more further executions, when verifying %s' % expected_input)
-        
-        actual_execution = self.executions[0]
-        if not actual_execution.command_input.fulfills(expected_input):
-            raise VerificationException('Execution does not fulfill expected_input:\n'
-                                        'Expected %s\n'
-                                        'Actual   %s\n'
-                                        % (expected_input, actual_execution))
-        
-        self.executions = self.executions[1:]
-    
-    
     def __enter__ (self):
         """
             since this class is designed to be integrated in a "with" block it
