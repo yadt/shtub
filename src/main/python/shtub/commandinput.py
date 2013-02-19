@@ -58,9 +58,10 @@ class CommandInput (object):
         
         if self.command != other.command:
             return False
-        
-        if other.stdin != self.stdin:
-            return False
+
+        if other.stdin is not None:
+            if other.stdin != self.stdin:
+                return False
         
         for argument in other.arguments:
             if argument not in self.arguments:

@@ -31,7 +31,7 @@ class FixtureTest (unittest.TestCase):
 
     def test_should_append_a_new_stub_configuration(self):
         fixture = Fixture('/test123')
-        fixture.expect('any_command', ['any_arg0', 'any_arg1', 'any_arg2'], 'any_stdin')
+        fixture.calling('any_command').at_least_with_arguments('any_arg0', 'any_arg1', 'any_arg2').and_input('any_stdin')
 
         actual_stub_configurations = fixture.stub_configurations
         
@@ -39,12 +39,12 @@ class FixtureTest (unittest.TestCase):
 
         actual_stub_configuration = actual_stub_configurations[0]
 
-        self.assertEqual('any_command', actual_stub_configuration.command)
-        self.assertEqual(['any_arg0', 'any_arg1', 'any_arg2'], actual_stub_configuration.arguments)
-        self.assertEqual('any_stdin', actual_stub_configuration.stdin)
+        self.assertEqual('any_command', actual_stub_configuration.command_input.command)
+        self.assertEqual(['any_arg0', 'any_arg1', 'any_arg2'], actual_stub_configuration.command_input.arguments)
+        self.assertEqual('any_stdin', actual_stub_configuration.command_input.stdin)
 
 
-    def test_should_append_a_new_stub_configuration(self):
+    def test_should_append_a_new_stub_configuration_with_default_stdin_and_arguments(self):
         fixture = Fixture('/test123')
 
         actual_return_value = fixture.calling('any_command')
@@ -57,7 +57,7 @@ class FixtureTest (unittest.TestCase):
         self.assertEqual(actual_return_value, actual_stub_configuration)
         self.assertEqual('any_command', actual_stub_configuration.command_input.command)
         self.assertEqual([], actual_stub_configuration.command_input.arguments)
-        self.assertEqual('', actual_stub_configuration.command_input.stdin)
+        self.assertEqual(None, actual_stub_configuration.command_input.stdin)
 
 
     @patch('shtub.fixture.serialize_executions')

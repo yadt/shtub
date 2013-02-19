@@ -29,7 +29,7 @@ class StubConfiguration(object):
         Represents the configuration of a command stub and contains the corresponding answers.
     """
     
-    def __init__ (self, command, arguments=[], stdin='', answers=[], initial_answer=0):
+    def __init__(self, command, arguments=[], stdin=None, answers=[], initial_answer=0):
         """
             will initialize a new object with the given properties.
             answers and initial_answer are not mandatory.
@@ -37,7 +37,7 @@ class StubConfiguration(object):
         
         self.command_input = CommandInput(command, arguments, stdin)
         
-        self.answers        = []
+        self.answers = []
         self.current_answer = initial_answer
         
         for answer in answers:
@@ -46,7 +46,7 @@ class StubConfiguration(object):
         self.and_input = self.with_input
     
     
-    def as_dictionary (self):
+    def as_dictionary(self):
         """
             returns a dictionary representation of this stub configuration.
         """
@@ -57,14 +57,14 @@ class StubConfiguration(object):
             answer_dictionary = answer.as_dictionary()
             answers_list.append(answer_dictionary)
         
-        result = {'command_input'  : self.command_input.as_dictionary(),
-                  'answers'        : answers_list,
-                  'current_answer' : self.current_answer}
+        result = {'command_input': self.command_input.as_dictionary(),
+                  'answers': answers_list,
+                  'current_answer': self.current_answer}
                 
         return result
 
 
-    def next_answer (self):
+    def next_answer(self):
         """
             returns the next answer in the list of answers or if the end of the
             list is reached it will repeatedly return the last answer of the

@@ -174,6 +174,10 @@ class StubConfigurationTests (unittest.TestCase):
         self.assertEqual(stub_configuration, actual_return_value)
         self.assertEqual(['-arg1', '-arg2', '-arg3'], stub_configuration.command_input.arguments)
 
+    def test_should_set_empty_stdin_as_default(self):
+        stub_configuration = StubConfiguration('any_command')
+
+        self.assertEqual(None, stub_configuration.command_input.stdin)
 
     def test_should_set_stdin (self):
         stub_configuration = StubConfiguration('any_command')

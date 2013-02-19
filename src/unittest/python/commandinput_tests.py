@@ -63,6 +63,13 @@ class CommandInputTests (unittest.TestCase):
         self.assertFalse(command_input1 == command_input2, 'comparison of command')
 
 
+    def test_should_return_true_when_stdin_is_none(self):
+        command_input1 = CommandInput('any_command', ['argument'], 'any_stdin')
+        command_input2 = CommandInput('any_command', ['argument'], None)
+
+        self.assertTrue(command_input1.fulfills(command_input2))
+
+
     def test_should_return_false_when_objects_stdin_is_not_equal (self):
         command_input1 = CommandInput('any_command', ['any_arg1', 'any_arg2'], 'any_stdin')
         command_input2 = CommandInput('any_command', ['any_arg1', 'any_arg2'], 'other_stdin')
