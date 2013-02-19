@@ -31,6 +31,7 @@ name = 'shtub'
 authors = [Author('Alexander Metzner', 'alexander.metzner@gmail.com'),
            Author('Michael Gruber', 'aelgru@gmail.com'),
            Author('Maximilien Riehl', 'maximilien.riehl@gmail.com'),
+           Author('Marcel Wolf', 'marcel.wolf@immobilienscout24.de'),
            Author('Udo Juettner', 'udo.juettner@gmail.com')]
 license = 'GNU GPL v3'
 summary = 'shtub - shell command stub'

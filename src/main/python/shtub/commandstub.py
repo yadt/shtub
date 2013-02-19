@@ -134,7 +134,7 @@ def read_stdin ():
     """
         waits READ_STDIN_TIMEOUT_IN_SECONDS seconds for input on stdin and
         is going to return the complete input if there is any. If there is no
-        input it is going to return None.
+        input it is going to returns an empty string.
     """
     read_list, _, _ = select([sys.stdin], [], [], READ_STDIN_TIMEOUT_IN_SECONDS)
 

@@ -19,7 +19,7 @@
     a list of answers and the index of the current answer.
 """
 
-__author__ = 'Alexander Metzner, Michael Gruber, Udo Juettner'
+__author__ = 'Alexander Metzner, Michael Gruber, Udo Juettner, Maximilien Riehl, Marcel Wolf'
 
 from shtub.answer import Answer
 from shtub.commandinput import CommandInput
