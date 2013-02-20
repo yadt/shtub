@@ -18,20 +18,22 @@ import unittest
 
 from mock import patch, call
 
-from shtub.verifier import Verifier, CommandInputVerifier, VerificationException
+from shtub.verification.verifierloader import VerifierLoader
+from shtub.verification import VerificationException
+from shtub.verification.commandinputverifier import CommandInputVerifier
 from shtub.execution import Execution
 from shtub.commandinput import CommandInput
 
 
 class VerifierTest (unittest.TestCase):
     def test_should_create_object_with_given_base_dir (self):
-        actual = Verifier('/abc/def')
+        actual = VerifierLoader('/abc/def')
         
         self.assertEqual('/abc/def', actual.base_dir)
 
 
     def test_should_initialize_recoreded_calls (self):
-        verifier = Verifier('/abc/def')
+        verifier = VerifierLoader('/abc/def')
 
         actual_executions = verifier.executions
         
@@ -41,17 +43,17 @@ class VerifierTest (unittest.TestCase):
     @patch('os.path.exists')
     def test_should_raise_exception_when_recorded_calls_file_does_not_exist (self, mock_exists):
         mock_exists.return_value = False
-        verifier = Verifier('/spam/eggs')
+        verifier = VerifierLoader('/spam/eggs')
         
         self.assertRaises(VerificationException, verifier.__enter__)
         self.assertEqual(call('/spam/eggs/shtub/executions'), mock_exists.call_args)
 
 
     @patch('os.path.exists')
-    @patch('shtub.verifier.deserialize_executions')
+    @patch('shtub.verification.verifierloader.deserialize_executions')
     def test_should_deserialize_recorded_calls_and_return_verifier_itself_when_entering_with_statement (self, mock_deserialize, mock_exists):
         mock_exists.return_value = True
-        verifier = Verifier('/hello/world')
+        verifier = VerifierLoader('/hello/world')
                 
         with verifier as veri:
             self.assertEqual(veri, verifier)
@@ -60,10 +62,10 @@ class VerifierTest (unittest.TestCase):
 
 
     @patch('os.path.exists')
-    @patch('shtub.verifier.deserialize_executions')
+    @patch('shtub.verification.verifierloader.deserialize_executions')
     def test_should_raise_exception_when_execution_has_not_been_accepted (self, mock_deserialize, mock_exists):
         mock_exists.return_value = True
-        verifier = Verifier('/hello/world')
+        verifier = VerifierLoader('/hello/world')
         
         execution1 = Execution('any_command1', ['1any_arg1', '1any_arg2'], 'any_stdin1')
         
@@ -73,10 +75,10 @@ class VerifierTest (unittest.TestCase):
 
 
     @patch('os.path.exists')
-    @patch('shtub.verifier.deserialize_executions')
+    @patch('shtub.verification.verifierloader.deserialize_executions')
     def test_should_raise_exception_when_the_second_execution_has_not_been_accepted (self, mock_deserialize, mock_exists):
         mock_exists.return_value = True
-        verifier = Verifier('/hello/world')
+        verifier = VerifierLoader('/hello/world')
         
         execution1 = Execution('any_command1', ['1any_arg1', '1any_arg2'], 'any_stdin1', expected=True)
         execution2 = Execution('any_command2', ['2any_arg1', '2any_arg2'], 'any_stdin2')
@@ -87,10 +89,10 @@ class VerifierTest (unittest.TestCase):
 
 
     @patch('os.path.exists')
-    @patch('shtub.verifier.deserialize_executions')
+    @patch('shtub.verification.verifierloader.deserialize_executions')
     def test_should_verify_command_has_been_called (self, mock_deserialize, mock_exists):
         mock_exists.return_value = True
-        verifier = Verifier('/hello/world')
+        verifier = VerifierLoader('/hello/world')
         
         stub_execution = Execution('command', ['-arg1', '-arg2'], 'stdin', expected=True)
         
@@ -104,10 +106,10 @@ class VerifierTest (unittest.TestCase):
 
 
     @patch('os.path.exists')
-    @patch('shtub.verifier.deserialize_executions')
+    @patch('shtub.verification.verifierloader.deserialize_executions')
     def test_should_raise_exception_when_expected_command_has_not_been_executed (self, mock_deserialize, mock_exists):
         mock_exists.return_value = True
-        verifier = Verifier('/hello/world')
+        verifier = VerifierLoader('/hello/world')
         
         stub_execution = Execution('command', ['-arg1', '-arg2'], 'stdin', expected=True)
         
@@ -118,10 +120,10 @@ class VerifierTest (unittest.TestCase):
 
 
     @patch('os.path.exists')
-    @patch('shtub.verifier.deserialize_executions')
+    @patch('shtub.verification.verifierloader.deserialize_executions')
     def test_should_raise_exception_when_no_recorded_calls_available (self, mock_deserialize, mock_exists):
         mock_exists.return_value = True
-        verifier = Verifier('/hello/world')
+        verifier = VerifierLoader('/hello/world')
         
         mock_deserialize.return_value = []
 
@@ -130,10 +132,10 @@ class VerifierTest (unittest.TestCase):
 
 
     @patch('os.path.exists')
-    @patch('shtub.verifier.deserialize_executions')
+    @patch('shtub.verification.verifierloader.deserialize_executions')
     def test_should_raise_exception_when_one_more_recorded_calls_available_than_verified (self, mock_deserialize, mock_exists):
         mock_exists.return_value = True
-        verifier = Verifier('/hello/world')
+        verifier = VerifierLoader('/hello/world')
         
         execution1 = Execution('command', ['-arg1', '-arg2'], 'stdin', expected=True)
         execution2 = Execution('command', ['-arg1', '-arg2'], 'stdin', expected=True)
@@ -146,10 +148,10 @@ class VerifierTest (unittest.TestCase):
 
 
     @patch('os.path.exists')
-    @patch('shtub.verifier.deserialize_executions')
+    @patch('shtub.verification.verifierloader.deserialize_executions')
     def test_should_raise_exception_when_more_recorded_calls_available_than_verified (self, mock_deserialize, mock_exists):
         mock_exists.return_value = True
-        verifier = Verifier('/hello/world')
+        verifier = VerifierLoader('/hello/world')
         
         execution1 = Execution('command', ['-arg1', '-arg2'], 'stdin', expected=True)
         execution2 = Execution('command', ['-arg1', '-arg2'], 'stdin', expected=True)
@@ -163,10 +165,10 @@ class VerifierTest (unittest.TestCase):
 
 
     @patch('os.path.exists')
-    @patch('shtub.verifier.deserialize_executions')
+    @patch('shtub.verification.verifierloader.deserialize_executions')
     def test_should_return_false_when_an_exception_occured_in_the_with_statement (self, mock_deserialize, mock_exists):
         mock_exists.return_value = True
-        verifier = Verifier('/hello/world')
+        verifier = VerifierLoader('/hello/world')
         
         execution1 = Execution('command', ['-arg1', '-arg2'], 'stdin', expected=True)
         execution2 = Execution('command', ['-arg1', '-arg2'], 'stdin', expected=True)

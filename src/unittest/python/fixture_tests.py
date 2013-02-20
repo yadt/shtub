@@ -19,7 +19,7 @@ import unittest
 from mock import patch, call
 
 from shtub.fixture import Fixture
-from shtub.stubconfiguration import StubConfiguration
+
 
 class FixtureTest (unittest.TestCase):
     def test_should_create_object_with_given_base_dir_and_empty_list_of_stub_configurations(self):

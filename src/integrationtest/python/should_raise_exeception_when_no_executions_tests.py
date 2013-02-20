@@ -18,7 +18,7 @@ import unittest
 
 import integrationtest_support
 
-from shtub.verifier import VerificationException
+from shtub.verification import VerificationException
 
 class Tests (integrationtest_support.IntegrationTestSupport):
     def test (self):

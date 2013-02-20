@@ -20,7 +20,7 @@ from os.path import join
 
 import integrationtest_support
 
-from shtub.verifier import VerificationException
+from shtub.verification import VerificationException
 
 class Test (integrationtest_support.IntegrationTestSupport):
     def test (self):

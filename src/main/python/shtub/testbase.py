@@ -17,13 +17,14 @@
 __author__ = 'Alexander Metzner, Michael Gruber, Udo Juettner'
 
 import unittest
-import os
 import subprocess
 import tempfile
 
+import os
 from shtub import BASEDIR, STUBS_DIRECTORY
 from shtub.fixture import Fixture
-from shtub.verifier import Verifier
+from shtub.verification.verifierloader import VerifierLoader
+
 
 STUB_SCRIPT_CONTENT = """#!/usr/bin/env python
 import shtub.commandstub
@@ -84,7 +85,7 @@ class IntegrationTestBase (unittest.TestCase):
 
 
     def verify (self):
-        return Verifier(self.base_dir)
+        return VerifierLoader(self.base_dir)
 
 
     def prepare_testbed (self, env, stubs):
