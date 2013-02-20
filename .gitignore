@@ -34,5 +34,6 @@ pip-log.txt
 *.iml
 
 # Virtualenv files
-ve*
+ve
+venv
 
