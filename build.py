@@ -15,7 +15,7 @@
 #   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import sys
-from pythonbuilder.core import use_plugin, init, Author
+from pybuilder.core import use_plugin, init, Author
 
 use_plugin('filter_resources')
 
