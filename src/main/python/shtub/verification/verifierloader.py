@@ -27,19 +27,37 @@ from shtub.verification.commandinputverifier import CommandInputVerifier
 from shtub.verification import VerificationException
 
 
+class Verifier (object):
 
-class VerifierLoader (object):
-    """
-        Verifies command stub executions. Please use instances of this class in "with" statements.
-    """
-    
-    def __init__(self, basedir):
-        """
-            initializes a new verifier using the given base directory.
-        """
-        self.base_dir = basedir
-        self.executions = []
+    def __init__(self, executions):
+        self.executions = executions
 
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exception_type, exception_value, traceback):
+        """
+            since this class is designed to be integrated in a "with" block it
+            is implemented, but has no effect.
+
+            @return: False, when exception_type, exception_value or traceback given,
+                     otherwise None
+        """
+
+        if exception_type or exception_value or traceback:
+            return False
+
+        count_of_executions = len(self.executions)
+        if count_of_executions > 0:
+            if count_of_executions == 1:
+                message = 'There is an unverified execution:\n'
+            else:
+                message = 'There are %s unverified executions:\n' % count_of_executions
+
+            for execution in self.executions:
+                message += "    %s\n" % str(execution)
+
+            raise VerificationException(message)
 
     def called(self, command):
         """
@@ -50,57 +68,56 @@ class VerifierLoader (object):
         """
         if not self.executions:
             raise VerificationException('No more further executions: command "%s" can not be verified.' % command)
-        
+
         actual_execution = self.executions.pop(0)
         if actual_execution.command_input.command != command:
             raise VerificationException('Execution does not fulfill stub configuration:\n'
                                         'Expected command "%s", but got "%s"\n'
                                         % (command, actual_execution.command_input.command))
-        
+
         return CommandInputVerifier(actual_execution.command_input)
-    
-    
+
+    def finished(self):
+        """
+            removes all left executions.
+        """
+        self.executions = []
+
+
+class VerifierLoader (Verifier):
+    """
+        Verifies command stub executions. Please use instances of this class in "with" statements.
+    """
+    def __init__(self, basedir):
+        """
+            initializes a new verifier using the given base directory.
+        """
+        self.base_dir = basedir
+        self.executions = []
+
     def __enter__ (self):
         """
             since this class is designed to be integrated in a "with" block it
             will load the actual executions and return itself.
         """
         filename = os.path.join(self.base_dir, EXECUTIONS_FILENAME)
-        
+
         if not os.path.exists(filename):
             raise VerificationException('No executions found. Stubbed commands have never been called.')
-    
+
         self.executions = deserialize_executions(filename)
-        
+
         for execution in self.executions:
             if not execution.expected:
                 raise VerificationException('Unexpected %s: did not fulfill any stub configuration.' % str(execution))
-        
+
         return self
 
+    def filter_by_argument(self, argument_name):
+        matching_executions = []
 
-    def __exit__(self, exception_type, exception_value, traceback):
-        """
-            since this class is designed to be integrated in a "with" block it
-            is implemented, but has no effect.
+        for execution in self.executions:
+            if argument_name in execution.command_input.arguments:
+                matching_executions.append(execution)
 
-            @return: False, when exception_type, exception_value or traceback given,
-                     otherwise None
-        """
-        
-        if exception_type or exception_value or traceback:
-            return False
-        
-        count_of_executions = len(self.executions)
-        if count_of_executions > 0:
-            if count_of_executions == 1:
-                message = 'There is an unverified execution:\n'
-            else:
-                message = 'There are %s unverified executions:\n' % count_of_executions
-                
-            for execution in self.executions:
-                message += "    %s\n" % str(execution)
-                
-            raise VerificationException(message)
-
-
+        return Verifier(matching_executions)

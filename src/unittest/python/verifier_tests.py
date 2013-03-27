@@ -18,14 +18,14 @@ import unittest
 
 from mock import patch, call
 
-from shtub.verification.verifierloader import VerifierLoader
+from shtub.verification.verifierloader import VerifierLoader, Verifier
 from shtub.verification import VerificationException
 from shtub.verification.commandinputverifier import CommandInputVerifier
 from shtub.execution import Execution
 from shtub.commandinput import CommandInput
 
 
-class VerifierTest (unittest.TestCase):
+class VerifierLoaderTest (unittest.TestCase):
     def test_should_create_object_with_given_base_dir (self):
         actual = VerifierLoader('/abc/def')
         
@@ -66,9 +66,7 @@ class VerifierTest (unittest.TestCase):
     def test_should_raise_exception_when_execution_has_not_been_accepted (self, mock_deserialize, mock_exists):
         mock_exists.return_value = True
         verifier = VerifierLoader('/hello/world')
-        
         execution1 = Execution('any_command1', ['1any_arg1', '1any_arg2'], 'any_stdin1')
-        
         mock_deserialize.return_value = [execution1]
         
         self.assertRaises(VerificationException, verifier.__enter__)
@@ -87,17 +85,105 @@ class VerifierTest (unittest.TestCase):
         
         self.assertRaises(VerificationException, verifier.__enter__)
 
+    @patch('os.path.exists')
+    @patch('shtub.verification.verifierloader.deserialize_executions')
+    def test_should_return_new_verifier_object(self, mock_deserialize, mock_exists):
+        mock_exists.return_value = True
+        mock_deserialize.return_value = []
+
+        verifier = VerifierLoader('/hello/world')
+
+        with verifier as verify:
+            self.assertTrue(verify.filter_by_argument('foobar') is not verify, "should not return itself")
+
+
+    @patch('os.path.exists')
+    @patch('shtub.verification.verifierloader.deserialize_executions')
+    def test_should_return_empty_verifier_when_filtering_by_argument_without_executions(self, mock_deserialize, mock_exists):
+        mock_exists.return_value = True
+        mock_deserialize.return_value = []
+
+        verifier = VerifierLoader('/hello/world')
+
+        with verifier as verify:
+            with verify.filter_by_argument('foobar') as verify_foobar:
+
+                self.assertEqual([], verify_foobar.executions)
+
+    @patch('os.path.exists')
+    @patch('shtub.verification.verifierloader.deserialize_executions')
+    def test_should_return_verifier_with_one_matching_execution_when_filtering_by_argument(self, mock_deserialize, mock_exists):
+        mock_exists.return_value = True
+        execution1 = Execution('command', ['-arg1', '-arg2'], 'stdin', expected=True)
+        mock_deserialize.return_value = [execution1]
+
+        verifier = VerifierLoader('/hello/world')
+
+        verify = verifier.__enter__()
+
+        with verify.filter_by_argument('-arg1') as verify_foobar:
+            self.assertEqual([execution1], verify_foobar.executions)
+            verify_foobar.finished()
+
+    @patch('os.path.exists')
+    @patch('shtub.verification.verifierloader.deserialize_executions')
+    def test_should_return_empty_verifier_when_filtering_by_argument_not_matching_execution(self, mock_deserialize, mock_exists):
+        mock_exists.return_value = True
+        execution1 = Execution('command', ['-arg1', '-arg2'], 'stdin', expected=True)
+        mock_deserialize.return_value = [execution1]
+
+        verifier = VerifierLoader('/hello/world')
+
+        verify = verifier.__enter__()
+
+        with verify.filter_by_argument('foobar') as verify_foobar:
+            self.assertEqual([], verify_foobar.executions)
+            verify_foobar.finished()
+
+    @patch('os.path.exists')
+    @patch('shtub.verification.verifierloader.deserialize_executions')
+    def test_should_return_verifier_with_one_matching_execution_when_filtering_two_executions_by_argument(self, mock_deserialize, mock_exists):
+        mock_exists.return_value = True
+        execution1 = Execution('command', ['-arg1', '-arg2'], 'stdin', expected=True)
+        execution2 = Execution('command', ['-arg2', '-arg3'], 'stdin', expected=True)
+        mock_deserialize.return_value = [execution1, execution2]
+
+        verifier = VerifierLoader('/hello/world')
+
+        verify = verifier.__enter__()
+
+        with verify.filter_by_argument('-arg1') as verify_foobar:
+            self.assertEqual([execution1], verify_foobar.executions)
+            verify_foobar.finished()
+
+    @patch('os.path.exists')
+    @patch('shtub.verification.verifierloader.deserialize_executions')
+    def test_should_return_verifier_with_matching_executions_when_filtering_by_argument(self, mock_deserialize, mock_exists):
+        mock_exists.return_value = True
+        execution1 = Execution('command', ['-arg1', '-arg2'], 'stdin', expected=True)
+        execution2 = Execution('command', ['-arg1', '-arg3'], 'stdin', expected=True)
+        execution3 = Execution('command', ['-arg2', '-arg4'], 'stdin', expected=True)
+        execution4 = Execution('command', ['-arg3', '-arg4'], 'stdin', expected=True)
+        mock_deserialize.return_value = [execution1, execution2, execution3, execution4]
+
+        verifier = VerifierLoader('/hello/world')
+
+        verify = verifier.__enter__()
+
+        with verify.filter_by_argument('-arg2') as verify_foobar:
+            self.assertEqual([execution1, execution3], verify_foobar.executions)
+            verify_foobar.finished()
 
     @patch('os.path.exists')
     @patch('shtub.verification.verifierloader.deserialize_executions')
     def test_should_verify_command_has_been_called (self, mock_deserialize, mock_exists):
         mock_exists.return_value = True
         verifier = VerifierLoader('/hello/world')
-        
+
         stub_execution = Execution('command', ['-arg1', '-arg2'], 'stdin', expected=True)
-        
+
         mock_deserialize.return_value = [stub_execution]
-        
+
         with verifier as verify:
             called_command = verify.called('command')
             self.assertEqual(0, len(verify.executions))
@@ -105,82 +191,19 @@ class VerifierTest (unittest.TestCase):
         self.assertEqual(call('/hello/world/shtub/executions'), mock_deserialize.call_args)
 
 
-    @patch('os.path.exists')
-    @patch('shtub.verification.verifierloader.deserialize_executions')
-    def test_should_raise_exception_when_expected_command_has_not_been_executed (self, mock_deserialize, mock_exists):
-        mock_exists.return_value = True
-        verifier = VerifierLoader('/hello/world')
-        
-        stub_execution = Execution('command', ['-arg1', '-arg2'], 'stdin', expected=True)
-        
-        mock_deserialize.return_value = [stub_execution]
+class VerifierTests (unittest.TestCase):
 
-        verify = verifier.__enter__()
-        self.assertRaises(VerificationException, verifier.called, 'other_command')
+    def test_should_initialize_with_empty_list_of_executions(self):
+        verifier = Verifier([])
 
+        self.assertEqual([], verifier.executions)
 
-    @patch('os.path.exists')
-    @patch('shtub.verification.verifierloader.deserialize_executions')
-    def test_should_raise_exception_when_no_recorded_calls_available (self, mock_deserialize, mock_exists):
-        mock_exists.return_value = True
-        verifier = VerifierLoader('/hello/world')
-        
-        mock_deserialize.return_value = []
+    def test_should_return_self(self):
+        verifier = Verifier([])
 
-        with verifier as verify:
-            self.assertRaises(VerificationException, verifier.called, 'other_command')
+        actual_object = verifier.__enter__()
 
-
-    @patch('os.path.exists')
-    @patch('shtub.verification.verifierloader.deserialize_executions')
-    def test_should_raise_exception_when_one_more_recorded_calls_available_than_verified (self, mock_deserialize, mock_exists):
-        mock_exists.return_value = True
-        verifier = VerifierLoader('/hello/world')
-        
-        execution1 = Execution('command', ['-arg1', '-arg2'], 'stdin', expected=True)
-        execution2 = Execution('command', ['-arg1', '-arg2'], 'stdin', expected=True)
-        
-        mock_deserialize.return_value = [execution1, execution2]
-        
-        verify = verifier.__enter__()
-        verify.called('command')
-        self.assertRaises(VerificationException, verify.__exit__, None, None, None)
-
-
-    @patch('os.path.exists')
-    @patch('shtub.verification.verifierloader.deserialize_executions')
-    def test_should_raise_exception_when_more_recorded_calls_available_than_verified (self, mock_deserialize, mock_exists):
-        mock_exists.return_value = True
-        verifier = VerifierLoader('/hello/world')
-        
-        execution1 = Execution('command', ['-arg1', '-arg2'], 'stdin', expected=True)
-        execution2 = Execution('command', ['-arg1', '-arg2'], 'stdin', expected=True)
-        stub_execution3 = Execution('command', ['-arg1', '-arg2'], 'stdin', expected=True)
-        
-        mock_deserialize.return_value = [execution1, execution2, stub_execution3]
-        
-        verify = verifier.__enter__()
-        verify.called('command')
-        self.assertRaises(VerificationException, verify.__exit__, None, None, None)
-
-
-    @patch('os.path.exists')
-    @patch('shtub.verification.verifierloader.deserialize_executions')
-    def test_should_return_false_when_an_exception_occured_in_the_with_statement (self, mock_deserialize, mock_exists):
-        mock_exists.return_value = True
-        verifier = VerifierLoader('/hello/world')
-        
-        execution1 = Execution('command', ['-arg1', '-arg2'], 'stdin', expected=True)
-        execution2 = Execution('command', ['-arg1', '-arg2'], 'stdin', expected=True)
-        
-        mock_deserialize.return_value = [execution1, execution2]
-        
-        verify = verifier.__enter__()
-        verify.called('command')
-        
-        actual_result = verify.__exit__('exception_type', 'exception_value', 'traceback')
-        
-        self.assertFalse(actual_result)
+        self.assertTrue(verifier is actual_object)
 
 
 class CommandInputVerifierTests (unittest.TestCase):
@@ -290,4 +313,60 @@ class CommandInputVerifierTests (unittest.TestCase):
         wrapper = CommandInputVerifier(command_input)
 
         self.assertEqual(wrapper.and_at_least_one_argument_matches, wrapper.at_least_one_argument_matches)
+
+    def test_should_pop_verified_execution (self):
+        stub_execution = Execution('command', ['-arg1', '-arg2'], 'stdin', expected=True)
+        verifier = Verifier([stub_execution])
+
+        verifier.called('command')
+
+        self.assertEqual(0, len(verifier.executions))
+
+    def test_should_raise_exception_when_expected_command_has_not_been_executed (self):
+        stub_execution = Execution('command', ['-arg1', '-arg2'], 'stdin', expected=True)
+        verifier = Verifier([stub_execution])
+
+        self.assertRaises(VerificationException, verifier.called, 'other_command')
+
+    def test_should_raise_exception_when_no_recorded_calls_available (self):
+        verifier = Verifier([])
+
+        self.assertRaises(VerificationException, verifier.called, 'other_command')
+
+    def test_should_raise_exception_when_one_more_recorded_calls_available_than_verified (self):
+        execution1 = Execution('command', ['-arg1', '-arg2'], 'stdin', expected=True)
+        execution2 = Execution('command', ['-arg1', '-arg2'], 'stdin', expected=True)
+        verifier = Verifier([execution1, execution2])
+
+        verifier.called('command')
+
+        self.assertRaises(VerificationException, verifier.__exit__, None, None, None)
+
+    def test_should_raise_exception_when_more_recorded_calls_available_than_verified (self):
+        execution1 = Execution('command', ['-arg1', '-arg2'], 'stdin', expected=True)
+        execution2 = Execution('command', ['-arg1', '-arg2'], 'stdin', expected=True)
+        execution3 = Execution('command', ['-arg1', '-arg2'], 'stdin', expected=True)
+        verifier = Verifier([execution1, execution2, execution3])
+
+        verifier.called('command')
+
+        self.assertRaises(VerificationException, verifier.__exit__, None, None, None)
+
+    def test_should_return_false_when_an_exception_occured_in_the_with_statement (self):
+        execution1 = Execution('command', ['-arg1', '-arg2'], 'stdin', expected=True)
+        execution2 = Execution('command', ['-arg1', '-arg2'], 'stdin', expected=True)
+        verifier = Verifier([execution1, execution2])
+
+        verifier.called('command')
+        actual_result = verifier.__exit__('exception_type', 'exception_value', 'traceback')
+
+        self.assertFalse(actual_result)
+
+    def test_should_not_raise_verification_exception_when_not_verifying_anything_else(self):
+        execution1 = Execution('command', ['-arg1', '-arg2'], 'stdin', expected=True)
+        execution2 = Execution('command', ['-arg1', '-arg2'], 'stdin', expected=True)
+        verifier = Verifier([execution1, execution2])
+
+        with verifier as verify:
+            verify.finished()
 
