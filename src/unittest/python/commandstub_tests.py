@@ -13,7 +13,7 @@
 #
 #   You should have received a copy of the GNU General Public License
 #   along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
+from __future__ import division
 import logging
 import sys
 import unittest
@@ -75,6 +75,27 @@ class Tests (unittest.TestCase):
         commandstub.dispatch(command_input)
 
         self.assertEqual(call(answer), mock_answer.call_args)
+
+
+    @patch('time.sleep')
+    @patch('shtub.commandstub.record_execution')
+    @patch('shtub.commandstub.send_answer')
+    @patch('logging.info')
+    @patch('shtub.commandstub.deserialize_stub_configurations')
+    def test_should_wait_when_answer_fulfills_stub_configurations_and_needs_waiting (self, \
+                                                                             mock_deserialize, mock_logging_info, mock_answer, mock_record, mock_sleep):
+
+        answer = Answer('Hello world', 'Hello error', 15, milliseconds_to_wait=5)
+        stub_configuration = StubConfiguration('command', ['-arg1', '-arg2', '-arg3'], 'stdin')
+        stub_configuration.then(answer)
+        mock_deserialize.return_value = [stub_configuration]
+
+        command_input = CommandInput('command', ['-arg1', '-arg2', '-arg3'], 'stdin')
+
+        commandstub.dispatch(command_input)
+
+        self.assertEqual(call(answer), mock_answer.call_args)
+        self.assertEqual(call(5/1000), mock_sleep.call_args)
 
 
     @patch('sys.exit')

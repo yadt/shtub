@@ -93,31 +93,31 @@ class StubConfiguration(object):
         return self
     
     
-    def then_answer (self, stdout=None, stderr=None, return_code=0):
+    def then_answer (self, stdout=None, stderr=None, return_code=0, milliseconds_to_wait=None):
         """
             a convenience method to "then" which will create a new answer
             object with the given properties. 
         """
         
-        return self.then(Answer(stdout, stderr, return_code))
+        return self.then(Answer(stdout, stderr, return_code, milliseconds_to_wait))
         
         
-    def then_return (self, return_code):
+    def then_return (self, return_code, milliseconds_to_wait=None):
         """
             a convenience method to "then" which will create a new answer
             object with the given return_code. 
         """
         
-        return self.then_answer(return_code=return_code)
+        return self.then_answer(return_code=return_code, milliseconds_to_wait=milliseconds_to_wait)
 
 
-    def then_write (self, stdout=None, stderr=None):
+    def then_write (self, stdout=None, stderr=None, milliseconds_to_wait=None):
         """
             a convenience method to "then" which will create a new answer
             object with the given stdout and stderr output. 
         """
         
-        return self.then_answer(stdout=stdout, stderr=stderr)
+        return self.then_answer(stdout=stdout, stderr=stderr, milliseconds_to_wait=milliseconds_to_wait)
     
     
     def at_least_with_arguments (self, *arguments):

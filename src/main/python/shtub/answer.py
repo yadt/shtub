@@ -26,13 +26,14 @@ class Answer (object):
         represents a answer the command stub is sending back when an stub configuration is fulfilled.
     """
     
-    def __init__(self, stdout, stderr, return_code):
+    def __init__(self, stdout, stderr, return_code, milliseconds_to_wait=None):
         """
             initializes with the given properties.
         """
         self.stdout      = stdout
         self.stderr      = stderr
         self.return_code = return_code
+        self.milliseconds_to_wait=milliseconds_to_wait
     
     
     def as_dictionary (self):
@@ -41,7 +42,8 @@ class Answer (object):
         """
         return {'stdout'      : self.stdout,
                 'stderr'      : self.stderr,
-                'return_code' : self.return_code}
+                'return_code' : self.return_code,
+                'milliseconds_to_wait': self.milliseconds_to_wait}
 
 
     def __str__ (self):
@@ -72,4 +74,5 @@ class Answer (object):
         
         return Answer(dictionary['stdout'],
                       dictionary['stderr'],
-                      dictionary['return_code'])
+                      dictionary['return_code'],
+                      dictionary['milliseconds_to_wait'])

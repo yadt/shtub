@@ -21,33 +21,37 @@ from shtub.answer import Answer
 
 class AnswerTest (unittest.TestCase):
     def test_should_create_new_instance_with_given_values (self):
-        actual = Answer('Hello world!', 'Hello error!', 8)
+        actual = Answer('Hello world!', 'Hello error!', 8, milliseconds_to_wait=1337)
 
         self.assertEqual('Hello world!', actual.stdout)
         self.assertEqual('Hello error!', actual.stderr)
         self.assertEqual(8, actual.return_code)
+        self.assertEqual(1337, actual.milliseconds_to_wait)
 
 
     def test_should_return_answer_from_dictionary (self):
         answer_dictionary = {'stdout'      : 'Hello world.',
                              'stderr'      : 'Hello error!',
-                             'return_code' : 82}
+                             'return_code' : 82,
+                             'milliseconds_to_wait' : 2}
 
         actual_answer = Answer.from_dictionary(answer_dictionary)
 
         self.assertEqual('Hello world.', actual_answer.stdout)
         self.assertEqual('Hello error!', actual_answer.stderr)
         self.assertEqual(82, actual_answer.return_code)
+        self.assertEqual(2, actual_answer.milliseconds_to_wait)
 
 
     def test_should_return_answer_as_dictionary (self):
-        answer = Answer('Hello world.', 'Hello error!', 13)
+        answer = Answer('Hello world.', 'Hello error!', 13, milliseconds_to_wait=3)
 
         actual_dictionary = answer.as_dictionary()
 
         self.assertEqual('Hello world.', actual_dictionary['stdout'])
         self.assertEqual('Hello error!', actual_dictionary['stderr'])
         self.assertEqual(13, actual_dictionary['return_code'])
+        self.assertEqual(3, actual_dictionary['milliseconds_to_wait'])
 
 
     def test_should_return_answer_as_string (self):
@@ -55,7 +59,7 @@ class AnswerTest (unittest.TestCase):
 
         actual_string = answer.__str__()
 
-        self.assertEqual("Answer {'return_code': 13, 'stderr': 'Hello error!', 'stdout': 'Hello world.'}", actual_string)
+        self.assertEqual("Answer {'milliseconds_to_wait': None, 'return_code': 13, 'stderr': 'Hello error!', 'stdout': 'Hello world.'}", actual_string)
 
 
     def test_should_return_false_when_comparing_and_stdout_is_different (self):

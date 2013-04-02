@@ -30,10 +30,12 @@ class StubConfigurationTests (unittest.TestCase):
                   'current_answer' : 0,
                   'answers'        : [{'stdout'      : 'Hello world.',
                                        'stderr'      : 'Hello error!',
-                                       'return_code' : 18},
+                                       'return_code' : 18,
+                                       'milliseconds_to_wait': None},
                                       {'stdout'      : 'Spam eggs.',
                                        'stderr'      : 'Error!',
-                                       'return_code' : 21}]
+                                       'return_code' : 21,
+                                       'milliseconds_to_wait': None}]
                   }
 
         actual_stub_configuration = StubConfiguration.from_dictionary(values)
@@ -97,7 +99,18 @@ class StubConfigurationTests (unittest.TestCase):
         self.assertEqual(19, actual_answer_dictionary['return_code'])
 
 
-    def test_should_set_return_code_when_answering (self):
+    def test_should_set_return_code_and_waiting_time_when_answering (self):
+        stub_configuration = StubConfiguration('any_command', ['any_arg1', 'any_arg2'], 'any_stdin')
+        stub_configuration.then_return(7, milliseconds_to_wait=3)
+
+        actual_answer = stub_configuration.next_answer()
+
+        self.assertEqual(None, actual_answer.stdout)
+        self.assertEqual(None, actual_answer.stderr)
+        self.assertEqual(7, actual_answer.return_code)
+        self.assertEqual(3, actual_answer.milliseconds_to_wait)
+
+    def test_should_unset_waiting_time_by_default_when_answering (self):
         stub_configuration = StubConfiguration('any_command', ['any_arg1', 'any_arg2'], 'any_stdin')
         stub_configuration.then_return(7)
 
@@ -106,9 +119,22 @@ class StubConfigurationTests (unittest.TestCase):
         self.assertEqual(None, actual_answer.stdout)
         self.assertEqual(None, actual_answer.stderr)
         self.assertEqual(7, actual_answer.return_code)
+        self.assertEqual(None, actual_answer.milliseconds_to_wait)
 
 
-    def test_should_set_stdout_when_answering (self):
+    def test_should_set_stdout_and_waiting_time_when_answering (self):
+        stub_configuration = StubConfiguration('any_command', ['any_arg1', 'any_arg2'], 'any_stdin')
+        stub_configuration.then_write('Hello world!', milliseconds_to_wait=6)
+
+        actual_answer = stub_configuration.next_answer()
+
+        self.assertEqual('Hello world!', actual_answer.stdout)
+        self.assertEqual(None, actual_answer.stderr)
+        self.assertEqual(0, actual_answer.return_code)
+        self.assertEqual(6, actual_answer.milliseconds_to_wait)
+
+
+    def test_should_unset_waiting_time_by_default_when_answering (self):
         stub_configuration = StubConfiguration('any_command', ['any_arg1', 'any_arg2'], 'any_stdin')
         stub_configuration.then_write('Hello world!')
 
@@ -117,6 +143,7 @@ class StubConfigurationTests (unittest.TestCase):
         self.assertEqual('Hello world!', actual_answer.stdout)
         self.assertEqual(None, actual_answer.stderr)
         self.assertEqual(0, actual_answer.return_code)
+        self.assertEqual(None, actual_answer.milliseconds_to_wait)
 
 
     def test_should_set_stderr_when_answering (self):
@@ -141,7 +168,20 @@ class StubConfigurationTests (unittest.TestCase):
         self.assertEqual(0, actual_answer.return_code)
 
 
-    def test_should_set_return_code_and_stderr_and_stdout (self):
+    def test_should_set_return_code_and_stderr_and_stdout_and_waiting_time (self):
+        stub_configuration = StubConfiguration('any_command', ['any_arg1', 'any_arg2'], 'any_stdin')
+        stub_configuration.then_answer('Hello world!', 'Hello error!', 15, milliseconds_to_wait=5)
+
+        actual_answer = stub_configuration.next_answer()
+
+        self.assertEqual('Hello world!', actual_answer.stdout)
+        self.assertEqual('Hello error!', actual_answer.stderr)
+        self.assertEqual(15, actual_answer.return_code)
+        self.assertEqual(5, actual_answer.milliseconds_to_wait)
+
+
+
+    def test_should_unset_waiting_time_by_default_when_answering (self):
         stub_configuration = StubConfiguration('any_command', ['any_arg1', 'any_arg2'], 'any_stdin')
         stub_configuration.then_answer('Hello world!', 'Hello error!', 15)
 
@@ -150,7 +190,7 @@ class StubConfigurationTests (unittest.TestCase):
         self.assertEqual('Hello world!', actual_answer.stdout)
         self.assertEqual('Hello error!', actual_answer.stderr)
         self.assertEqual(15, actual_answer.return_code)
-
+        self.assertEqual(None, actual_answer.milliseconds_to_wait)
 
     def test_should_have_property_answers_with_empty_list (self):
         stub_configuration = StubConfiguration('any_command', ['any_arg1', 'any_arg2'], 'any_stdin')
@@ -346,4 +386,4 @@ class StubConfigurationTests (unittest.TestCase):
     def test_should_return_string_with_all_properties (self):
         stub_configuration = StubConfiguration('any_command', ['any_arg1', 'any_arg2'], 'any_stdin', [Answer('stdout1', 'stderr1', 13)], 1)
 
-        self.assertEqual("StubConfiguration {'current_answer': 1, 'answers': [{'return_code': 13, 'stderr': 'stderr1', 'stdout': 'stdout1'}], 'command_input': {'stdin': 'any_stdin', 'command': 'any_command', 'arguments': ['any_arg1', 'any_arg2']}}", str(stub_configuration))
+        self.assertEqual("StubConfiguration {'current_answer': 1, 'answers': [{'milliseconds_to_wait': None, 'return_code': 13, 'stderr': 'stderr1', 'stdout': 'stdout1'}], 'command_input': {'stdin': 'any_stdin', 'command': 'any_command', 'arguments': ['any_arg1', 'any_arg2']}}", str(stub_configuration))

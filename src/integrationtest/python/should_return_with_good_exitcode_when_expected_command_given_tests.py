@@ -35,6 +35,7 @@ class Test (unittest.TestCase):
                                                     '        {\n'
                                                     '            "stdout": "Hello world!",\n'
                                                     '            "stderr": "Hello error!",\n'
+                                                    '            "milliseconds_to_wait": 3,\n'
                                                     '            "return_code": 0\n'
                                                     '        }\n'
                                                     '    ]\n'

@@ -20,12 +20,14 @@
     the command stub.
 """
 
-__author__ = 'Alexander Metzner, Michael Gruber, Udo Juettner'
-
+from __future__ import division
 import logging
 import os
 import sys
 import fcntl
+import time
+
+__author__ = 'Alexander Metzner, Michael Gruber, Udo Juettner'
 
 from select import select
 
@@ -119,10 +121,11 @@ def dispatch (command_input):
     for stub_configuration in stub_configurations:
         if command_input.fulfills(stub_configuration.command_input):
             logging.info('Execution fulfills %s', stub_configuration)
-            
             execution.mark_as_expected()
             record_execution(execution)
             answer = stub_configuration.next_answer()
+            if answer.milliseconds_to_wait:
+                time.sleep(answer.milliseconds_to_wait / 1000)
             send_answer(answer)
             return
 

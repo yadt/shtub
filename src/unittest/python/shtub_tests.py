@@ -37,7 +37,7 @@ class ShtubTests (unittest.TestCase):
 
     @patch('json.loads')
     @patch(builtin_string + '.open')
-    def test_should_deserialize_stub_configuration (self, mock_open, mock_json):
+    def test_should_deserialize_stub_configuration_with_no_answers(self, mock_open, mock_json):
         fake_file = self.return_file_when_calling(mock_open)
         json_string = "[{'expected': false, 'command_input': {'stdin': 'stdin', 'command': 'command', 'arguments': ['-arg1', '-arg2', '-arg3']}}]"
         fake_file.read.return_value = json_string
@@ -60,7 +60,7 @@ class ShtubTests (unittest.TestCase):
     @patch(builtin_string + '.open')
     def test_should_deserialize_stub_configurations(self, mock_open, mock_json):
         fake_file = self.return_file_when_calling(mock_open)
-        json_string = "[{'current_answer': 0, 'answers': [{'return_code': 15, 'stderr': 'stderr', 'stdout': 'stdout'}], 'command_input': {'stdin': 'stdin', 'command': 'command', 'arguments': ['-arg1', '-arg2', '-arg3']}}]"
+        json_string = "[{'current_answer': 0, 'answers': [{'return_code': 15, 'stderr': 'stderr', 'stdout': 'stdout', 'milliseconds_to_wait': None}], 'command_input': {'stdin': 'stdin', 'command': 'command', 'arguments': ['-arg1', '-arg2', '-arg3']}}]"
         fake_file.read.return_value = json_string
         mock_json.return_value = [{'command_input': {'command'        : 'command',
                                                      'arguments'      : ['-arg1', '-arg2', '-arg3'],
@@ -68,7 +68,8 @@ class ShtubTests (unittest.TestCase):
                                    'current_answer' : 0,
                                    'answers'        : [{'stdout'      : 'stdout',
                                                         'stderr'      : 'stderr',
-                                                        'return_code' : 15}]
+                                                        'return_code' : 15,
+                                                        'milliseconds_to_wait': None}]
                                  }]
 
         actual_stub_configurations = deserialize_stub_configurations('stub_configuration.json')
