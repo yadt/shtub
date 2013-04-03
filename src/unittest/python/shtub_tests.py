@@ -82,9 +82,11 @@ class ShtubTests (unittest.TestCase):
 
         self.assertEqual(expected_stub_configurations, actual_stub_configurations)
 
+    @patch('shtub.lock')
+    @patch('shtub.unlock')
     @patch('json.dumps')
     @patch(builtin_string + '.open')
-    def test_should_serialize_as_dictionaries (self, mock_open, mock_json):
+    def test_should_serialize_as_dictionaries (self, mock_open, mock_json, mock_unlock, mock_lock):
         fake_file = self.return_file_when_calling(mock_open)
         mock_json.return_value = '[{"some": "json"}]'
         stub_configuration = [Execution('command', ['-arg1', '-arg2', '-arg3'], 'stdin', expected=True)]
@@ -125,6 +127,20 @@ class ShtubTests (unittest.TestCase):
         self.assertEqual(file_handle_mock, actual_file_handle)
         self.assertEqual(call('shtub/lock', mode='a'), mock_open.call_args)
         self.assertEqual(call(file_handle_mock, mock_fcntl.LOCK_EX), mock_fcntl.flock.call_args)
+
+    @patch('shtub.os.mkdir')
+    @patch('shtub.os.path.exists')
+    @patch('shtub.fcntl')
+    @patch(builtin_string + '.open')
+    def test_should_create_base_dir_if_it_does_not_exist_when_locking (self, mock_open, mock_fcntl, mock_exists, mock_mkdir):
+        mock_fcntl.LOCK_EX = 'LOCK_EX'
+        mock_exists.return_value = False
+        file_handle_mock = Mock()
+        mock_open.return_value = file_handle_mock
+
+        lock()
+
+        self.assertEqual(call('shtub'), mock_mkdir.call_args)
 
 
     def test_should_unlock (self):

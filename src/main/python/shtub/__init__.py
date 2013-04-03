@@ -24,6 +24,7 @@ import json
 import logging
 import fcntl
 
+import os
 from os.path import join
 
 from shtub.execution import Execution
@@ -36,6 +37,7 @@ BASEDIR = 'shtub'
 EXECUTIONS_FILENAME = join(BASEDIR, 'executions')
 CONFIGURED_STUBS_FILENAME = join(BASEDIR, 'stub-configurations')
 LOCK_FILENAME = join(BASEDIR, 'lock')
+SERIALIZATION_LOCK_FILENAME = join(BASEDIR, 'serialization-lock')
 LOG_FILENAME = join(BASEDIR, 'log')
 STUBS_DIRECTORY = join(BASEDIR, 'stubs')
 
@@ -68,7 +70,6 @@ def serialize_as_dictionaries (filename, dictionarizables):
     with open(filename, mode='w') as json_file:
         json_file.write(json_string)
 
-
 def _load_json_file (filename):
     """
         loads the given json file and returns the json content as dictionary.
@@ -80,13 +81,15 @@ def _load_json_file (filename):
     return dictionary
 
 
-def lock ():
+def lock (file_name=LOCK_FILENAME):
     """
-        creates a file lock and blocks if the file lock is already locked.
+        creates a file lock and blocks if the file lock is already taken.
     """
+    if not os.path.exists(BASEDIR):
+        os.mkdir(BASEDIR)
 
     logging.info('Acquire lock.')
-    file_handle = open(LOCK_FILENAME, mode='a')
+    file_handle = open(file_name, mode='a')
     fcntl.flock(file_handle, fcntl.LOCK_EX)
 
     logging.info('Lock acquired.')
@@ -98,5 +101,5 @@ def unlock (file_handle):
         releases the given file lock by closing it.
     """
 
-    logging.info('Release lock.')
+    logging.info('Lock released.')
     file_handle.close()

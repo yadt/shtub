@@ -37,12 +37,15 @@ from shtub import (BASEDIR,
                    unlock,
                    LOG_FILENAME,
                    READ_STDIN_TIMEOUT_IN_SECONDS,
+                   SERIALIZATION_LOCK_FILENAME,
                    deserialize_executions,
                    deserialize_stub_configurations,
                    serialize_as_dictionaries)
 
 from shtub.execution import Execution
 from shtub.commandinput import CommandInput
+
+global lock_handle
 
 
 def record_execution (execution):
@@ -102,14 +105,14 @@ def dispatch (command_input):
             execution.mark_as_expected()
             record_execution(execution)
             answer = stub_configuration.next_answer()
-
             serialize_as_dictionaries(CONFIGURED_STUBS_FILENAME, stub_configurations)
-
+            unlock(lock_handle)
             if answer.milliseconds_to_wait:
                 time.sleep(answer.milliseconds_to_wait / 1000)
             send_answer(answer)
             return
 
+    unlock(lock_handle)
     logging.error('Given command_input does not fulfill requirements of any stub configuration.')
     sys.exit(255)
 
@@ -136,6 +139,8 @@ def handle_execution ():
 
     if not os.path.exists(BASEDIR):
         os.mkdir(BASEDIR)
+    global lock_handle
+    lock_handle = lock(SERIALIZATION_LOCK_FILENAME)
 
     logging_format = '%(asctime)s %(levelname)5s [%(name)s] process[%(process)d] thread[%(thread)d] - %(message)s'
     logging.basicConfig(filename=LOG_FILENAME,
@@ -151,5 +156,5 @@ def handle_execution ():
     dispatch(command_input)
 
 
-if __name__ == '__main__':
+if __name__ == '__main__': # pragma: no cover
     handle_execution()

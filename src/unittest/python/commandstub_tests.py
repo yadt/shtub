@@ -35,6 +35,7 @@ from shtub.stubconfiguration import StubConfiguration
 
 class Tests (unittest.TestCase):
 
+    @patch('shtub.commandstub.unlock')
     @patch('shtub.commandstub.serialize_as_dictionaries')
     @patch('shtub.commandstub.Execution')
     @patch('shtub.commandstub.record_execution')
@@ -42,7 +43,7 @@ class Tests (unittest.TestCase):
     @patch('logging.info')
     @patch('shtub.commandstub.deserialize_stub_configurations')
     def test_should_mark_execution_as_expected_and_record_call_when_execution_fulfills_stub_configuration(self, \
-                        mock_deserialize, mock_logging_info, mock_answer, mock_record, mock_execution_class, mock_serialize):
+                        mock_deserialize, mock_logging_info, mock_answer, mock_record, mock_execution_class, mock_serialize, mock_unlock):
         
         mock_execution = Mock(Execution)
         mock_execution_class.return_value = mock_execution
@@ -59,12 +60,13 @@ class Tests (unittest.TestCase):
         self.assertEqual(call(), mock_execution.mark_as_expected.call_args)
         self.assertEqual(call(mock_execution), mock_record.call_args)
 
+    @patch('shtub.commandstub.unlock')
     @patch('shtub.commandstub.serialize_as_dictionaries')
     @patch('shtub.commandstub.record_execution')
     @patch('shtub.commandstub.send_answer')
     @patch('logging.info')
     @patch('shtub.commandstub.deserialize_stub_configurations')
-    def test_should_send_answer_when_execution_fulfills_stub_configurations(self, mock_deserialize, mock_logging_info, mock_answer, mock_record, mock_serialize):
+    def test_should_send_answer_when_execution_fulfills_stub_configurations(self, mock_deserialize, mock_logging_info, mock_answer, mock_record, mock_serialize, mock_unlock):
 
         answer = Answer('Hello world', 'Hello error', 15)
         stub_configuration = StubConfiguration('command', ['-arg1', '-arg2', '-arg3'], 'stdin')
@@ -77,13 +79,13 @@ class Tests (unittest.TestCase):
 
         self.assertEqual(call(answer), mock_answer.call_args)
 
-
+    @patch('shtub.commandstub.unlock')
     @patch('shtub.commandstub.serialize_as_dictionaries')
     @patch('shtub.commandstub.record_execution')
     @patch('shtub.commandstub.send_answer')
     @patch('logging.info')
     @patch('shtub.commandstub.deserialize_stub_configurations')
-    def test_should_serialize_stubs_configuration_before_sending_answer(self, mock_deserialize, mock_logging_info, mock_answer, mock_record, mock_serialize):
+    def test_should_serialize_stubs_configuration_before_sending_answer(self, mock_deserialize, mock_logging_info, mock_answer, mock_record, mock_serialize, mock_unlock):
 
         answer = Answer('Hello world', 'Hello error', 15)
         stub_configuration = StubConfiguration('command', ['-arg1', '-arg2', '-arg3'], 'stdin')
@@ -97,14 +99,14 @@ class Tests (unittest.TestCase):
 
         self.assertEqual(call('shtub/stub-configurations', stub_configurations), mock_serialize.call_args)
 
-
+    @patch('shtub.commandstub.unlock')
     @patch('shtub.commandstub.serialize_as_dictionaries')
     @patch('time.sleep')
     @patch('shtub.commandstub.record_execution')
     @patch('shtub.commandstub.send_answer')
     @patch('logging.info')
     @patch('shtub.commandstub.deserialize_stub_configurations')
-    def test_should_wait_when_answer_fulfills_stub_configurations_and_needs_waiting(self, mock_deserialize, mock_logging_info, mock_answer, mock_record, mock_sleep, mock_serialize):
+    def test_should_wait_when_answer_fulfills_stub_configurations_and_needs_waiting(self, mock_deserialize, mock_logging_info, mock_answer, mock_record, mock_sleep, mock_serialize, mock_unlock):
 
         answer = Answer('Hello world', 'Hello error', 15, milliseconds_to_wait=5)
         stub_configuration = StubConfiguration('command', ['-arg1', '-arg2', '-arg3'], 'stdin')
@@ -119,13 +121,14 @@ class Tests (unittest.TestCase):
         self.assertEqual(call(5/1000), mock_sleep.call_args)
 
 
+    @patch('shtub.commandstub.unlock')
     @patch('shtub.commandstub.serialize_as_dictionaries')
     @patch('sys.exit')
     @patch('logging.error')
     @patch('logging.info')
     @patch('shtub.commandstub.deserialize_stub_configurations', return_value=[])
     def test_should_exit_with_error_code_255_when_execution_not_in_stub_configuration (self, \
-                        mock_deserialize, mock_logging_info, mock_logging_error, mock_exit, mock_serialize):
+                        mock_deserialize, mock_logging_info, mock_logging_error, mock_exit, mock_serialize, mock_unlock):
 
         command_input = CommandInput('command', ['-arg1', '-arg2', '-arg3'], 'stdin')
 
@@ -134,12 +137,13 @@ class Tests (unittest.TestCase):
         self.assertEqual(call(255), mock_exit.call_args)
 
 
+    @patch('shtub.commandstub.unlock')
     @patch('shtub.commandstub.serialize_as_dictionaries')
     @patch('sys.exit')
     @patch('logging.error')
     @patch('logging.info')
     @patch('shtub.commandstub.deserialize_stub_configurations', return_value=[])
-    def test_should_load_configured_stubs(self, mock_deserialize, mock_logging_info, mock_logging_error, mock_exit, mock_serialize):
+    def test_should_load_configured_stubs(self, mock_deserialize, mock_logging_info, mock_logging_error, mock_exit, mock_serialize, mock_unlock):
         command_input = CommandInput('command', ['-arg1', '-arg2', '-arg3'], 'stdin')
 
         commandstub.dispatch(command_input)
@@ -244,7 +248,7 @@ class Tests (unittest.TestCase):
 
         self.assertEqual('Hello world', actual)
 
-
+    @patch('shtub.commandstub.lock')
     @patch.object(sys, 'argv', ['command', '-arg1', '-arg2', '-arg3'])
     @patch('shtub.commandstub.read_stdin', return_value=None)
     @patch('shtub.commandstub.dispatch')
@@ -252,14 +256,14 @@ class Tests (unittest.TestCase):
     @patch('os.mkdir')
     @patch('os.path.exists', return_value=False)
     def test_should_create_basedir_if_does_not_exist (self, \
-            mock_exists, mock_mkdir, mock_logging, mock_dispatch, mock_read_stdin):
+            mock_exists, mock_mkdir, mock_logging, mock_dispatch, mock_read_stdin, mock_lock):
 
         commandstub.handle_execution()
 
         self.assertEqual(call('shtub'), mock_exists.call_args)
         self.assertEqual(call('shtub'), mock_mkdir.call_args)
 
-
+    @patch('shtub.commandstub.lock')
     @patch.object(sys, 'argv', ['command', '-arg1', '-arg2', '-arg3'])
     @patch('shtub.commandstub.read_stdin', return_value=None)
     @patch('shtub.commandstub.dispatch')
@@ -267,7 +271,7 @@ class Tests (unittest.TestCase):
     @patch('os.mkdir')
     @patch('os.path.exists', return_value=True)
     def test_should_not_create_basedir_if_already_exist (self, \
-            mock_exists, mock_mkdir, mock_logging, mock_dispatch, mock_read_stdin):
+            mock_exists, mock_mkdir, mock_logging, mock_dispatch, mock_read_stdin, mock_lock):
 
         commandstub.handle_execution()
 
@@ -276,6 +280,7 @@ class Tests (unittest.TestCase):
         self.assertEqual(None, mock_mkdir.call_args)
 
 
+    @patch('shtub.commandstub.lock')
     @patch.object(sys, 'argv', ['command', '-arg1', '-arg2', '-arg3'])
     @patch('shtub.commandstub.read_stdin', return_value=None)
     @patch('shtub.commandstub.dispatch')
@@ -283,7 +288,7 @@ class Tests (unittest.TestCase):
     @patch('os.mkdir')
     @patch('os.path.exists', return_value=True)
     def test_should_initialize_basic_logging_configuration (self, \
-            mock_exists, mock_mkdir, mock_logging, mock_dispatch, mock_read_stdin):
+            mock_exists, mock_mkdir, mock_logging, mock_dispatch, mock_read_stdin, mock_lock):
 
         commandstub.handle_execution()
 
@@ -295,13 +300,14 @@ class Tests (unittest.TestCase):
                           mock_logging.call_args)
 
 
+    @patch('shtub.commandstub.lock')
     @patch.object(sys, 'argv', ['command', '-arg1', '-arg2', '-arg3'])
     @patch('shtub.commandstub.read_stdin', return_value=None)
     @patch('shtub.commandstub.dispatch')
     @patch('logging.basicConfig')
     @patch('os.mkdir')
     @patch('os.path.exists', return_value=True)
-    def test_should_dispatch_execution (self, mock_exists, mock_mkdir, mock_logging, mock_dispatch, mock_read_stdin):
+    def test_should_dispatch_execution (self, mock_exists, mock_mkdir, mock_logging, mock_dispatch, mock_read_stdin, mock_lock):
         commandstub.handle_execution()
 
         mock_dispatch.assert_called()
