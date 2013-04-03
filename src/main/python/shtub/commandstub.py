@@ -24,7 +24,6 @@ from __future__ import division
 import logging
 import os
 import sys
-import fcntl
 import time
 
 __author__ = 'Alexander Metzner, Michael Gruber, Udo Juettner'
@@ -34,7 +33,8 @@ from select import select
 from shtub import (BASEDIR,
                    EXECUTIONS_FILENAME,
                    CONFIGURED_STUBS_FILENAME,
-                   LOCK_FILENAME,
+                   lock,
+                   unlock,
                    LOG_FILENAME,
                    READ_STDIN_TIMEOUT_IN_SECONDS,
                    deserialize_executions,
@@ -43,28 +43,6 @@ from shtub import (BASEDIR,
 
 from shtub.execution import Execution
 from shtub.commandinput import CommandInput
-
-
-def lock ():
-    """
-        creates a file lock and blocks if the file lock is already locked.
-    """
-
-    logging.info('Acquire lock.')
-    file_handle = open(LOCK_FILENAME, mode='a')
-    fcntl.flock(file_handle, fcntl.LOCK_EX)
-
-    logging.info('Lock acquired.')
-    return file_handle
-
-
-def unlock (file_handle):
-    """
-        releases the given file lock by closing it.
-    """
-
-    logging.info('Release lock.')
-    file_handle.close()
 
 
 def record_execution (execution):

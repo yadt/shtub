@@ -309,25 +309,3 @@ class Tests (unittest.TestCase):
         expected_input = str(CommandInput('command', ['-arg1', '-arg2', '-arg3'], stdin=None))
         actual_execution = str(mock_dispatch.call_args[0][0])
         self.assertEqual(expected_input, actual_execution)
-
-
-    @patch('shtub.commandstub.fcntl')
-    @patch(builtin_string + '.open')
-    def test_should_create_lock (self, mock_open, mock_fcntl):
-        mock_fcntl.LOCK_EX = 'LOCK_EX'
-        file_handle_mock = Mock()
-        mock_open.return_value = file_handle_mock
-
-        actual_file_handle = commandstub.lock()
-
-        self.assertEqual(file_handle_mock, actual_file_handle)
-        self.assertEqual(call('shtub/lock', mode='a'), mock_open.call_args)
-        self.assertEqual(call(file_handle_mock, mock_fcntl.LOCK_EX), mock_fcntl.flock.call_args)
-
-
-    def test_should_unlock (self):
-        file_handle_mock = Mock()
-
-        commandstub.unlock(file_handle_mock)
-
-        self.assertEqual(call(), file_handle_mock.close.call_args)

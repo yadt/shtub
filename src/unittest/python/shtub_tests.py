@@ -24,7 +24,7 @@ if sys.version_info[0] == 3:
 else:
     builtin_string = '__builtin__'
 
-from shtub import __version__, serialize_as_dictionaries, deserialize_executions, deserialize_stub_configurations
+from shtub import __version__, serialize_as_dictionaries, deserialize_executions, deserialize_stub_configurations, lock, unlock
 from shtub.answer import Answer
 from shtub.execution import Execution
 from shtub.stubconfiguration import StubConfiguration
@@ -111,3 +111,25 @@ class ShtubTests (unittest.TestCase):
             mock_open.return_value.read.return_value = content
 
         return file_handle
+
+
+    @patch('shtub.fcntl')
+    @patch(builtin_string + '.open')
+    def test_should_create_lock (self, mock_open, mock_fcntl):
+        mock_fcntl.LOCK_EX = 'LOCK_EX'
+        file_handle_mock = Mock()
+        mock_open.return_value = file_handle_mock
+
+        actual_file_handle = lock()
+
+        self.assertEqual(file_handle_mock, actual_file_handle)
+        self.assertEqual(call('shtub/lock', mode='a'), mock_open.call_args)
+        self.assertEqual(call(file_handle_mock, mock_fcntl.LOCK_EX), mock_fcntl.flock.call_args)
+
+
+    def test_should_unlock (self):
+        file_handle_mock = Mock()
+
+        unlock(file_handle_mock)
+
+        self.assertEqual(call(), file_handle_mock.close.call_args)

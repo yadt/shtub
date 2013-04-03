@@ -21,6 +21,8 @@
 __author__ = 'Alexander Metzner, Michael Gruber, Udo Juettner'
 
 import json
+import logging
+import fcntl
 
 from os.path import join
 
@@ -76,3 +78,25 @@ def _load_json_file (filename):
         dictionary = json.loads(file_content)
 
     return dictionary
+
+
+def lock ():
+    """
+        creates a file lock and blocks if the file lock is already locked.
+    """
+
+    logging.info('Acquire lock.')
+    file_handle = open(LOCK_FILENAME, mode='a')
+    fcntl.flock(file_handle, fcntl.LOCK_EX)
+
+    logging.info('Lock acquired.')
+    return file_handle
+
+
+def unlock (file_handle):
+    """
+        releases the given file lock by closing it.
+    """
+
+    logging.info('Release lock.')
+    file_handle.close()
