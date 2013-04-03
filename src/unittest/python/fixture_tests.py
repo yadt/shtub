@@ -60,7 +60,7 @@ class FixtureTest (unittest.TestCase):
         self.assertEqual(None, actual_stub_configuration.command_input.stdin)
 
 
-    @patch('shtub.fixture.serialize_executions')
+    @patch('shtub.fixture.serialize_as_dictionaries')
     def test_should_return_fixture_itself_when_entering_with_statement_and_serialize_stub_configurations_when_exiting (self, serialize_mock):
         fixture = Fixture('/hello/world')
 

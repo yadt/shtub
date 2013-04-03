@@ -56,11 +56,11 @@ def deserialize_executions (filename):
     return list(map(lambda e: Execution.from_dictionary(e), executions))
 
 
-def serialize_executions (filename, executions):
+def serialize_as_dictionaries (filename, dictionarizables):
     """
         writes the given execution objects into a json file with the given filename.
     """
-    dictionaries = list(map(lambda e: e.as_dictionary(), executions))
+    dictionaries = list(map(lambda e: e.as_dictionary(), dictionarizables))
     json_string = json.dumps(dictionaries, sort_keys=True, indent=4)
 
     with open(filename, mode='w') as json_file:

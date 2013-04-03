@@ -24,7 +24,7 @@ if sys.version_info[0] == 3:
 else:
     builtin_string = '__builtin__'
 
-from shtub import __version__, serialize_executions, deserialize_executions, deserialize_stub_configurations
+from shtub import __version__, serialize_as_dictionaries, deserialize_executions, deserialize_stub_configurations
 from shtub.answer import Answer
 from shtub.execution import Execution
 from shtub.stubconfiguration import StubConfiguration
@@ -82,15 +82,14 @@ class ShtubTests (unittest.TestCase):
 
         self.assertEqual(expected_stub_configurations, actual_stub_configurations)
 
-
     @patch('json.dumps')
     @patch(builtin_string + '.open')
-    def test_should_serialize_stub_configuration (self, mock_open, mock_json):
+    def test_should_serialize_as_dictionaries (self, mock_open, mock_json):
         fake_file = self.return_file_when_calling(mock_open)
         mock_json.return_value = '[{"some": "json"}]'
         stub_configuration = [Execution('command', ['-arg1', '-arg2', '-arg3'], 'stdin', expected=True)]
 
-        serialize_executions('stub_configuration.json', stub_configuration)
+        serialize_as_dictionaries('stub_configuration.json', stub_configuration)
 
         expected_dictionary = {'command_input': {'command'   : 'command',
                                                  'arguments' : ['-arg1', '-arg2', '-arg3'],

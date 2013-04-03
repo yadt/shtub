@@ -23,7 +23,7 @@ __author__ = 'Alexander Metzner, Michael Gruber, Udo Juettner'
 
 import os
 
-from shtub import CONFIGURED_STUBS_FILENAME, serialize_executions
+from shtub import CONFIGURED_STUBS_FILENAME, serialize_as_dictionaries
 from shtub.stubconfiguration import StubConfiguration
 
 
@@ -75,4 +75,4 @@ class Fixture (object):
                
         filename = os.path.join(self.base_directory, CONFIGURED_STUBS_FILENAME)
         
-        serialize_executions(filename, self.stub_configurations)
+        serialize_as_dictionaries(filename, self.stub_configurations)

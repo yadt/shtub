@@ -39,7 +39,7 @@ from shtub import (BASEDIR,
                    READ_STDIN_TIMEOUT_IN_SECONDS,
                    deserialize_executions,
                    deserialize_stub_configurations,
-                   serialize_executions)
+                   serialize_as_dictionaries)
 
 from shtub.execution import Execution
 from shtub.commandinput import CommandInput
@@ -82,7 +82,7 @@ def record_execution (execution):
         executions = deserialize_executions(EXECUTIONS_FILENAME)
 
     executions.append(execution)
-    serialize_executions(EXECUTIONS_FILENAME, executions)
+    serialize_as_dictionaries(EXECUTIONS_FILENAME, executions)
     logging.info('Recorded %s executions.', len(executions))
 
     unlock(lock_file_handle)
@@ -124,6 +124,9 @@ def dispatch (command_input):
             execution.mark_as_expected()
             record_execution(execution)
             answer = stub_configuration.next_answer()
+
+            serialize_as_dictionaries(CONFIGURED_STUBS_FILENAME, stub_configurations)
+
             if answer.milliseconds_to_wait:
                 time.sleep(answer.milliseconds_to_wait / 1000)
             send_answer(answer)

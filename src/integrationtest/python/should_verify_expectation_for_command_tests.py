@@ -27,13 +27,13 @@ class Tests (integrationtest_support.IntegrationTestSupport):
         with self.fixture() as when:
             when.calling('command_stub').at_least_with_arguments('-arg1', '-arg2', '-arg3').and_input('stdin') \
                 .then_answer('Hello world!', 'Hello error!', 0) \
-                .then_return(1)
+                .then_return(10)
 
         actual_return_code1 = self.execute_command('command_wrapper')
         actual_return_code2 = self.execute_command('command_wrapper')
 
         self.assertEqual(0, actual_return_code1)
-        self.assertEqual(0, actual_return_code2)
+        self.assertEqual(10, actual_return_code2)
 
         with self.verify() as verify:
             verify.called('command_stub').with_arguments('-arg1', '-arg2', '-arg3').and_input('stdin')

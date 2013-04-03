@@ -34,13 +34,15 @@ from shtub.commandinput import CommandInput
 from shtub.stubconfiguration import StubConfiguration
 
 class Tests (unittest.TestCase):
+
+    @patch('shtub.commandstub.serialize_as_dictionaries')
     @patch('shtub.commandstub.Execution')
     @patch('shtub.commandstub.record_execution')
     @patch('shtub.commandstub.send_answer')
     @patch('logging.info')
     @patch('shtub.commandstub.deserialize_stub_configurations')
     def test_should_mark_execution_as_expected_and_record_call_when_execution_fulfills_stub_configuration(self, \
-                        mock_deserialize, mock_logging_info, mock_answer, mock_record, mock_execution_class):
+                        mock_deserialize, mock_logging_info, mock_answer, mock_record, mock_execution_class, mock_serialize):
         
         mock_execution = Mock(Execution)
         mock_execution_class.return_value = mock_execution
@@ -57,13 +59,12 @@ class Tests (unittest.TestCase):
         self.assertEqual(call(), mock_execution.mark_as_expected.call_args)
         self.assertEqual(call(mock_execution), mock_record.call_args)
 
-
+    @patch('shtub.commandstub.serialize_as_dictionaries')
     @patch('shtub.commandstub.record_execution')
     @patch('shtub.commandstub.send_answer')
     @patch('logging.info')
     @patch('shtub.commandstub.deserialize_stub_configurations')
-    def test_should_send_answer_when_execution_fulfills_stub_configurations (self, \
-                        mock_deserialize, mock_logging_info, mock_answer, mock_record):
+    def test_should_send_answer_when_execution_fulfills_stub_configurations(self, mock_deserialize, mock_logging_info, mock_answer, mock_record, mock_serialize):
 
         answer = Answer('Hello world', 'Hello error', 15)
         stub_configuration = StubConfiguration('command', ['-arg1', '-arg2', '-arg3'], 'stdin')
@@ -77,13 +78,33 @@ class Tests (unittest.TestCase):
         self.assertEqual(call(answer), mock_answer.call_args)
 
 
+    @patch('shtub.commandstub.serialize_as_dictionaries')
+    @patch('shtub.commandstub.record_execution')
+    @patch('shtub.commandstub.send_answer')
+    @patch('logging.info')
+    @patch('shtub.commandstub.deserialize_stub_configurations')
+    def test_should_serialize_stubs_configuration_before_sending_answer(self, mock_deserialize, mock_logging_info, mock_answer, mock_record, mock_serialize):
+
+        answer = Answer('Hello world', 'Hello error', 15)
+        stub_configuration = StubConfiguration('command', ['-arg1', '-arg2', '-arg3'], 'stdin')
+        stub_configuration.then(answer)
+        stub_configurations = [stub_configuration]
+        mock_deserialize.return_value = stub_configurations
+
+        command_input = CommandInput('command', ['-arg1', '-arg2', '-arg3'], 'stdin')
+
+        commandstub.dispatch(command_input)
+
+        self.assertEqual(call('shtub/stub-configurations', stub_configurations), mock_serialize.call_args)
+
+
+    @patch('shtub.commandstub.serialize_as_dictionaries')
     @patch('time.sleep')
     @patch('shtub.commandstub.record_execution')
     @patch('shtub.commandstub.send_answer')
     @patch('logging.info')
     @patch('shtub.commandstub.deserialize_stub_configurations')
-    def test_should_wait_when_answer_fulfills_stub_configurations_and_needs_waiting (self, \
-                                                                             mock_deserialize, mock_logging_info, mock_answer, mock_record, mock_sleep):
+    def test_should_wait_when_answer_fulfills_stub_configurations_and_needs_waiting(self, mock_deserialize, mock_logging_info, mock_answer, mock_record, mock_sleep, mock_serialize):
 
         answer = Answer('Hello world', 'Hello error', 15, milliseconds_to_wait=5)
         stub_configuration = StubConfiguration('command', ['-arg1', '-arg2', '-arg3'], 'stdin')
@@ -98,12 +119,13 @@ class Tests (unittest.TestCase):
         self.assertEqual(call(5/1000), mock_sleep.call_args)
 
 
+    @patch('shtub.commandstub.serialize_as_dictionaries')
     @patch('sys.exit')
     @patch('logging.error')
     @patch('logging.info')
     @patch('shtub.commandstub.deserialize_stub_configurations', return_value=[])
     def test_should_exit_with_error_code_255_when_execution_not_in_stub_configuration (self, \
-                        mock_deserialize, mock_logging_info, mock_logging_error, mock_exit):
+                        mock_deserialize, mock_logging_info, mock_logging_error, mock_exit, mock_serialize):
 
         command_input = CommandInput('command', ['-arg1', '-arg2', '-arg3'], 'stdin')
 
@@ -112,11 +134,12 @@ class Tests (unittest.TestCase):
         self.assertEqual(call(255), mock_exit.call_args)
 
 
+    @patch('shtub.commandstub.serialize_as_dictionaries')
     @patch('sys.exit')
     @patch('logging.error')
     @patch('logging.info')
     @patch('shtub.commandstub.deserialize_stub_configurations', return_value=[])
-    def test_should_load_configured_stubs(self, mock_deserialize, mock_logging_info, mock_logging_error, mock_exit):
+    def test_should_load_configured_stubs(self, mock_deserialize, mock_logging_info, mock_logging_error, mock_exit, mock_serialize):
         command_input = CommandInput('command', ['-arg1', '-arg2', '-arg3'], 'stdin')
 
         commandstub.dispatch(command_input)
@@ -126,7 +149,7 @@ class Tests (unittest.TestCase):
 
     @patch('shtub.commandstub.unlock')
     @patch('shtub.commandstub.lock')
-    @patch('shtub.commandstub.serialize_executions')
+    @patch('shtub.commandstub.serialize_as_dictionaries')
     @patch('shtub.commandstub.deserialize_executions', return_value=[])
     @patch('os.path.exists', return_value=True)
     def test_should_append_execution_and_serialize (self,
@@ -144,7 +167,7 @@ class Tests (unittest.TestCase):
 
     @patch('shtub.commandstub.unlock')
     @patch('shtub.commandstub.lock')
-    @patch('shtub.commandstub.serialize_executions')
+    @patch('shtub.commandstub.serialize_as_dictionaries')
     @patch('shtub.commandstub.deserialize_executions')
     @patch('os.path.exists', return_value=True)
     def test_should_deserialize_when_file_exists (self,
@@ -158,7 +181,7 @@ class Tests (unittest.TestCase):
 
     @patch('shtub.commandstub.unlock')
     @patch('shtub.commandstub.lock')
-    @patch('shtub.commandstub.serialize_executions')
+    @patch('shtub.commandstub.serialize_as_dictionaries')
     @patch('shtub.commandstub.deserialize_executions')
     @patch('os.path.exists', return_value=False)
     def test_should_not_deserialize_when_file_does_not_exist (self, \
