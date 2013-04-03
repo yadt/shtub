@@ -70,6 +70,7 @@ This will cause the first ssh call to succeed with exit code 0 and the next call
 
 
 # Running a shtub test
+```python
 if __name__ == '__main__':
     unittest.main()
 ```
