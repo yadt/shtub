@@ -29,7 +29,7 @@ class StubbingSshExampleTest (shtub.testbase.IntegrationTestBase):
 
         with self.verify() as verify:
             verify.called('ssh').at_least_with_arguments('-arg1', '-arg2', '-arg3')
-
+```
 ## Matching
 You can match stub executions using invocation chaining with
   * with_input
