@@ -57,12 +57,12 @@ with self.verify() as complete_verify:
     with complete_verify.filter_by_argument('foo') as verify:
          verify.called('ssh').at_least_with_arguments('foo', '--bar')
     complete_verify.finished()
-
+```
 ## Using stacked answers
 If your stubbed command should behave differently when called repeatedly, you can use stacked answers like so:
 
 ```python
-            when.calling('ssh').at_least_with_arguments('-arg1').then_return(0).then_return(100)
+when.calling('ssh').at_least_with_arguments('-arg1').then_return(0).then_return(100)
 ```
 This will cause the first ssh call to succeed with exit code 0 and the next call to fail with exit code 100.
 
