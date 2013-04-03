@@ -33,7 +33,8 @@ class StubbingSshExampleTest (shtub.testbase.IntegrationTestBase):
 ## Matching
 You can match stub executions using invocation chaining with
   * with_input
-  * at_least_with_arguments
+  * at_least_with_arguments  
+
 ### Example
 ```python
 when.calling('cmd').at_least_with_arguments('foo', '--verbose=1').with_input('Lorem ipsum dolorem').then_return(0)
