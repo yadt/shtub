@@ -41,11 +41,14 @@ class Tests (integrationtest_support.IntegrationTestSupport):
 
         with self.verify() as verify:
 
-            with verify.extract_by_argument('type_1') as filtered_verify:
+            with verify.filter_by_argument('type_1') as filtered_verify:
                 filtered_verify.called('command_stub').with_arguments('type_1', '-arg2', '-arg3').and_input('stdin')
 
-            with verify.extract_by_argument('type_2') as filtered_verify:
+            with verify.filter_by_argument('type_2') as filtered_verify:
                 filtered_verify.called('command_stub').with_arguments('type_2', '-arg4', '-arg5').and_input('stdin')
+
+            verify.finished()
+
 
 if __name__ == '__main__':
     unittest.main()

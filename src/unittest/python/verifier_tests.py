@@ -28,7 +28,7 @@ from shtub.commandinput import CommandInput
 class VerifierLoaderTest (unittest.TestCase):
     def test_should_create_object_with_given_base_dir (self):
         actual = VerifierLoader('/abc/def')
-
+        
         self.assertEqual('/abc/def', actual.base_dir)
 
 
@@ -36,7 +36,7 @@ class VerifierLoaderTest (unittest.TestCase):
         verifier = VerifierLoader('/abc/def')
 
         actual_executions = verifier.executions
-
+        
         self.assertEqual([], actual_executions)
 
 
@@ -44,7 +44,7 @@ class VerifierLoaderTest (unittest.TestCase):
     def test_should_raise_exception_when_recorded_calls_file_does_not_exist (self, mock_exists):
         mock_exists.return_value = False
         verifier = VerifierLoader('/spam/eggs')
-
+        
         self.assertRaises(VerificationException, verifier.__enter__)
         self.assertEqual(call('/spam/eggs/shtub/executions'), mock_exists.call_args)
 
@@ -54,10 +54,10 @@ class VerifierLoaderTest (unittest.TestCase):
     def test_should_deserialize_recorded_calls_and_return_verifier_itself_when_entering_with_statement (self, mock_deserialize, mock_exists):
         mock_exists.return_value = True
         verifier = VerifierLoader('/hello/world')
-
+                
         with verifier as veri:
             self.assertEqual(veri, verifier)
-
+            
         self.assertEqual(call('/hello/world/shtub/executions'), mock_deserialize.call_args)
 
 
@@ -68,7 +68,7 @@ class VerifierLoaderTest (unittest.TestCase):
         verifier = VerifierLoader('/hello/world')
         execution1 = Execution('any_command1', ['1any_arg1', '1any_arg2'], 'any_stdin1')
         mock_deserialize.return_value = [execution1]
-
+        
         self.assertRaises(VerificationException, verifier.__enter__)
 
 
@@ -77,12 +77,12 @@ class VerifierLoaderTest (unittest.TestCase):
     def test_should_raise_exception_when_the_second_execution_has_not_been_accepted (self, mock_deserialize, mock_exists):
         mock_exists.return_value = True
         verifier = VerifierLoader('/hello/world')
-
+        
         execution1 = Execution('any_command1', ['1any_arg1', '1any_arg2'], 'any_stdin1', expected=True)
         execution2 = Execution('any_command2', ['2any_arg1', '2any_arg2'], 'any_stdin2')
-
+        
         mock_deserialize.return_value = [execution1, execution2]
-
+        
         self.assertRaises(VerificationException, verifier.__enter__)
 
     @patch('os.path.exists')
@@ -94,7 +94,7 @@ class VerifierLoaderTest (unittest.TestCase):
         verifier = VerifierLoader('/hello/world')
 
         with verifier as verify:
-            self.assertTrue(verify.extract_by_argument('foobar') is not verify, "should not return itself")
+            self.assertTrue(verify.filter_by_argument('foobar') is not verify, "should not return itself")
 
 
     @patch('os.path.exists')
@@ -106,7 +106,7 @@ class VerifierLoaderTest (unittest.TestCase):
         verifier = VerifierLoader('/hello/world')
 
         with verifier as verify:
-            with verify.extract_by_argument('foobar') as verify_foobar:
+            with verify.filter_by_argument('foobar') as verify_foobar:
 
                 self.assertEqual([], verify_foobar.executions)
 
@@ -121,25 +121,9 @@ class VerifierLoaderTest (unittest.TestCase):
 
         verify = verifier.__enter__()
 
-        with verify.extract_by_argument('-arg1') as verify_foobar:
+        with verify.filter_by_argument('-arg1') as verify_foobar:
             self.assertEqual([execution1], verify_foobar.executions)
             verify_foobar.finished()
-
-    @patch('os.path.exists')
-    @patch('shtub.verification.verifierloader.deserialize_executions')
-    def test_should_remove_executions_when_extracting_by_argument(self, mock_deserialize, mock_exists):
-        mock_exists.return_value = True
-        execution1 = Execution('command', ['-arg1', '-arg2'], 'stdin', expected=True)
-        mock_deserialize.return_value = [execution1]
-
-        verifier = VerifierLoader('/hello/world')
-
-        verify = verifier.__enter__()
-
-        with verify.extract_by_argument('-arg1') as verify_foobar:
-            self.assertEqual([execution1], verify_foobar.executions)
-            verify_foobar.finished()
-        self.assertEqual(verify.executions, [])
 
     @patch('os.path.exists')
     @patch('shtub.verification.verifierloader.deserialize_executions')
@@ -152,7 +136,7 @@ class VerifierLoaderTest (unittest.TestCase):
 
         verify = verifier.__enter__()
 
-        with verify.extract_by_argument('foobar') as verify_foobar:
+        with verify.filter_by_argument('foobar') as verify_foobar:
             self.assertEqual([], verify_foobar.executions)
             verify_foobar.finished()
 
@@ -168,7 +152,7 @@ class VerifierLoaderTest (unittest.TestCase):
 
         verify = verifier.__enter__()
 
-        with verify.extract_by_argument('-arg1') as verify_foobar:
+        with verify.filter_by_argument('-arg1') as verify_foobar:
             self.assertEqual([execution1], verify_foobar.executions)
             verify_foobar.finished()
 
@@ -186,7 +170,7 @@ class VerifierLoaderTest (unittest.TestCase):
 
         verify = verifier.__enter__()
 
-        with verify.extract_by_argument('-arg2') as verify_foobar:
+        with verify.filter_by_argument('-arg2') as verify_foobar:
             self.assertEqual([execution1, execution3], verify_foobar.executions)
             verify_foobar.finished()
 
@@ -226,64 +210,64 @@ class CommandInputVerifierTests (unittest.TestCase):
     def test_should_verify_at_least_given_argument (self):
         command_input = CommandInput('command', ['-arg1', '-arg2', '-arg3'], 'stdin')
         wrapper = CommandInputVerifier(command_input)
-
+        
         actual_value = wrapper.at_least_with_arguments('-arg1')
-
+        
         self.assertEqual(wrapper, actual_value)
 
 
     def test_should_verify_at_least_given_arguments (self):
         command_input = CommandInput('command', ['-arg1', '-arg2', '-arg3'], 'stdin')
         wrapper = CommandInputVerifier(command_input)
-
+        
         actual_value = wrapper.at_least_with_arguments('-arg1', '-arg2')
-
+        
         self.assertEqual(wrapper, actual_value)
 
 
     def test_should_raise_exception_when_given_argument_is_not_execution (self):
         command_input = CommandInput('command', ['-arg1', '-arg2', '-arg3'], 'stdin')
         wrapper = CommandInputVerifier(command_input)
-
+        
         self.assertRaises(VerificationException, wrapper.at_least_with_arguments, '-arg0')
 
 
     def test_should_verify_given_arguments (self):
         command_input = CommandInput('command', ['-arg1', '-arg2', '-arg3'], 'stdin')
         wrapper = CommandInputVerifier(command_input)
-
+        
         actual_value = wrapper.with_arguments('-arg1', '-arg2', '-arg3')
-
+        
         self.assertEqual(wrapper, actual_value)
 
 
     def test_should_raise_exception_when_given_arguments_are_different (self):
         command_input = CommandInput('command', ['-arg1', '-arg2', '-arg3'], 'stdin')
         wrapper = CommandInputVerifier(command_input)
-
+        
         self.assertRaises(VerificationException, wrapper.with_arguments, '-arg1', '-arg2', 'arg3')
 
 
     def test_should_verify_given_input (self):
         command_input = CommandInput('command', ['-arg1', '-arg2', '-arg3'], 'stdin')
         wrapper = CommandInputVerifier(command_input)
-
+        
         actual_value = wrapper.with_input('stdin')
-
+        
         self.assertEqual(wrapper, actual_value)
 
 
     def test_should_raise_exception_when_given_input_is_different (self):
         command_input = CommandInput('command', ['-arg1', '-arg2', '-arg3'], 'stdin')
         wrapper = CommandInputVerifier(command_input)
-
+        
         self.assertRaises(VerificationException, wrapper.with_input, 'hello world')
 
 
     def test_should_verify_input_using_with_or_and (self):
         command_input = CommandInput('command', ['-arg1', '-arg2', '-arg3'], 'stdin')
         wrapper = CommandInputVerifier(command_input)
-
+        
         self.assertEqual(wrapper.and_input, wrapper.with_input)
 
     def test_should_raise_exception_when_no_argument_matches_given_string(self):

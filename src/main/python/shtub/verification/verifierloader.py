@@ -16,7 +16,7 @@
 
 """
     this module provides the class VerifierLoader which offers methods to verify if
-    the command stub has been called in the expected way.
+    the command stub has been called in the expected way. 
 """
 
 __author__ = 'Alexander Metzner, Michael Gruber, Udo Juettner'
@@ -113,12 +113,11 @@ class VerifierLoader (Verifier):
 
         return self
 
-    def extract_by_argument(self, argument_name):
+    def filter_by_argument(self, argument_name):
         matching_executions = []
 
         for execution in self.executions:
             if argument_name in execution.command_input.arguments:
                 matching_executions.append(execution)
-                self.executions.remove(execution)
 
         return Verifier(matching_executions)
