@@ -16,11 +16,13 @@
 
 __author__ = 'Alexander Metzner, Michael Gruber, Udo Juettner'
 
-import unittest
+import os
 import subprocess
 import tempfile
+import unittest
+import sys
 
-import os
+
 from shtub import BASEDIR, STUBS_DIRECTORY
 from shtub.fixture import Fixture
 from shtub.verification.verifierloader import VerifierLoader
@@ -78,6 +80,8 @@ class IntegrationTestBase (unittest.TestCase):
                                          env=self.env)
 
         stdout, stderr = shell_process.communicate()
+        stdout = stdout.decode(sys.stdout.encoding or 'utf-8')
+        stderr = stderr.decode(sys.stderr.encoding or 'utf-8')
         self._write_output_file(command, stdout, stderr)
 
         self.command_counter += 1
