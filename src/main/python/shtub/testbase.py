@@ -60,10 +60,10 @@ class IntegrationTestBase (unittest.TestCase):
                 output_file.write('%s=%s\n' % (key, self.env[key]))
 
             output_file.write('----------------- STDOUT -------------------\n')
-            output_file.write(str(stdout.decode("utf-8")))
+            output_file.write(str(stdout))
 
             output_file.write('----------------- STDERR -------------------\n')
-            output_file.write(str(stderr.decode("utf-8")))
+            output_file.write(str(stderr))
 
 
     def execute_command(self, command):
