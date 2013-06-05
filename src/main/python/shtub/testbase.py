@@ -64,7 +64,12 @@ class IntegrationTestBase (unittest.TestCase):
             output_file.write(str(stderr.decode("utf-8")))
 
 
-    def execute_command (self, command):
+    def execute_command(self, command):
+        return_code, _, _ = self.execute_command_and_capture_output(command)
+        return return_code
+
+
+    def execute_command_and_capture_output(self, command):
         shell_process = subprocess.Popen(args=[command],
                                          stdout=subprocess.PIPE,
                                          stderr=subprocess.PIPE,
@@ -74,10 +79,9 @@ class IntegrationTestBase (unittest.TestCase):
 
         stdout, stderr = shell_process.communicate()
         self._write_output_file(command, stdout, stderr)
-        
-        self.command_counter += 1
 
-        return shell_process.returncode
+        self.command_counter += 1
+        return (shell_process.returncode, stdout, stderr)
 
 
     def fixture (self):
@@ -100,10 +104,10 @@ class IntegrationTestBase (unittest.TestCase):
     def stub_commands (self, command_list):
         for command in command_list:
             command_file_name = os.path.join(self.stubs_dir, command)
-            
+
             with open(command_file_name, "w") as command_file:
                 command_file.write(STUB_SCRIPT_CONTENT)
-                
+
             os.chmod(command_file_name, 0o755)
 
     def make_base_dir (self, base_dir):
