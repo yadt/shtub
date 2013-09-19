@@ -28,20 +28,21 @@ from shtub.stubconfiguration import StubConfiguration
 
 
 class Fixture (object):
+
     """
         Represents the testing context which contains stub configurations and corresponding answers.
         Please use instances of this class in a "with" statement.
     """
-    def __init__ (self, base_directory):
+
+    def __init__(self, base_directory):
         """
             initializes a new fixture with the given base directory.
         """
-        
+
         self.base_directory = base_directory
         self.stub_configurations = []
-    
 
-    def calling (self, command):
+    def calling(self, command):
         """
             creates a new StubConfiguration with the given command and appends it to
             the stub_configurations, then returns the stub_configuration for invocation
@@ -49,30 +50,28 @@ class Fixture (object):
         """
         stub_configuration = StubConfiguration(command)
         self.stub_configurations.append(stub_configuration)
-        
+
         return stub_configuration
 
-    
-    def __enter__ (self):
+    def __enter__(self):
         """
             since this class is designed to be used using the "with" statement
             this returns the fixture itself.
         """
         return self
-    
-    
-    def __exit__ (self, exception_type, exception_value, traceback):
+
+    def __exit__(self, exception_type, exception_value, traceback):
         """
             since this class is designed to be used in a "with" statement
             this will save the list of stub_configurations in the base directory.
-            
+
             @return: False, when exception_type, exception_value or traceback given,
                      otherwise None
         """
-         
+
         if exception_type or exception_value or traceback:
             return False
-               
+
         filename = os.path.join(self.base_directory, CONFIGURED_STUBS_FILENAME)
-        
+
         serialize_as_dictionaries(filename, self.stub_configurations)

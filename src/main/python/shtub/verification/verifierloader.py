@@ -21,6 +21,7 @@
 
 __author__ = 'Alexander Metzner, Michael Gruber, Udo Juettner'
 
+import sys
 import os.path
 from shtub import EXECUTIONS_FILENAME, deserialize_executions
 from shtub.verification.commandinputverifier import CommandInputVerifier
@@ -58,6 +59,14 @@ class Verifier (object):
                 message += "    %s\n" % str(execution)
 
             raise VerificationException(message)
+
+    def render_execution_chain(self, filelike=sys.stdout):
+        filelike.write("%20s\n" % "Execution chain")
+        execution_counter = 1
+        for e in self.executions:
+            ci = e.command_input
+            filelike.write("{0} | {1} {2}\n".format(execution_counter, ci.command, ' '.join(ci.arguments)))
+            execution_counter += 1
 
     def called(self, command):
         """
