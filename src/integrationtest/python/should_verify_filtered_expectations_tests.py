@@ -20,11 +20,13 @@ import integrationtest_support
 
 
 class Tests (integrationtest_support.IntegrationTestSupport):
-    def test (self):
-        self.prepare_default_testbed(['command_stub'])
-        self.create_command_wrapper('command_wrapper_1', 'command_stub', ['type_1', '-arg2', '-arg3'], 'stdin')
-        self.create_command_wrapper('command_wrapper_2', 'command_stub', ['type_2', '-arg4', '-arg5'], 'stdin')
 
+    def test(self):
+        self.prepare_default_testbed(['command_stub'])
+        self.create_command_wrapper(
+            'command_wrapper_1', 'command_stub', ['type_1', '-arg2', '-arg3'], 'stdin')
+        self.create_command_wrapper(
+            'command_wrapper_2', 'command_stub', ['type_2', '-arg4', '-arg5'], 'stdin')
 
         with self.fixture() as when:
             when.calling('command_stub').at_least_with_arguments('-arg2', '-arg3').and_input('stdin') \
@@ -42,10 +44,12 @@ class Tests (integrationtest_support.IntegrationTestSupport):
         with self.verify() as verify:
 
             with verify.filter_by_argument('type_1') as filtered_verify:
-                filtered_verify.called('command_stub').with_arguments('type_1', '-arg2', '-arg3').and_input('stdin')
+                filtered_verify.called('command_stub').with_arguments(
+                    'type_1', '-arg2', '-arg3').and_input('stdin')
 
             with verify.filter_by_argument('type_2') as filtered_verify:
-                filtered_verify.called('command_stub').with_arguments('type_2', '-arg4', '-arg5').and_input('stdin')
+                filtered_verify.called('command_stub').with_arguments(
+                    'type_2', '-arg4', '-arg5').and_input('stdin')
 
             verify.finished()
 

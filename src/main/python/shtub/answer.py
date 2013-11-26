@@ -21,57 +21,55 @@
 
 __author__ = 'Michael Gruber'
 
+
 class Answer (object):
+
     """
         represents a answer the command stub is sending back when an stub configuration is fulfilled.
     """
-    
+
     def __init__(self, stdout, stderr, return_code, milliseconds_to_wait=None):
         """
             initializes with the given properties.
         """
-        self.stdout      = stdout
-        self.stderr      = stderr
+        self.stdout = stdout
+        self.stderr = stderr
         self.return_code = return_code
-        self.milliseconds_to_wait=milliseconds_to_wait
-    
-    
-    def as_dictionary (self):
+        self.milliseconds_to_wait = milliseconds_to_wait
+
+    def as_dictionary(self):
         """
             returns a dictionary representation of this object.
         """
-        return {'stdout'      : self.stdout,
-                'stderr'      : self.stderr,
-                'return_code' : self.return_code,
+        return {'stdout': self.stdout,
+                'stderr': self.stderr,
+                'return_code': self.return_code,
                 'milliseconds_to_wait': self.milliseconds_to_wait}
 
-
-    def __str__ (self):
+    def __str__(self):
         """
             returns a string representation of this object using the method
             as_dictionary.
         """
-        
+
         return 'Answer %s' % (self.as_dictionary())
 
-
-    def __eq__ (self, other):
+    def __eq__(self, other):
         """
             returns True when the given answer object has exactly the same
             properties.
         """
-        
-        return      self.stdout == other.stdout \
-           and      self.stderr == other.stderr \
-           and self.return_code == other.return_code
 
+        return      self.stdout == other.stdout \
+            and      self.stderr == other.stderr \
+            and self.return_code == other.return_code
 
     @staticmethod
-    def from_dictionary (dictionary):
+    def from_dictionary(dictionary):
         """
             returns a new Answer object with the properties from the dictionary.
         """
-        
+
         return Answer(dictionary['stdout'],
                       dictionary['stderr'],
                       dictionary['return_code'],

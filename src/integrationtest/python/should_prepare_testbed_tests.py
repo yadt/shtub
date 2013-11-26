@@ -21,11 +21,13 @@ import integrationtest_support
 
 from shtub.testbase import STUB_SCRIPT_CONTENT
 
+
 class Test (integrationtest_support.IntegrationTestSupport):
-    def test (self):
+
+    def test(self):
         list_of_stubs = ['command_stub1', 'command_stub2', 'command_stub3']
-        environment   = {'env_var': 'env_value'}
-        
+        environment = {'env_var': 'env_value'}
+
         self.prepare_testbed(environment, list_of_stubs)
 
         actual_testbase = self
@@ -39,7 +41,8 @@ class Test (integrationtest_support.IntegrationTestSupport):
             path_to_stub = os.path.join(actual_testbase.stubs_dir, stub_name)
             self.assert_file_content(path_to_stub, STUB_SCRIPT_CONTENT)
 
-        test_execution_directory = os.path.join(actual_testbase.base_dir, 'shtub')
+        test_execution_directory = os.path.join(
+            actual_testbase.base_dir, 'shtub')
         self.assert_directory_exists(test_execution_directory)
 
 

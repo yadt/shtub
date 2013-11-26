@@ -24,9 +24,11 @@ from shtub import deserialize_executions
 
 
 class Test (integrationtest_support.IntegrationTestSupport):
-    def test (self):
+
+    def test(self):
         self.prepare_default_testbed(['command_stub'])
-        self.create_command_wrapper('command_wrapper', 'command_stub', ['-arg1', '-arg2', '-arg3'], 'stdin')
+        self.create_command_wrapper(
+            'command_wrapper', 'command_stub', ['-arg1', '-arg2', '-arg3'], 'stdin')
 
         with self.fixture() as when:
             when.calling('command_stub').at_least_with_arguments('-arg1', '-arg2', '-arg3').and_input('stdin') \
@@ -44,8 +46,10 @@ class Test (integrationtest_support.IntegrationTestSupport):
 
         actual_execution = actual_executions[0]
 
-        self.assertEqual('command_stub', actual_execution.command_input.command)
-        self.assertEqual(['-arg1', '-arg2', '-arg3'], actual_execution.command_input.arguments)
+        self.assertEqual(
+            'command_stub', actual_execution.command_input.command)
+        self.assertEqual(
+            ['-arg1', '-arg2', '-arg3'], actual_execution.command_input.arguments)
         self.assertEqual('stdin', actual_execution.command_input.stdin)
 
 

@@ -20,10 +20,13 @@ import integrationtest_support
 
 from shtub.verification import VerificationException
 
+
 class Test (integrationtest_support.IntegrationTestSupport):
-    def test (self):
+
+    def test(self):
         self.prepare_default_testbed(['command_stub', 'command_stub1'])
-        self.create_command_wrapper('command_wrapper1', 'command_stub1', ['-arg1', '-arg2', '-arg3'], 'stdin1')
+        self.create_command_wrapper(
+            'command_wrapper1', 'command_stub1', ['-arg1', '-arg2', '-arg3'], 'stdin1')
 
         with self.fixture() as when:
             when.calling('command_stub').at_least_with_arguments('-arg0', '-arg1', '-arg2').and_input('stdin') \

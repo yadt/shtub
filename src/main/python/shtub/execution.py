@@ -25,63 +25,58 @@ from shtub.commandinput import CommandInput
 
 
 class Execution (object):
+
     """
         Represents the parameters of a call to the command stub.
     """
-    
-    def __init__ (self, command, arguments, stdin, expected=False):
+
+    def __init__(self, command, arguments, stdin, expected=False):
         """
             initializes a new execution with the given properties.
             If arguments is not given it will be initialized as empty list.
         """
-        
-        self.command_input = CommandInput(command, arguments, stdin)        
-        self.expected      = expected
-    
-    
-    def as_dictionary (self):
+
+        self.command_input = CommandInput(command, arguments, stdin)
+        self.expected = expected
+
+    def as_dictionary(self):
         """
             returns a dictionary representation of the execution.
         """
-        
-        return {'command_input' : self.command_input.as_dictionary(),
-                'expected'      : self.expected}
-    
-    
-    def mark_as_expected (self):
+
+        return {'command_input': self.command_input.as_dictionary(),
+                'expected': self.expected}
+
+    def mark_as_expected(self):
         """
             marks the execution as expected which means the execution fulfills a stub configuration.
         """
-        
+
         self.expected = True
 
-
-    def __eq__ (self, other):
+    def __eq__(self, other):
         return self.command_input == other.command_input \
-           and      self.expected == other.expected
- 
+            and self.expected == other.expected
 
-    def __ne__ (self, other):
+    def __ne__(self, other):
         return not(self == other)
 
-
-    def __str__ (self):
+    def __str__(self):
         """
             returns a string representation using as_dictionary.
         """
-        
+
         return 'Execution %s' % (self.as_dictionary())
 
-    
     @staticmethod
-    def from_dictionary (dictionary):
+    def from_dictionary(dictionary):
         """
             returns a new execution object with the properties from the given
             dictionary.
         """
-        
+
         command_input_dictionary = dictionary['command_input']
-        
+
         return Execution(command_input_dictionary['command'],
                          command_input_dictionary['arguments'],
                          command_input_dictionary['stdin'],

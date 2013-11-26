@@ -34,11 +34,12 @@ import shtub.commandstub
 shtub.commandstub.handle_execution()
 """
 
+
 class IntegrationTestBase (unittest.TestCase):
-    def setUp (self):
+
+    def setUp(self):
         self.command_counter = 0
         self.set_base_dir(None)
-
 
     def _normalize_command_line(self, command):
         normalized = command.replace(' ', '_') \
@@ -48,10 +49,9 @@ class IntegrationTestBase (unittest.TestCase):
                             .replace('/', '_')
         return normalized
 
-
-    def _write_output_file (self, command, stdout, stderr):
-        normalized  = self._normalize_command_line(command)
-        filename    = '%02d-%s' % (self.command_counter, normalized)
+    def _write_output_file(self, command, stdout, stderr):
+        normalized = self._normalize_command_line(command)
+        filename = '%02d-%s' % (self.command_counter, normalized)
         output_path = os.path.join(self.base_dir, BASEDIR, filename)
 
         with open(output_path, 'wt') as output_file:
@@ -65,11 +65,9 @@ class IntegrationTestBase (unittest.TestCase):
             output_file.write('----------------- STDERR -------------------\n')
             output_file.write(str(stderr))
 
-
     def execute_command(self, command):
         return_code, _, _ = self.execute_command_and_capture_output(command)
         return return_code
-
 
     def execute_command_and_capture_output(self, command):
         shell_process = subprocess.Popen(args=[command],
@@ -87,25 +85,21 @@ class IntegrationTestBase (unittest.TestCase):
         self.command_counter += 1
         return (shell_process.returncode, stdout, stderr)
 
-
-    def fixture (self):
+    def fixture(self):
         return Fixture(self.base_dir)
 
-
-    def verify (self):
+    def verify(self):
         return VerifierLoader(self.base_dir)
 
-
-    def prepare_testbed (self, env, stubs):
-        self.env   = env
+    def prepare_testbed(self, env, stubs):
+        self.env = env
         self.stubs = stubs
 
         os.mkdir(os.path.join(self.base_dir, BASEDIR))
         os.mkdir(self.stubs_dir)
         self.stub_commands(self.stubs)
 
-
-    def stub_commands (self, command_list):
+    def stub_commands(self, command_list):
         for command in command_list:
             command_file_name = os.path.join(self.stubs_dir, command)
 
@@ -114,12 +108,11 @@ class IntegrationTestBase (unittest.TestCase):
 
             os.chmod(command_file_name, 0o755)
 
-    def make_base_dir (self, base_dir):
+    def make_base_dir(self, base_dir):
         os.makedirs(base_dir)
         self.set_base_dir(base_dir)
 
-
-    def set_base_dir (self, base_dir):
+    def set_base_dir(self, base_dir):
         if base_dir:
             self.base_dir = base_dir
             self.cleanup_base_dir = False

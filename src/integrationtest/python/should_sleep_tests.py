@@ -22,10 +22,11 @@ import integrationtest_support
 
 
 class Tests (integrationtest_support.IntegrationTestSupport):
-    def test (self):
-        self.prepare_default_testbed(['command_stub'])
-        self.create_command_wrapper('command_wrapper_1', 'command_stub', ['type_1', '-arg2', '-arg3'], 'stdin')
 
+    def test(self):
+        self.prepare_default_testbed(['command_stub'])
+        self.create_command_wrapper(
+            'command_wrapper_1', 'command_stub', ['type_1', '-arg2', '-arg3'], 'stdin')
 
         with self.fixture() as when:
             when.calling('command_stub').at_least_with_arguments('-arg2', '-arg3').and_input('stdin') \
@@ -37,13 +38,15 @@ class Tests (integrationtest_support.IntegrationTestSupport):
 
         execution_time_delta = after_execution - before_execution
 
-        self.assertTrue(execution_time_delta > timedelta(seconds=2), 'Command stub did not sleep at least 2 seconds before answering.')
+        self.assertTrue(execution_time_delta > timedelta(seconds=2),
+                        'Command stub did not sleep at least 2 seconds before answering.')
 
         self.assertEqual(0, actual_return_code1)
 
         with self.verify() as verify:
 
-            verify.called('command_stub').with_arguments('type_1', '-arg2', '-arg3').and_input('stdin')
+            verify.called('command_stub').with_arguments(
+                'type_1', '-arg2', '-arg3').and_input('stdin')
 
 
 if __name__ == '__main__':

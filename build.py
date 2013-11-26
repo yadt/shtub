@@ -14,7 +14,6 @@
 #   You should have received a copy of the GNU General Public License
 #   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import sys
 from pybuilder.core import use_plugin, init, Author
 
 use_plugin('filter_resources')
@@ -25,7 +24,6 @@ use_plugin('python.unittest')
 use_plugin('python.integrationtest')
 use_plugin('python.install_dependencies')
 use_plugin('python.distutils')
-use_plugin('python.pydev')
 
 name = 'shtub'
 authors = [Author('Alexander Metzner', 'alexander.metzner@gmail.com'),
@@ -44,7 +42,7 @@ default_task = ['analyze', 'publish']
 @init
 def set_properties (project):
     project.build_depends_on('mock')
-    
+
     project.set_property('coverage_break_build', True)
     project.get_property('coverage_exceptions').append('shtub.testbase')
 

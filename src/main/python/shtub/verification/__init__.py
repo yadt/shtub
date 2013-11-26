@@ -16,8 +16,9 @@
 
 __author__ = 'Alexander Metzner, Michael Gruber, Udo Juettner, Maximilien Riehl, Marcel Wolf'
 
+
 class VerificationException (Exception):
+
     """
         to be raised when an error during verification occurs.
     """
-

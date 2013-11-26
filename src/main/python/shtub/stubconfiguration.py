@@ -24,45 +24,45 @@ __author__ = 'Alexander Metzner, Michael Gruber, Udo Juettner, Maximilien Riehl,
 from shtub.answer import Answer
 from shtub.commandinput import CommandInput
 
+
 class StubConfiguration(object):
+
     """
         Represents the configuration of a command stub and contains the corresponding answers.
     """
-    
+
     def __init__(self, command, arguments=[], stdin=None, answers=[], initial_answer=0):
         """
             will initialize a new object with the given properties.
             answers and initial_answer are not mandatory.
         """
-        
+
         self.command_input = CommandInput(command, arguments, stdin)
-        
+
         self.answers = []
         self.current_answer = initial_answer
-        
+
         for answer in answers:
             self.answers.append(answer)
-            
+
         self.and_input = self.with_input
-    
-    
+
     def as_dictionary(self):
         """
             returns a dictionary representation of this stub configuration.
         """
-        
+
         answers_list = []
-        
+
         for answer in self.answers:
             answer_dictionary = answer.as_dictionary()
             answers_list.append(answer_dictionary)
-        
+
         result = {'command_input': self.command_input.as_dictionary(),
                   'answers': answers_list,
                   'current_answer': self.current_answer}
-                
-        return result
 
+        return result
 
     def next_answer(self):
         """
@@ -70,105 +70,99 @@ class StubConfiguration(object):
             list is reached it will repeatedly return the last answer of the
             list.
         """
-        
+
         if len(self.answers) == 0:
             raise Exception('List of answers is empty!')
-        
+
         result = self.answers[self.current_answer]
-        
+
         if self.current_answer < len(self.answers) - 1:
             self.current_answer += 1
-        
+
         return result
-        
-        
-    def then (self, answer):
+
+    def then(self, answer):
         """
             will append the given answer to the list of answers and return
             the object itself for invocation chaining.
         """
-        
+
         self.answers.append(answer)
-        
+
         return self
-    
-    
-    def then_answer (self, stdout=None, stderr=None, return_code=0, milliseconds_to_wait=None):
+
+    def then_answer(self, stdout=None, stderr=None, return_code=0, milliseconds_to_wait=None):
         """
             a convenience method to "then" which will create a new answer
-            object with the given properties. 
+            object with the given properties.
         """
-        
+
         return self.then(Answer(stdout, stderr, return_code, milliseconds_to_wait))
-        
-        
-    def then_return (self, return_code, milliseconds_to_wait=None):
+
+    def then_return(self, return_code, milliseconds_to_wait=None):
         """
             a convenience method to "then" which will create a new answer
-            object with the given return_code. 
+            object with the given return_code.
         """
-        
+
         return self.then_answer(return_code=return_code, milliseconds_to_wait=milliseconds_to_wait)
 
-
-    def then_write (self, stdout=None, stderr=None, milliseconds_to_wait=None):
+    def then_write(self, stdout=None, stderr=None, milliseconds_to_wait=None):
         """
             a convenience method to "then" which will create a new answer
-            object with the given stdout and stderr output. 
+            object with the given stdout and stderr output.
         """
-        
+
         return self.then_answer(stdout=stdout, stderr=stderr, milliseconds_to_wait=milliseconds_to_wait)
-    
-    
-    def at_least_with_arguments (self, *arguments):
+
+    def at_least_with_arguments(self, *arguments):
         """
             sets the given arguments and returns self for invocation chaining
         """
-        
+
         self.command_input.arguments = list(arguments)
-        
+
         return self
 
-    
-    def with_input (self, stdin):
+    def with_input(self, stdin):
         """
             sets the given arguments and returns self for invocation chaining
         """
-        
+
         self.command_input.stdin = stdin
-        
+
         return self
 
-
-    def __eq__ (self, other):
+    def __eq__(self, other):
         return  self.command_input == other.command_input \
-           and self.current_answer == other.current_answer \
-           and        self.answers == other.answers
+            and self.current_answer == other.current_answer \
+            and self.answers == other.answers
 
-
-    def __str__ (self):
+    def __str__(self):
         """
             returns a string representation of this stub configuration using the method "as_dictionary"
         """
         return 'StubConfiguration %s' % (self.as_dictionary())
-    
-    
+
     @staticmethod
-    def from_dictionary (dictionary):
+    def from_dictionary(dictionary):
         """
             returns a new stub configuration object with the properties from the given dictionary
         """
         answers = []
-        
+
         for answer_dictionary in dictionary['answers']:
             answer = Answer.from_dictionary(answer_dictionary)
             answers.append(answer)
-        
+
         command_input_dictionary = dictionary['command_input']
-        stub_configuration = StubConfiguration(command_input_dictionary['command'],
-                                               command_input_dictionary['arguments'],
-                                               command_input_dictionary['stdin'],
-                                               answers,
-                                               dictionary['current_answer'])
-        
+        stub_configuration = StubConfiguration(
+            command_input_dictionary['command'],
+            command_input_dictionary[
+                'arguments'],
+            command_input_dictionary[
+                'stdin'],
+            answers,
+            dictionary['current_answer'])
+
         return stub_configuration

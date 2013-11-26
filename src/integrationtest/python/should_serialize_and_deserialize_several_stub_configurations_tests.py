@@ -24,10 +24,13 @@ import integrationtest_support
 
 
 class Test (integrationtest_support.IntegrationTestSupport):
-    def test (self):
+
+    def test(self):
         self.prepare_default_testbed(['command_stub1', 'command_stub2'])
-        self.create_command_wrapper('command_wrapper1', 'command_stub1', ['-arg1', '-arg2', '-arg3'], 'stdin1')
-        self.create_command_wrapper('command_wrapper2', 'command_stub2', ['-arg6', '-arg7', '-arg8'], 'stdin2')
+        self.create_command_wrapper(
+            'command_wrapper1', 'command_stub1', ['-arg1', '-arg2', '-arg3'], 'stdin1')
+        self.create_command_wrapper(
+            'command_wrapper2', 'command_stub2', ['-arg6', '-arg7', '-arg8'], 'stdin2')
 
         with self.fixture() as when:
             when.calling('command_stub1').at_least_with_arguments('-arg1', '-arg2', '-arg3').and_input('stdin1') \
@@ -41,16 +44,21 @@ class Test (integrationtest_support.IntegrationTestSupport):
         self.assertEqual(0, actual_return_code1)
         self.assertEqual(0, actual_return_code2)
 
-        stub_configurations_filename = join(self.base_dir, 'shtub', 'stub-configurations')
-        actual_stub_configurations = deserialize_stub_configurations(stub_configurations_filename)
+        stub_configurations_filename = join(
+            self.base_dir, 'shtub', 'stub-configurations')
+        actual_stub_configurations = deserialize_stub_configurations(
+            stub_configurations_filename)
 
         self.assertEqual(2, len(actual_stub_configurations))
 
         actual_first_stub_configuration = actual_stub_configurations[0]
 
-        self.assertEqual('stdin1', actual_first_stub_configuration.command_input.stdin)
-        self.assertEqual(['-arg1', '-arg2', '-arg3'], actual_first_stub_configuration.command_input.arguments)
-        self.assertEqual('command_stub1', actual_first_stub_configuration.command_input.command)
+        self.assertEqual(
+            'stdin1', actual_first_stub_configuration.command_input.stdin)
+        self.assertEqual(['-arg1', '-arg2', '-arg3'],
+                         actual_first_stub_configuration.command_input.arguments)
+        self.assertEqual(
+            'command_stub1', actual_first_stub_configuration.command_input.command)
 
         actual_first_answer = actual_first_stub_configuration.next_answer()
 
@@ -60,9 +68,12 @@ class Test (integrationtest_support.IntegrationTestSupport):
 
         actual_second_stub_configuration = actual_stub_configurations[1]
 
-        self.assertEqual(['-arg6', '-arg7', '-arg8'], actual_second_stub_configuration.command_input.arguments)
-        self.assertEqual('stdin2', actual_second_stub_configuration.command_input.stdin)
-        self.assertEqual('command_stub2', actual_second_stub_configuration.command_input.command)
+        self.assertEqual(['-arg6', '-arg7', '-arg8'],
+                         actual_second_stub_configuration.command_input.arguments)
+        self.assertEqual(
+            'stdin2', actual_second_stub_configuration.command_input.stdin)
+        self.assertEqual(
+            'command_stub2', actual_second_stub_configuration.command_input.command)
 
         actual_second_answer = actual_second_stub_configuration.next_answer()
 

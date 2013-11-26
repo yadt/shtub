@@ -16,16 +16,17 @@
 
 import unittest
 
-from os.path import join
-
 import integrationtest_support
 
 from shtub.verification import VerificationException
 
+
 class Test (integrationtest_support.IntegrationTestSupport):
-    def test (self):
+
+    def test(self):
         self.prepare_default_testbed(['command_stub'])
-        self.create_command_wrapper('command_wrapper', 'command_stub', ['-arg1', '-arg2', '-arg3'], 'stdin')
+        self.create_command_wrapper(
+            'command_wrapper', 'command_stub', ['-arg1', '-arg2', '-arg3'], 'stdin')
 
         with self.fixture() as when:
             when.calling('command_stub').at_least_with_arguments('-arg1', '-arg2', '-arg3').and_input('stdin') \
@@ -37,7 +38,8 @@ class Test (integrationtest_support.IntegrationTestSupport):
 
         with self.verify() as verify:
             called_command = verify.called('command_stub')
-            self.assertRaises(VerificationException, called_command.with_arguments, '-arg0', '-arg1', '-arg2')
+            self.assertRaises(
+                VerificationException, called_command.with_arguments, '-arg0', '-arg1', '-arg2')
 
 
 if __name__ == '__main__':

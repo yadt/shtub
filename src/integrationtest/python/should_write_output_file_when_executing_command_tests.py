@@ -24,14 +24,15 @@ if sys.version_info[0] == 3:
 else:
     from StringIO import StringIO
 
-from shtub import BASEDIR
 import integrationtest_support
 
 
 class Test (integrationtest_support.IntegrationTestSupport):
-    def test (self):
+
+    def test(self):
         self.prepare_default_testbed(['command_stub'])
-        self.create_command_wrapper('command_wrapper', 'command_stub', ['-arg1', '-arg2', '-arg3'], 'stdin')
+        self.create_command_wrapper(
+            'command_wrapper', 'command_stub', ['-arg1', '-arg2', '-arg3'], 'stdin')
 
         with self.fixture() as when:
             when.calling('command_stub').at_least_with_arguments('-arg1', '-arg2', '-arg3').and_input('stdin') \
@@ -47,7 +48,7 @@ class Test (integrationtest_support.IntegrationTestSupport):
                                  'Hello world!\n'
                                  '----------------- STDERR -------------------\n'
                                  'Hello error.'
-                                ) % (self.create_path(), self.create_python_path())
+                                 ) % (self.create_path(), self.create_python_path())
 
         output_filename_00 = join(self.base_dir, 'shtub', '00-command_wrapper')
         self.assert_file_content(output_filename_00, expected_file_content)

@@ -31,9 +31,9 @@ from shtub.stubconfiguration import StubConfiguration
 
 
 class ShtubTests (unittest.TestCase):
-    def test_if_this_test_fails_maybe_you_have_shtub_installed_locally (self):
-        self.assertEqual('${version}', __version__)
 
+    def test_if_this_test_fails_maybe_you_have_shtub_installed_locally(self):
+        self.assertEqual('${version}', __version__)
 
     @patch('json.loads')
     @patch(builtin_string + '.open')
@@ -41,20 +41,23 @@ class ShtubTests (unittest.TestCase):
         fake_file = self.return_file_when_calling(mock_open)
         json_string = "[{'expected': false, 'command_input': {'stdin': 'stdin', 'command': 'command', 'arguments': ['-arg1', '-arg2', '-arg3']}}]"
         fake_file.read.return_value = json_string
-        mock_json.return_value = [{'command_input': {'command'   : 'command',
-                                                     'arguments' : ['-arg1', '-arg2', '-arg3'],
-                                                     'stdin'     : 'stdin'},
-                                   'expected'  : False}]
+        mock_json.return_value = [{'command_input': {'command': 'command',
+                                                     'arguments': ['-arg1', '-arg2', '-arg3'],
+                                                     'stdin': 'stdin'},
+                                   'expected': False}]
 
-        actual_stub_configuration = deserialize_executions('stub_configuration.json')
+        actual_stub_configuration = deserialize_executions(
+            'stub_configuration.json')
 
-        self.assertEqual(call('stub_configuration.json', mode='r'), mock_open.call_args)
+        self.assertEqual(
+            call('stub_configuration.json', mode='r'), mock_open.call_args)
         self.assertEqual(call(), fake_file.read.call_args)
         self.assertEqual(call(json_string), mock_json.call_args)
 
-        expected_stub_configuration = [Execution('command', ['-arg1', '-arg2', '-arg3'], 'stdin')]
-        self.assertEqual(expected_stub_configuration, actual_stub_configuration)
-
+        expected_stub_configuration = [
+            Execution('command', ['-arg1', '-arg2', '-arg3'], 'stdin')]
+        self.assertEqual(
+            expected_stub_configuration, actual_stub_configuration)
 
     @patch('json.loads')
     @patch(builtin_string + '.open')
@@ -62,48 +65,56 @@ class ShtubTests (unittest.TestCase):
         fake_file = self.return_file_when_calling(mock_open)
         json_string = "[{'current_answer': 0, 'answers': [{'return_code': 15, 'stderr': 'stderr', 'stdout': 'stdout', 'milliseconds_to_wait': None}], 'command_input': {'stdin': 'stdin', 'command': 'command', 'arguments': ['-arg1', '-arg2', '-arg3']}}]"
         fake_file.read.return_value = json_string
-        mock_json.return_value = [{'command_input': {'command'        : 'command',
-                                                     'arguments'      : ['-arg1', '-arg2', '-arg3'],
-                                                     'stdin'          : 'stdin'},
-                                   'current_answer' : 0,
-                                   'answers'        : [{'stdout'      : 'stdout',
-                                                        'stderr'      : 'stderr',
-                                                        'return_code' : 15,
-                                                        'milliseconds_to_wait': None}]
-                                 }]
+        mock_json.return_value = [
+            {'command_input': {'command': 'command',
+                               'arguments': ['-arg1', '-arg2', '-arg3'],
+                               'stdin': 'stdin'},
+             'current_answer': 0,
+             'answers': [{'stdout': 'stdout',
+                          'stderr': 'stderr',
+                          'return_code': 15,
+                          'milliseconds_to_wait': None}]
+             }]
 
-        actual_stub_configurations = deserialize_stub_configurations('stub_configuration.json')
+        actual_stub_configurations = deserialize_stub_configurations(
+            'stub_configuration.json')
 
-        self.assertEqual(call('stub_configuration.json', mode='r'), mock_open.call_args)
+        self.assertEqual(
+            call('stub_configuration.json', mode='r'), mock_open.call_args)
         self.assertEqual(call(), fake_file.read.call_args)
         self.assertEqual(call(json_string), mock_json.call_args)
 
-        expected_stub_configurations = [StubConfiguration('command', ['-arg1', '-arg2', '-arg3'], 'stdin', [Answer('stdout', 'stderr', 15)], 0)]
+        expected_stub_configurations = [
+            StubConfiguration('command', ['-arg1', '-arg2', '-arg3'], 'stdin', [Answer('stdout', 'stderr', 15)], 0)]
 
-        self.assertEqual(expected_stub_configurations, actual_stub_configurations)
+        self.assertEqual(
+            expected_stub_configurations, actual_stub_configurations)
 
     @patch('shtub.lock')
     @patch('shtub.unlock')
     @patch('json.dumps')
     @patch(builtin_string + '.open')
-    def test_should_serialize_as_dictionaries (self, mock_open, mock_json, mock_unlock, mock_lock):
+    def test_should_serialize_as_dictionaries(self, mock_open, mock_json, mock_unlock, mock_lock):
         fake_file = self.return_file_when_calling(mock_open)
         mock_json.return_value = '[{"some": "json"}]'
-        stub_configuration = [Execution('command', ['-arg1', '-arg2', '-arg3'], 'stdin', expected=True)]
+        stub_configuration = [
+            Execution('command', ['-arg1', '-arg2', '-arg3'], 'stdin', expected=True)]
 
-        serialize_as_dictionaries('stub_configuration.json', stub_configuration)
+        serialize_as_dictionaries(
+            'stub_configuration.json', stub_configuration)
 
-        expected_dictionary = {'command_input': {'command'   : 'command',
-                                                 'arguments' : ['-arg1', '-arg2', '-arg3'],
-                                                 'stdin'     : 'stdin'},
-                               'expected'  : True}
+        expected_dictionary = {'command_input': {'command': 'command',
+                                                 'arguments': ['-arg1', '-arg2', '-arg3'],
+                                                 'stdin': 'stdin'},
+                               'expected': True}
 
-        self.assertEqual(call([expected_dictionary], sort_keys=True, indent=4), mock_json.call_args)
-        self.assertEqual(call('stub_configuration.json', mode='w'), mock_open.call_args)
+        self.assertEqual(
+            call([expected_dictionary], sort_keys=True, indent=4), mock_json.call_args)
+        self.assertEqual(
+            call('stub_configuration.json', mode='w'), mock_open.call_args)
         self.assertEqual(call('[{"some": "json"}]'), fake_file.write.call_args)
 
-
-    def return_file_when_calling (self, mock_open, content=None):
+    def return_file_when_calling(self, mock_open, content=None):
         file_handle = Mock()
 
         mock_open.return_value.__enter__ = Mock(return_value=file_handle)
@@ -114,10 +125,9 @@ class ShtubTests (unittest.TestCase):
 
         return file_handle
 
-
     @patch('shtub.fcntl')
     @patch(builtin_string + '.open')
-    def test_should_create_lock (self, mock_open, mock_fcntl):
+    def test_should_create_lock(self, mock_open, mock_fcntl):
         mock_fcntl.LOCK_EX = 'LOCK_EX'
         file_handle_mock = Mock()
         mock_open.return_value = file_handle_mock
@@ -126,13 +136,14 @@ class ShtubTests (unittest.TestCase):
 
         self.assertEqual(file_handle_mock, actual_file_handle)
         self.assertEqual(call('shtub/lock', mode='a'), mock_open.call_args)
-        self.assertEqual(call(file_handle_mock, mock_fcntl.LOCK_EX), mock_fcntl.flock.call_args)
+        self.assertEqual(
+            call(file_handle_mock, mock_fcntl.LOCK_EX), mock_fcntl.flock.call_args)
 
     @patch('shtub.os.mkdir')
     @patch('shtub.os.path.exists')
     @patch('shtub.fcntl')
     @patch(builtin_string + '.open')
-    def test_should_create_base_dir_if_it_does_not_exist_when_locking (self, mock_open, mock_fcntl, mock_exists, mock_mkdir):
+    def test_should_create_base_dir_if_it_does_not_exist_when_locking(self, mock_open, mock_fcntl, mock_exists, mock_mkdir):
         mock_fcntl.LOCK_EX = 'LOCK_EX'
         mock_exists.return_value = False
         file_handle_mock = Mock()
@@ -142,8 +153,7 @@ class ShtubTests (unittest.TestCase):
 
         self.assertEqual(call('shtub'), mock_mkdir.call_args)
 
-
-    def test_should_unlock (self):
+    def test_should_unlock(self):
         file_handle_mock = Mock()
 
         unlock(file_handle_mock)

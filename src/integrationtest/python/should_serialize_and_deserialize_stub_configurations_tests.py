@@ -24,26 +24,33 @@ import integrationtest_support
 
 
 class Test (integrationtest_support.IntegrationTestSupport):
-    def test (self):
+
+    def test(self):
         # given
         self.prepare_default_testbed(['command_stub'])
-        self.create_command_wrapper('command_wrapper', 'command_stub', ['-arg1', '-arg2', '-arg3'], 'stdin')
+        self.create_command_wrapper(
+            'command_wrapper', 'command_stub', ['-arg1', '-arg2', '-arg3'], 'stdin')
 
         # when
         with self.fixture() as when:
             when.calling('command_stub').at_least_with_arguments('-arg1', '-arg2', '-arg3').and_input('stdin') \
                 .then_answer('Hello world.', 'Hello error!', 2)
 
-        stub_configurations_filename = join(self.base_dir, 'shtub', 'stub-configurations')
-        actual_stub_configurations = deserialize_stub_configurations(stub_configurations_filename)
+        stub_configurations_filename = join(
+            self.base_dir, 'shtub', 'stub-configurations')
+        actual_stub_configurations = deserialize_stub_configurations(
+            stub_configurations_filename)
 
         # then
         self.assertEqual(1, len(actual_stub_configurations))
         actual_stub_configuration = actual_stub_configurations[0]
 
-        self.assertEqual(['-arg1', '-arg2', '-arg3'], actual_stub_configuration.command_input.arguments)
-        self.assertEqual('stdin', actual_stub_configuration.command_input.stdin)
-        self.assertEqual('command_stub', actual_stub_configuration.command_input.command)
+        self.assertEqual(['-arg1', '-arg2', '-arg3'],
+                         actual_stub_configuration.command_input.arguments)
+        self.assertEqual(
+            'stdin', actual_stub_configuration.command_input.stdin)
+        self.assertEqual(
+            'command_stub', actual_stub_configuration.command_input.command)
 
         actual_answer = actual_stub_configuration.next_answer()
 

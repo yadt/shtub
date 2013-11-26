@@ -18,7 +18,9 @@ import unittest
 import os
 import shtub.testbase
 
+
 class StubbingSshExampleTest (shtub.testbase.IntegrationTestBase):
+
     def test_should_stub_ssh_then_execute_ssh_and_verify(self):
         env = self._create_environment()
         self.prepare_testbed(env, ['ssh'])
@@ -34,14 +36,12 @@ class StubbingSshExampleTest (shtub.testbase.IntegrationTestBase):
         with self.verify() as verify:
             verify.called('ssh').with_arguments('-arg1', '-arg2', '-arg3')
 
-
     def _create_environment(self):
-        env = {'PATH'       : self._create_path(),
-               'PYTHONPATH' : self._create_python_path()}
+        env = {'PATH': self._create_path(),
+               'PYTHONPATH': self._create_python_path()}
         return env
 
-
-    def _create_path (self):
+    def _create_path(self):
         path = self.stubs_dir
 
         if 'PATH' in os.environ:
@@ -53,12 +53,12 @@ class StubbingSshExampleTest (shtub.testbase.IntegrationTestBase):
 
         return path
 
-
-    def _create_python_path (self):
+    def _create_python_path(self):
         current_file = os.path.abspath(__file__)
         pythonpath = os.path.abspath(os.path.join(current_file, '.'))
         pythonpath += os.pathsep
-        pythonpath += os.path.abspath(os.path.join(current_file, '..', '..', '..', 'main', 'python'))
+        pythonpath += os.path.abspath(
+            os.path.join(current_file, '..', '..', '..', 'main', 'python'))
 
         return pythonpath
 

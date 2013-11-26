@@ -20,15 +20,18 @@ import integrationtest_support
 
 
 class Tests (integrationtest_support.IntegrationTestSupport):
-    def test (self):
+
+    def test(self):
         self.prepare_default_testbed(['command_stub'])
-        self.create_command_wrapper('command_wrapper_1', 'command_stub', ['type_1', '-arg2', '-arg3'], 'stdin')
+        self.create_command_wrapper(
+            'command_wrapper_1', 'command_stub', ['type_1', '-arg2', '-arg3'], 'stdin')
 
         with self.fixture() as when:
             when.calling('command_stub').at_least_with_arguments('-arg2', '-arg3').and_input('stdin') \
                 .then_answer('Hello world!', 'Hello error!', 0)
 
-        actual_return_code, stdout, stderr = self.execute_command_and_capture_output('command_wrapper_1')
+        actual_return_code, stdout, stderr = self.execute_command_and_capture_output(
+            'command_wrapper_1')
 
         self.assertEqual(0, actual_return_code)
         self.assertEqual('Hello world!', stdout)
@@ -37,7 +40,8 @@ class Tests (integrationtest_support.IntegrationTestSupport):
         with self.verify() as verify:
 
             with verify.filter_by_argument('type_1') as filtered_verify:
-                filtered_verify.called('command_stub').with_arguments('type_1', '-arg2', '-arg3').and_input('stdin')
+                filtered_verify.called('command_stub').with_arguments(
+                    'type_1', '-arg2', '-arg3').and_input('stdin')
 
             verify.finished()
 
