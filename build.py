@@ -34,7 +34,7 @@ authors = [Author('Alexander Metzner', 'alexander.metzner@gmail.com'),
 license = 'GNU GPL v3'
 summary = 'shtub - shell command stub'
 url = 'https://github.com/yadt/shtub'
-version = '0.3.7'
+version = '0.3.8'
 
 default_task = ['analyze', 'publish']
 
