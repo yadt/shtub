@@ -55,16 +55,16 @@ class IntegrationTestBase (unittest.TestCase):
         filename = '%02d-%s' % (self.command_counter, normalized)
         output_path = os.path.join(self.base_dir, BASEDIR, filename)
 
-        with codecs.open(output_path, 'wt', 'utf-8') as output_file:
+        with codecs.open(output_path, 'w', 'utf-8') as output_file:
             output_file.write('--------------- ENVIRONMENT ----------------\n')
             for key in sorted(self.env.keys()):
                 output_file.write('%s=%s\n' % (key, self.env[key]))
 
             output_file.write('----------------- STDOUT -------------------\n')
-            output_file.write(str(stdout))
+            output_file.write(stdout.decode('utf-8'))
 
             output_file.write('----------------- STDERR -------------------\n')
-            output_file.write(str(stderr))
+            output_file.write(stderr.decode('utf-8'))
 
     def execute_command(self, command):
         return_code, _, _ = self.execute_command_and_capture_output(command)
