@@ -16,6 +16,7 @@
 
 __author__ = 'Alexander Metzner, Michael Gruber, Udo Juettner'
 
+import codecs
 import os
 import subprocess
 import tempfile
@@ -54,7 +55,7 @@ class IntegrationTestBase (unittest.TestCase):
         filename = '%02d-%s' % (self.command_counter, normalized)
         output_path = os.path.join(self.base_dir, BASEDIR, filename)
 
-        with open(output_path, 'wt') as output_file:
+        with codecs.open(output_path, 'wt', 'utf-8') as output_file:
             output_file.write('--------------- ENVIRONMENT ----------------\n')
             for key in sorted(self.env.keys()):
                 output_file.write('%s=%s\n' % (key, self.env[key]))
